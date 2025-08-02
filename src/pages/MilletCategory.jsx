@@ -26,7 +26,9 @@ export default function MilletCategory() {
       id: "48",
       name: "Barnyard Millet",
       images: ["/media/Barnyard-Millet.jpeg"],
-      Link:"/Millets/BarnyardMillet"
+      Link:"/Millets/BarnyardMillet",
+      originalPrice:70,
+      discountedPrice: 45
     },
     
     {

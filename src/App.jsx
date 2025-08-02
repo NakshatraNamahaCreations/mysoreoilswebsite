@@ -26,7 +26,7 @@ import Create_Account from "./pages/accounts/Create_Account";
 // import ProdductSpice from "./pages/Product_spice";
 import Product_spice from "./pages/Product_spice";
 import AlmondOil from "./pages/oil-products/AlmondOil";
-import OilCategory from "./pages/oil-products/oilcategory";
+
 import BlackSesameOil from "./pages/oil-products/BlackSesameOil";
 import CastorOil from "./pages/oil-products/CastorOil";
 import CoconutOil from "./pages/oil-products/CoconutOil";
@@ -43,12 +43,12 @@ import SafflowerOil from "./pages/oil-products/SafflowerOil";
 import ScrollToTop from "./components/ScrollToTop";
 import SpicePowders from "./pages/SpicePowders/SpicePowders";
 import Cosmetics from "./pages/Cosmetics/Oyl-Bath";
-import ClayUtensils from "./pages/Clay-Utensils/Clay-Bowl";
+
 import Snacks from "./pages/Snacks/Snacks";
 import IceCream from "./pages/IceCream/Mango";
 import Fruits from "./pages/Fruits/Fruits";
 import Vegetables from "./pages/Vegetables/Vegetables";
-import GiftingSolutions from "./pages/GiftingSolutions/Gifting-one";
+
 import DryFruits from "./pages/dry-fruits/DryFruits";
 import MilletCategory from "./pages/MilletCategory";
 import BarnyardMillet from "./pages/Millets/BarnyardMillet";
@@ -111,7 +111,7 @@ function App() {
            <Route path="/dry-fruits" element={<DryFruits/>}/>
           <Route path="/product-spice/:id" element={<Product_spice />} />
           <Route path="/oil-products/AlmondOil" element={<AlmondOil/>}/>
-          <Route path="/oil-products/OilCategory" element={<OilCategory/>}/>
+       {/*<Route path="/oilcategory" element={<OilCategory/>}/>*/}
           <Route path="/oil-products/BlackSesameOil" element={<BlackSesameOil/>}/>
           <Route path="/oil-products/CastorOil" element={<CastorOil/>}/>
           <Route path="/oil-products/CoconutOil" element={<CoconutOil/>}/>

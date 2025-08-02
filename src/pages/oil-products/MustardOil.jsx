@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Container, Row, Col, Image, Form, Button } from "react-bootstrap";
-import OilCategory from "./oilcategory";
+
 import Navbar_Menu from "../../components/Navbar_Menu";
 
 import { useDispatch } from "react-redux";
@@ -8,6 +8,7 @@ import { addToCart } from "../../redux/cartSlice";
 import { useNavigate } from "react-router-dom";
 import { Table, Badge } from "react-bootstrap";
 import { FaCheckCircle } from "react-icons/fa";
+import OilCategory from "./oilcategory";
 
 const MustardOil = () => {
   const images = [{ src:"/media/oil-mustard.png",weight:"500ml", price:"380"}, 
