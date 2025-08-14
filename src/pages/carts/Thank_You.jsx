@@ -25,7 +25,7 @@ export default function Thank_You() {
 
      const redirectTimeout = setTimeout(() => {
       navigate("/");
-    }, 10000);
+    }, 5000);
 
    return () => {
       clearTimeout(fadeInTimeout);
@@ -147,25 +147,7 @@ export default function Thank_You() {
           </div>
         </div>
         {/* YOU MAY ALSO LIKE */}
-        <div
-          style={{ backgroundColor: "#ffff", color: "black", padding: "5% 0" }}
-        >
-          <h1
-            style={{
-              fontSize: "44px",
-              letterSpacing: "1px",
-              textAlign: "center",
-              fontWeight:'700',
-              color:"#002209"
-            }}
-            className="mobile-font"
-          >
-            YOU MAY ALSO LIKE
-          </h1>
-          <div>
-            <Products_Sliders />
-          </div>
-        </div>
+      
 
         <ScrollToTop />
       </div>

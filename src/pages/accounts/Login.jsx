@@ -543,31 +543,69 @@ export default function Login() {
   );
 }*/}
 
-
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Container, Form, Button, Card } from "react-bootstrap";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import NavbarMenu from "../../components/NavMenuBar";
+import FooterOne from "../../components/FooterOne";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import axios from "axios";
+
+const schema = yup.object().shape({
+  email: yup.string().email("Invalid email format").required("Email is required"),
+  password: yup.string().required("Password is required"),
+});
 
 export default function Login() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const location = useLocation();
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    // Your login logic here
-    alert("Login successful!");
-    navigate("/checkout");
+  // Redirect if user already logged in
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user && user.email) {
+      navigate("/account"); // or keep them on the same page
+    }
+  }, [navigate]);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmit = async (data) => {
+    try {
+      const response = await axios.post(
+        "https://api.themysoreoils.com/api/customers/login",
+        data
+      );
+      const userData = response.data.user;
+      localStorage.setItem("user", JSON.stringify(userData));
+
+      // ✅ Redirect to previous page or fallback
+      const redirectPath = localStorage.getItem("redirectAfterLogin") || "/checkout";
+      localStorage.removeItem("redirectAfterLogin");
+      navigate(redirectPath);
+    } catch (error) {
+      console.error("Login error:", error);
+      if (error.response?.data?.message) {
+        alert(error.response.data.message);
+      } else {
+        alert("Login failed. Please try again later.");
+      }
+    }
   };
 
   return (
     <>
       <NavbarMenu />
-      <Container
-        className="d-flex justify-content-center align-items-center"
-        style={{ height: "100vh" }}
-      >
+      <Container className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
         <Card
           style={{
             width: "400px",
@@ -585,40 +623,43 @@ export default function Login() {
               fontFamily: "Poppins",
             }}
           >
-            Login or Do a Guest Checkout
+            Login to Continue
           </h4>
 
-          <Form onSubmit={handleLogin}>
-            <Form.Group controlId="formEmail" className="mb-3">
-              <Form.Label style={{ fontFamily: "Poppins", fontWeight: "500" }}>
-                Email Address
-              </Form.Label>
+          <Form onSubmit={handleSubmit(onSubmit)}>
+            <Form.Group className="mb-4">
               <Form.Control
                 type="email"
-                placeholder="Enter your registered email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                style={{ fontFamily: "Poppins", padding: "10px" }}
+                placeholder="Email"
+                {...register("email")}
+                isInvalid={!!errors.email}
+                style={{
+                  height: "50px",
+                  border: "1.5px solid #002209",
+                  fontSize: "16px",
+                  fontFamily: "Poppins",
+                }}
               />
+              <Form.Control.Feedback type="invalid">{errors.email?.message}</Form.Control.Feedback>
             </Form.Group>
 
-            <Form.Group controlId="formPassword" className="mb-3">
-              <Form.Label style={{ fontFamily: "Poppins", fontWeight: "500" }}>
-                Password
-              </Form.Label>
+            <Form.Group className="mb-4">
               <Form.Control
                 type="password"
-                placeholder="Enter password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                style={{ fontFamily: "Poppins", padding: "10px" }}
+                placeholder="Password"
+                {...register("password")}
+                isInvalid={!!errors.password}
+                style={{
+                  height: "50px",
+                  border: "1.5px solid #002209",
+                  fontSize: "16px",
+                  fontFamily: "Poppins",
+                }}
               />
+              <Form.Control.Feedback type="invalid">{errors.password?.message}</Form.Control.Feedback>
             </Form.Group>
 
             <Button
-              variant="danger"
               type="submit"
               style={{
                 width: "100%",
@@ -634,31 +675,8 @@ export default function Login() {
             </Button>
           </Form>
 
-          <div style={{ textAlign: "center", marginTop: "20px" }}>
-            <span style={{ fontFamily: "Poppins", color: "#555" }}>
-              or
-            </span>
-          </div>
-
-          <Button
-            variant="outline-secondary"
-            className="mt-3"
-            style={{
-              width: "100%",
-              padding: "10px",
-              fontFamily: "Poppins",
-              fontWeight: "500",
-              fontSize: "16px",
-            }}
-            onClick={() => navigate("/checkout")}
-          >
-            CONTINUE AS GUEST
-          </Button>
-
           <div style={{ textAlign: "center", marginTop: "25px" }}>
-            <p style={{ fontFamily: "Poppins", color: "#555" }}>
-              Don’t have an account?
-            </p>
+            <p style={{ fontFamily: "Poppins", color: "#555" }}>Don’t have an account?</p>
             <Link
               to="/create_account"
               style={{
@@ -673,6 +691,7 @@ export default function Login() {
           </div>
         </Card>
       </Container>
+      <FooterOne />
     </>
   );
 }

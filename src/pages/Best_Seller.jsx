@@ -388,8 +388,7 @@ const handleCardClick = (id) => {
             </Container>
           </div>
 
-          {/* REVIEWS */}
-          <Reviews />
+         
 
           <ScrollToTop />
 

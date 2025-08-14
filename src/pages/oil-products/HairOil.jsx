@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Image, Form, Button } from "react-bootstrap";
-import OilCategory from "./oilcategory";
+import OilCategory from "./OilCategory";
 import Navbar_Menu from "../../components/Navbar_Menu";
 
 

@@ -858,7 +858,6 @@ import {
   Col,
   Button,
   Form,
-  InputGroup,
   Alert
 } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
@@ -866,6 +865,8 @@ import { removeFromCart, updateQuantity } from "../../redux/cartSlice";
 import { useNavigate } from "react-router-dom";
 import Navbar_Menu from "../../components/Navbar_Menu";
 import ScrollToTop from "../../components/ScrollToTop";
+import { useEffect, useState } from "react";
+import { addToCart } from "../../redux/cartSlice";
 
 export default function Your_Carts() {
   const cartItems = useSelector((state) => state.cart.cartItems);
@@ -886,32 +887,104 @@ export default function Your_Carts() {
     0
   );
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
   const grandTotal = subtotal - discount;
+
+  const handleAddToWishlist = (product) => {
+  const existingWishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+
+  const isAlreadyWishlisted = existingWishlist.some((item) => item.id === product.id);
+  if (!isAlreadyWishlisted) {
+    const updatedWishlist = [...existingWishlist, product];
+    localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
+    alert("Item added to wishlist!");
+  } else {
+    alert("Item already in wishlist.");
+  }
+};
+
+
+
+const handleRemoveFromWishlist = (productId) => {
+  const existingWishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+  const updatedWishlist = existingWishlist.filter(item => item.id !== productId);
+  localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
+  setWishlist(updatedWishlist); // Update state if using
+};
+
+const handleAddFromWishlist = () => {
+  const wishlistItems = JSON.parse(localStorage.getItem("wishlist")) || [];
+  if (wishlistItems.length === 0) {
+    alert("Your Wishlist is empty.");
+    return;
+  }
+
+  wishlistItems.forEach((item) => {
+    const isAlreadyInCart = cartItems.some(cartItem => cartItem.id === item.id);
+    if (!isAlreadyInCart) {
+      dispatch(addToCart({ ...item, quantity: 1 })); // Add with default quantity 1
+    }
+  });
+
+  alert("Wishlist items added to Cart!");
+};
+
+
 
   return (
     <>
       <Navbar_Menu />
       <ScrollToTop />
       <Container className="my-5">
-        <h2 className="mb-4 fw-bold" style={{ fontFamily: "Poppins" }}>
-          Cart : {cartItems.length} Item{cartItems.length > 1 ? "s" : ""}
-        </h2>
-        <Row>
-          {/* LEFT SIDE: Cart Items */}
-          <Col md={8}>
-            {subtotal >= 1500 && subtotal < 2000 && (
-              <Alert variant="info">
-                You're just ₹{2000 - subtotal} away from <strong>Free Delivery</strong>! 🎉
-              </Alert>
-            )}
-            {subtotal >= 2000 && (
-              <Alert variant="success">
-                Congratulations! You're eligible for <strong>Free Delivery</strong> 🚚
-              </Alert>
-            )}
+      {cartItems.length > 0 && (
+  <h2 className="mb-4 fw-bold" style={{ fontFamily: "Poppins" }}>
+    Cart : {cartItems.length} Item{cartItems.length > 1 ? "s" : ""}
+  </h2>
+)}
 
-            {cartItems.map((item) => {
-              return (
+
+        {cartItems.length === 0 ? (
+          <div className="text-center py-5">
+            <img
+              src="/media/Emptycart.png"  
+              alt="Empty Cart"
+              style={{ width: "300px", marginBottom: "20px" }}
+            />
+            <h3 style={{ fontFamily: "Poppins", marginBottom: "20px" }}>
+              Your Cart is Empty
+            </h3>
+            <Button
+              variant="dark"
+              onClick={() => navigate("/categories")}
+              style={{ fontFamily: "Poppins", padding: "10px 30px" }}
+            >
+              Shop Now
+            </Button>
+          </div>
+        ) : (
+          <Row>
+            {/* LEFT SIDE: Cart Items */}
+            <Col md={8}>
+              {subtotal >= 1500 && subtotal < 2000 && (
+                <Alert variant="info">
+                  You're just ₹{2000 - subtotal} away from <strong>Free Delivery</strong>! 🎉
+                </Alert>
+              )}
+              {subtotal >= 2000 && (
+                <Alert variant="success">
+                  Congratulations! You're eligible for <strong>Free Delivery</strong> 🚚
+                </Alert>
+              )}
+
+              {cartItems.map((item) => (
                 <div key={item.id} className="p-3 border-bottom mb-4">
                   <Row className="align-items-center">
                     <Col xs={4}>
@@ -922,136 +995,144 @@ export default function Your_Carts() {
                         style={{ maxWidth: "120px" }}
                       />
                     </Col>
-                    <Col xs={8}>
-                      <h5 className="fw-semibold" style={{ fontFamily: "Poppins" }}>{item.name}</h5>
-                      <div className="text-muted text-decoration-line-through">
-                        ₹{item.originalPrice}
-                      </div>
-                      <div className="d-flex align-items-center gap-2 my-2">
-                        <Button
-                          variant="outline-secondary"
-                          size="sm"
-                          onClick={() =>
-                            dispatch(
-                              updateQuantity({
-                                id: item.id,
-                                quantity: Math.max(1, item.quantity - 1),
-                              })
-                            )
-                          }
-                        >
-                          -
-                        </Button>
-                        <Form.Control
-                          value={item.quantity}
-                          readOnly
-                          className="text-center"
-                          style={{ maxWidth: "50px" }}
-                        />
-                        <Button
-                          variant="outline-secondary"
-                          size="sm"
-                          onClick={() =>
-                            dispatch(
-                              updateQuantity({
-                                id: item.id,
-                                quantity: item.quantity + 1,
-                              })
-                            )
-                          }
-                        >
-                          +
-                        </Button>
-                      </div>
-                      <div className="fw-bold text-success">₹{item.discountedPrice}</div>
-                      <div className="mt-2">
-                       <Button
-  variant="transparent"
-  style={{
-    fontSize: "12px",
-    padding: "5px 0px",
-    fontWeight: "600",
-    lineHeight: "1",
-    textDecoration: "underline",
-    textTransform: "uppercase",
-  }}
-  onClick={() =>
-    dispatch(removeFromCart({
-      id: item.id,
-      selectedWeight: item.selectedWeight
-    }))
-  }
->
-  Remove
-</Button>
+                  <Col xs={8}>
+  <h5 className="fw-semibold" style={{ fontFamily: "Poppins" }}>{item.name}</h5>
+  <div className="text-muted text-decoration-line-through">
+    ₹{(item.originalPrice * item.quantity).toFixed(2)}
+  </div>
+  <div className="d-flex align-items-center gap-2 my-2">
+    <Button
+      variant="outline-secondary"
+      size="sm"
+      onClick={() =>
+        dispatch(
+          updateQuantity({
+            id: item.id,
+            quantity: Math.max(1, item.quantity - 1),
+          })
+        )
+      }
+    >
+      -
+    </Button>
+    <Form.Control
+      value={item.quantity}
+      readOnly
+      className="text-center"
+      style={{ maxWidth: "50px" }}
+    />
+    <Button
+      variant="outline-secondary"
+      size="sm"
+      onClick={() =>
+        dispatch(
+          updateQuantity({
+            id: item.id,
+            quantity: item.quantity + 1,
+          })
+        )
+      }
+    >
+      +
+    </Button>
+  </div>
+  <div className="fw-bold text-success">
+    ₹{(item.discountedPrice * item.quantity).toFixed(2)}
+  </div>
+  <div className="mt-2">
+    <Button
+      variant="transparent"
+      style={{
+        fontSize: "12px",
+        padding: "5px 0px",
+        fontWeight: "600",
+        lineHeight: "1",
+        textDecoration: "underline",
+        textTransform: "uppercase",
+      }}
+      onClick={() =>
+        dispatch(removeFromCart({
+          id: item.id,
+          selectedWeight: item.selectedWeight
+        }))
+      }
+    >
+      Remove
+    </Button>
+  </div>
+</Col>
 
-                      </div>
-                    </Col>
                   </Row>
                 </div>
-              );
-            })}
-            <Button variant="outline-dark" className="mt-3" onClick={()=> navigate("/wishlist")}  style={{fontFamily:"poppins"}}>
-              + Add from Wishlist
-            </Button>
-          </Col>
-
-          {/* RIGHT SIDE: Price Summary */}
-          <Col md={4} className="offset-md-0">
-            <div className="p-4 border rounded">
-              
-              
-
-              <div className="p-3 bg-light-subtle border rounded mb-3">
-                <p className="mb-1 fw-medium"  style={{fontFamily:"poppins"}}>
-                  🎁 Get extra 10% off on your first purchase.<br />
-                  Use code: <strong className="text-danger">NEW10</strong>
-                </p>
-                <small className="text-muted"  style={{fontFamily:"poppins"}}>
-                  Login to use this code. <a href="/login">Click here</a>
-                </small>
-              </div>
-
-              <h5 className="fw-bold mb-3"  style={{fontFamily:"poppins"}}>Price Detail</h5>
-              <div className="d-flex justify-content-between mb-2">
-                <span  style={{fontFamily:"poppins"}}>Sub-total</span>
-                <span  style={{fontFamily:"poppins"}}>₹{subtotal.toFixed(0)}</span>
-              </div>
-              <div className="d-flex justify-content-between mb-2 text-success">
-                <span  style={{fontFamily:"poppins"}}>Product Discount</span>
-                <span  style={{fontFamily:"poppins"}}>-₹{discount.toFixed(0)}</span>
-              </div>
-              <div className="d-flex justify-content-between mb-2">
-                <span  style={{fontFamily:"poppins"}}>Shipping</span>
-                <span  style={{fontFamily:"poppins"}}>₹0</span>
-              </div>
-              <hr />
-              <div className="d-flex justify-content-between fw-bold fs-5">
-                <span  style={{fontFamily:"poppins"}}>Grand Total</span>
-                <span>₹{grandTotal.toFixed(0)}</span>
-              </div>
-
+              ))}
               <Button
-                variant="dark"
-                className="w-100 mt-4"
-                onClick={() => navigate("/checkout")}
-                 style={{fontFamily:"poppins"}}
-              >
-                Proceed to Checkout
-              </Button>
-              <Button
-                variant="outline-dark"
-                className="w-100 mt-3"
-                onClick={() => navigate("/")}
-                style={{fontFamily:"poppins"}}
-              >
-                Continue Shopping
-              </Button>
-            </div>
-          </Col>
-        </Row>
+  variant="outline-dark"
+  className="mt-3"
+  onClick={handleAddFromWishlist}
+  style={{ fontFamily: "Poppins" }}
+>
+  + Add from Wishlist
+</Button>
+
+            </Col>
+
+            {/* RIGHT SIDE: Price Summary */}
+            <Col md={4}>
+              <div className="p-4 border rounded">
+                <div className="p-3 bg-light-subtle border rounded mb-3">
+                  <p className="mb-1 fw-medium" style={{ fontFamily: "Poppins" }}>
+                    🎁 Spend ₹2000 and get free delivery on your order.
+                  </p>
+                </div>
+
+                <h5 className="fw-bold mb-3" style={{ fontFamily: "Poppins" }}>Price Detail</h5>
+                <div className="d-flex justify-content-between mb-2">
+                  <span style={{ fontFamily: "Poppins" }}>Sub-total</span>
+                  <span style={{ fontFamily: "Poppins" }}>₹{subtotal.toFixed(0)}</span>
+                </div>
+                <div className="d-flex justify-content-between mb-2 text-success">
+                  <span style={{ fontFamily: "Poppins" }}>Product Discount</span>
+                  <span style={{ fontFamily: "Poppins" }}>₹{discount.toFixed(0)}</span>
+                </div>
+                <div className="d-flex justify-content-between mb-2">
+                  <span style={{ fontFamily: "Poppins" }}>Shipping</span>
+                  <span style={{ fontFamily: "Poppins" }}>₹0</span>
+                </div>
+                <hr />
+                <div className="d-flex justify-content-between fw-bold fs-5">
+                  <span style={{ fontFamily: "Poppins" }}>Grand Total</span>
+                  <span>₹{grandTotal.toFixed(0)}</span>
+                </div>
+
+                <Button
+                  variant="dark"
+                  className="w-100 mt-4"
+                  onClick={() => {
+                    if (isLoggedIn) {
+                      navigate("/checkout");
+                    } else {
+                      alert("Please login to proceed to checkout.");
+                      navigate("/login");
+                    }
+                  }}
+                  style={{ fontFamily: "Poppins" }}
+                >
+                  Proceed to Checkout
+                </Button>
+
+                <Button
+                  variant="outline-dark"
+                  className="w-100 mt-3"
+                  onClick={() => navigate("/categories")}
+                  style={{ fontFamily: "Poppins" }}
+                >
+                  Continue Shopping
+                </Button>
+              </div>
+            </Col>
+          </Row>
+        )}
       </Container>
     </>
   );
 }
-

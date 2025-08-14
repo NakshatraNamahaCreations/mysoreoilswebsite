@@ -29,10 +29,10 @@ export default function PrivacyPolicy() {
         }}
       >
         {/* NAVBAR MENU */}
-        {/* <Navbar_Menu /> */}
+         <Navbar_Menu /> 
 
           {/* SEARCH */}
-          <Container className="mt-3">
+          {/*<Container className="mt-3">
             <InputGroup
               className="mb-5 footer-subscribe-input"
               style={{
@@ -68,7 +68,7 @@ export default function PrivacyPolicy() {
                 SEARCH
               </div>
             </InputGroup>
-          </Container>
+          </Container>*/}
 
         {/* PRIVACY POLICY */}
         <div style={{ backgroundColor: "white", padding:'5% 0' }}>
@@ -89,371 +89,94 @@ export default function PrivacyPolicy() {
                   textAlign: "center",
                   marginBottom: "5%",
                   color: "#002209",
+                  fontFamily:"montserrat"
                 }}
               >
                 PRIVACY POLICY
               </h1>
 
               <div className="div-p-ul">
-                <p style={{ textAlign: "right" }}>
+                <p style={{ textAlign: "right" , fontFamily:"poppins", fontWeight:"700"}}>
                   Effective Date:{" "}
                   <span
                     style={{
                       fontSize: "16px",
                       marginRight: "5px",
                       fontWeight:'700',
-                      
+                      fontFamily:"poppins"
                     }}
                   >
-                    10-12-2024
+                    14-08-2025
                   </span>
                 </p>
-                <p>
-                  At Avitri Spices Pvt Ltd, your privacy is important to us.
-                  This Privacy Policy explains how we collect, use, and protect
-                  your personal information when you visit our website, purchase
-                  our products, or interact with us in any way.
+                <p className="para fw-bold" style={{fontSize:"18px"}}>
+                  The Mysore Oils respects your privacy and is committed to protecting it.
                 </p>
-                <p>
-                  1. Information We Collect We may collect the following types
-                  of personal information from you:{" "}
+                <p className="para fw-bold mt-4">
+                 Information We Collect
                 </p>
-                <ul>
+                <ul className="para">
                   <li>
-                    <span
-                      style={{
-                        fontSize: "16px",
-                        marginLeft: "5px",
-                        fontWeight:'700',
-                        
-                      }}
-                    >
-                      Personal Identifiable Information (PII):
-                    </span>{" "}
-                    Name, email address, phone number, shipping address, and
-                    billing address.
+                    Name, email, phone number, billing/shipping address.
+
                   </li>
                   <li>
-                    <span
-                      style={{
-                        fontSize: "16px",
-                        marginLeft: "5px",
-                        fontWeight:'700',
-                        
-                      }}
-                    >
-                      Payment Information:
-                    </span>{" "}
-                    Credit/debit card details and payment method information.
-                    (Note: This information is processed securely through
-                    third-party payment gateways and is not stored on our
-                    servers.)
+                   Payment details (processed securely via third-party gateways).
                   </li>
                   <li>
-                    <span
-                      style={{
-                        fontSize: "16px",
-                        marginLeft: "5px",
-                        fontWeight:'700',
-                        
-                      }}
-                    >
-                      {" "}
-                      Account Information:
-                    </span>{" "}
-                    Login credentials (if you create an account on our website).
+                    Website usage data via cookies.
                   </li>
-                  <li>
-                    <span
-                      style={{
-                        fontSize: "16px",
-                        marginLeft: "5px",
-                        fontWeight:'700',
-                        
-                      }}
-                    >
-                      Usage Data:{" "}
-                    </span>{" "}
-                    Information about how you interact with our website, such as
-                    IP address, browser type, pages visited, and time spent.
-                  </li>
-                  <li>
-                    <span
-                      style={{
-                        fontSize: "16px",
-                        marginLeft: "5px",
-                        fontWeight:'700',
-                        
-                      }}
-                    >
-                      Other Data:
-                    </span>{" "}
-                    Privacy Policy for Avitri Spices Pvt Ltd - Any information
-                    you voluntarily provide through surveys, feedback forms, or
-                    customer support.
-                  </li>
+                
                 </ul>
 
-                <p>
-                  2. How We Use Your Information We use your personal
-                  information for the following purposes:
+                <p className="para fw-bold mt-4">
+                 How We Use Your Information
                 </p>
-                <ul>
-                  <li>To process and fulfill your orders.</li>
-                  <li>To provide customer support and resolve issues.</li>
+                <ul className="para">
+                  <li>To process and deliver your order.</li>
+                  <li>To communicate order updates, promotions, and offers.</li>
                   <li>
-                    To send order confirmations, shipping notifications, and
-                    promotional emails (with your consent).
+                    To improve our website and services.
                   </li>
-                  <li>
-                    To analyze website performance and improve user experience.
-                  </li>
-                  <li>
-                    To comply with legal obligations or enforce our terms and
-                    policies.
-                  </li>
+                 
                 </ul>
 
-                <p>
-                  3. Sharing Your Information We do not sell or rent your
-                  personal information to third parties. However, we may share
-                  your information with:
+                <p className="para fw-bold mt-4">
+                 Data Security
                 </p>
-                <ul>
+                <ul className="para">
                   <li>
-                    <span
-                      style={{
-                        fontSize: "16px",
-                        marginRight: "5px",
-                        fontWeight:'700',
-                        
-                      }}
-                    >
-                      Service Providers:
-                    </span>
-                    Third-party vendors who assist in payment processing,
-                    shipping, and marketing.
+                    We use industry-standard SSL encryption to protect your information.
                   </li>
                   <li>
-                    <span
-                      style={{
-                        fontSize: "16px",
-                        marginRight: "5px",
-                        fontWeight:'700',
-                        
-                      }}
-                    >
-                      Legal Authorities:
-                    </span>
-                    If required by law or to protect our legal rights.
+                   Payment details are never stored on our servers.
+
                   </li>
-                  <li>
-                    <span
-                      style={{
-                        fontSize: "16px",
-                        marginRight: "5px",
-                        fontWeight:'700',
-                        
-                      }}
-                    >
-                      Business Transfers:
-                    </span>
-                    In case of a merger, acquisition, or sale of assets.
-                  </li>
-                  <li>
-                    Cookies and Tracking Technologies Our website uses cookies
-                    and similar technologies to enhance user experience. <br />
-                    These may include:
-                    <ul style={{ listStyleType: "none" }}>
-                      <li>
-                        <span
-                          style={{
-                            fontSize: "16px",
-                            marginRight: "5px",
-                            fontWeight:'700',
-                            
-                          }}
-                        >
-                          - Essential Cookies:
-                        </span>{" "}
-                        For basic website functionality. Privacy Policy for
-                        Avitri Spices Pvt Ltd
-                      </li>
-                      <li>
-                        <span
-                          style={{
-                            fontSize: "16px",
-                            marginRight: "5px",
-                            fontWeight:'700',
-                            
-                          }}
-                        >
-                          - Analytics Cookies:
-                        </span>{" "}
-                        To track website performance.
-                      </li>
-                      <li>
-                        <span
-                          style={{
-                            fontSize: "16px",
-                            marginRight: "5px",
-                            fontWeight:'700',
-                            
-                          }}
-                        >
-                          - Marketing Cookies:
-                        </span>{" "}
-                        To deliver targeted ads. You can manage your cookie
-                        preferences through your browser settings.
-                      </li>
-                    </ul>
-                  </li>
-                  <li>
-                    Data Security We take appropriate technical and
-                    organizational measures to protect your personal information
-                    against unauthorized access, loss, or misuse. <br />
-                    These include:
-                    <ul style={{ listStyleType: "none" }}>
-                      <li>Secure servers and encrypted data transmissions.</li>
-                      <li>
-                        Regular security audits and updates. However, no method
-                        of transmission over the internet is 100% secure, and we
-                        cannot guarantee absolute security
-                      </li>
-                    </ul>
-                  </li>
-                  <li>
-                    Your Rights You have the following rights regarding your
-                    personal information:
-                    <ul style={{ listStyleType: "none" }}>
-                      <li>
-                        <span
-                          style={{
-                            fontSize: "16px",
-                            marginRight: "5px",
-                            fontWeight:'700',
-                            
-                          }}
-                        >
-                          - Access:
-                        </span>{" "}
-                        Request a copy of the information we hold about you.
-                      </li>
-                      <li>
-                        <span
-                          style={{
-                            fontSize: "16px",
-                            marginRight: "5px",
-                            fontWeight:'700',
-                            
-                          }}
-                        >
-                          - Correction:
-                        </span>{" "}
-                        Update or correct inaccurate information.
-                      </li>
-                      <li>
-                        <span
-                          style={{
-                            fontSize: "16px",
-                            marginRight: "5px",
-                            fontWeight:'700',
-                            
-                          }}
-                        >
-                          - Deletion:
-                        </span>{" "}
-                        Request the deletion of your data.
-                      </li>
-                      <li>
-                        <span
-                          style={{
-                            fontSize: "16px",
-                            marginRight: "5px",
-                            fontWeight:'700',
-                            
-                          }}
-                        >
-                          - Withdrawal of Consent:
-                        </span>{" "}
-                        Opt-out of marketing communications. To exercise these
-                        rights, please contact us at{" "}
-                        <span
-                          style={{
-                            fontSize: "16px",
-                            marginRight: "5px",
-                            fontWeight:'700',
-                            
-                          }}
-                        >
-                          Contact@AvitriSpices.in.
-                        </span>
-                      </li>
-                    </ul>
-                  </li>
-                  <li>
-                    Third-Party Links Our website may contain links to
-                    third-party websites. We are not responsible for the privacy
-                    practices of these websites. We encourage you to read their
-                    privacy policies before providing any personal information.
-                    Privacy Policy for Avitri Spices Pvt Ltd
-                  </li>
-                  <li>
-                    Updates to This Policy We may update this Privacy Policy
-                    from time to time. Any changes will be posted on this page
-                    with the updated effective date. We encourage you to review
-                    this policy periodically.
-                  </li>
-                  <li>
-                    Contact Us If you have any questions or concerns about this
-                    Privacy Policy, please contact us:
-                    <ul style={{ listStyleType: "none" }}>
-                      <li>
-                        - Email:{" "}
-                        <span
-                          style={{
-                            fontSize: "16px",
-                            marginRight: "5px",
-                            fontWeight:'700',
-                            letterSpacing: "2px",
-                          }}
-                        >
-                          Contact@AvitriSpices.in
-                        </span>
-                      </li>
-                      <li>
-                        - Phone:{" "}
-                        <span
-                          style={{
-                            fontSize: "16px",
-                            marginRight: "5px",
-                            fontWeight:'700',
-                            letterSpacing: "2px",
-                          }}
-                        >
-                          +91734 944 4419
-                        </span>
-                      </li>
-                      <li>
-                        - Address:{" "}
-                        <span
-                          style={{
-                            fontSize: "16px",
-                            marginRight: "5px",
-                            
-                            letterSpacing: "2px",
-                          }}
-                        >
-                          Avitri Spices Pvt Ltd, Bangalore, India
-                        </span>
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
-                <p>
-                  Thank you for trusting Avitri Spices. Your privacy is our
-                  priority.
+                  </ul>
+                      
+                     
+                    
+                  
+                <p className="para fw-bold mt-4">
+                 Sharing of Information
                 </p>
+                 <ul className="para">
+                  <li>
+                   We do not sell or rent your personal data.
+                  </li>
+                  <li>
+                We may share with trusted third-party service providers (e.g., courier companies, payment processors).
+
+                  </li>
+                  </ul>
+
+                  <p className="para fw-bold mt-4">Cookies</p>
+                   <ul className="para">
+                  <li>
+                Our site uses cookies to enhance user experience and track website performance.
+                  </li>
+                
+                  </ul>
               </div>
             </div>
           </Container>
@@ -462,7 +185,7 @@ export default function PrivacyPolicy() {
         <ScrollToTop />
 
         {/* FOOTER */}
-        {/* <Footer /> */}
+         <Footer /> 
       </div>
     </>
   );

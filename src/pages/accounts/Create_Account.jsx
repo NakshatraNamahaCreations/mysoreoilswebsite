@@ -1,4 +1,4 @@
-import {
+{/*import {
   Container,
   Button,
   InputGroup,
@@ -12,6 +12,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import ScrollToTop from "../../components/ScrollToTop";
 import { Modal } from "react-bootstrap";
+
 
 
 export default function Create_Account() {
@@ -51,31 +52,31 @@ export default function Create_Account() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  //const handleSubmit = (e) => {
+    //e.preventDefault();
 
     // Save to localStorage
-    localStorage.setItem("user", JSON.stringify(formData));
+    //localStorage.setItem("user", JSON.stringify(formData));
 
     // Show success modal
-    setShowModal(true);
+    //setShowModal(true);
 
     // Reset form
-    setFormData({
-      firstname: "",
-      lastname: "",
-      email: "",
-      password: "",
-      mobilenumber: "",
-    });
-  };
+    //setFormData({
+     // firstname: "",
+    //  lastname: "",
+     // email: "",
+     // password: "",
+     // mobilenumber: "",
+  //  });
+//  };
 
 
 
-  {/*const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
   e.preventDefault();
   try {
-    //const res = await axios.post("http://localhost:8011/api/customers/register", formData);
+    const res = await axios.post("https://api.themysoreoils.com/api/customers/register", formData);
     setShowModal(true);
     setTimeout(() => {
       navigate("/login");
@@ -83,7 +84,7 @@ export default function Create_Account() {
   } catch (err) {
     alert(err.response?.data?.message || "Something went wrong");
   }
-};*/}
+};
 
  
 
@@ -148,7 +149,7 @@ export default function Create_Account() {
               <Form onSubmit={handleSubmit}>
                 <Row>
                   {/* First Name */}
-                  <Form.Group className="mb-4">
+                {/* <Form.Group className="mb-4">
                     <Form.Control
                       type="text"
                       placeholder="First Name"
@@ -166,7 +167,7 @@ export default function Create_Account() {
                   </Form.Group>
 
                   {/* Last Name */}
-                  <Form.Group className="mb-4">
+                {/*}  <Form.Group className="mb-4">
                     <Form.Control
                       type="text"
                        name="lastname" // ✅ this was missing
@@ -184,7 +185,7 @@ export default function Create_Account() {
                   </Form.Group>
 
                   {/* Email */}
-                  <Form.Group className="mb-4">
+                  {/*<Form.Group className="mb-4">
                     <Form.Control
                       type="email"
                       name="email"
@@ -201,7 +202,7 @@ export default function Create_Account() {
                     />
                   </Form.Group>
                   {/* number */}
-                   <Form.Group className="mb-4">
+                  {/*} <Form.Group className="mb-4">
                     <Form.Control
                       name="mobilenumber" // ✅ ADD THIS (You forgot this field in your UI)
   value={formData.mobilenumber}
@@ -218,7 +219,7 @@ export default function Create_Account() {
                   </Form.Group>
 
                   {/* Password */}
-                  <Form.Group className="mb-4">
+                 {/*} <Form.Group className="mb-4">
                     <Form.Control
                       type="password"
                          name="password" 
@@ -237,7 +238,7 @@ export default function Create_Account() {
                   <div className="d-flex gap-2">
 
                   {/* Submit Button */}
-                  <Button
+                  {/*<Button
                     variant="none"
                     type="submit"
                       
@@ -333,7 +334,7 @@ export default function Create_Account() {
               >
                 Have an account?
               </p> */}
-            </div>
+           {/*} </div>
           </Container>
         </div>
 
@@ -356,7 +357,175 @@ export default function Create_Account() {
 
         {/* FOOTER */}
         {/* <Footer /> */}
-      </div>
+    {/*}  </div>
+    </>
+  );
+}*/}
+
+
+import React, { useState } from "react";
+import { Container, Form, Button, Modal } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import NavbarMenu from "../../components/NavMenuBar";
+import FooterOne from "../../components/FooterOne";
+
+export default function Create_Account() {
+  const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    firstname: "",
+    lastname: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    mobilenumber: "",
+    smsConsent: false,
+  });
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (formData.password.length < 6) {
+      alert("Password must be at least 6 characters long.");
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match.");
+      return;
+    }
+
+    try {
+      await axios.post("https://api.themysoreoils.com/api/customers/register", {
+        firstname: formData.firstname,
+        lastname: formData.lastname,
+        email: formData.email,
+        password: formData.password,
+        mobilenumber: formData.mobilenumber,
+        smsConsent: formData.smsConsent,
+      });
+      setShowModal(true);
+      setTimeout(() => navigate("/login"), 2000);
+    } catch (err) {
+      alert(err.response?.data?.message || "Something went wrong");
+    }
+  };
+
+  return (
+    <>
+    <NavbarMenu/>
+      <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
+        <div style={{ width: "100%", maxWidth: "500px", padding: "30px", background: "#fffbe8", borderRadius: "10px" }}>
+          <h2 className="text-center mb-4" style={{ fontFamily: "Montserrat", fontWeight: "bold" }}>Create Account</h2>
+          <p className="text-center mb-4" style={{ fontFamily: "Poppins", color: "#555" }}>
+            Creating an account has many benefits: check out faster, keep more than one address, track orders and more.
+          </p>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-3">
+              <Form.Control
+                type="text"
+                name="firstname"
+                placeholder="First Name"
+                value={formData.firstname}
+                onChange={handleChange}
+                required
+                style={{ fontFamily: "poppins" }}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Control
+                type="text"
+                name="lastname"
+                placeholder="Last Name"
+                value={formData.lastname}
+                onChange={handleChange}
+                required
+                style={{ fontFamily: "poppins" }}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Control
+                type="text"
+                name="mobilenumber"
+                placeholder="Mobile Number"
+                value={formData.mobilenumber}
+                onChange={handleChange}
+                required
+                style={{ fontFamily: "poppins" }}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Control
+                type="email"
+                name="email"
+                placeholder="Email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                style={{ fontFamily: "poppins" }}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Control
+                type="password"
+                name="password"
+                placeholder="New Password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                style={{ fontFamily: "poppins" }}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Control
+                type="password"
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                required
+                style={{ fontFamily: "poppins" }}
+              />
+            </Form.Group>
+            {/* Uncomment if you need SMS Consent */}
+            {/* <Form.Group className="mb-3">
+              <Form.Check
+                type="checkbox"
+                label="I hereby authorize you to send notifications via SMS/messages/promotional/informational messages."
+                name="smsConsent"
+                checked={formData.smsConsent}
+                onChange={handleChange}
+                style={{ fontFamily: "poppins" }}
+              />
+            </Form.Group> */}
+            <div className="d-grid gap-2">
+              <Button type="submit" style={{ backgroundColor: " #d3b353", border: "none", height: "45px", fontFamily: "poppins" }}>
+                Create an Account
+              </Button>
+              <Button variant="outline-secondary" as={Link} to="/login" style={{ height: "45px", fontFamily: "poppins" }}>
+                Cancel
+              </Button>
+            </div>
+          </Form>
+        </div>
+      </Container>
+
+      <Modal show={showModal} centered backdrop="static">
+        <Modal.Header>
+          <Modal.Title>Account Created</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Your account has been successfully created. Redirecting to login page...</Modal.Body>
+      </Modal>
+
+      {/*footer section */}
+      <FooterOne/>
     </>
   );
 }

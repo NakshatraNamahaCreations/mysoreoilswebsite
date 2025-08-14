@@ -821,79 +821,338 @@ const handleSelectDefaultAddress = () => {
   );
 }*/}
 
-
 import {
   Container,
+  Form,
   Row,
   Col,
-  Card,
-  Form,
   Button,
-  Alert
+  Card,
 } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import NavbarMenu from "../../components/NavMenuBar";
 
-export default function Checkout() {
+export default function Checkout({ onSubmit }) {
+  const [isEditing, setIsEditing] = useState(false);
   const [savedAddresses, setSavedAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [editingAddressId, setEditingAddressId] = useState(null);
+
+  const navigate = useNavigate();
+  const paymentMode = "Online"; // change to "COD" if needed
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cart.cartItems);
+
+  const userJSON = localStorage.getItem("user");
+  const storedUser = userJSON ? JSON.parse(userJSON) : null;
+
   const [address, setAddress] = useState({
     firstName: "",
     lastName: "",
+    phoneCode: "+91",
     phoneNumber: "",
-    address: "",
+    address1: "",
+    address2: "",
     city: "",
     state: "",
     pincode: "",
-    country: "India"
+    country: "",
   });
 
-  const cartItems = useSelector((state) => state.cart.cartItems);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const [saveAddress, setSaveAddress] = useState(false);
 
-  const subtotal = cartItems.reduce(
-    (acc, item) =>
-      acc + (parseFloat(item.discountedPrice) || 0) * (parseInt(item.quantity) || 1),
-    0
-  );
+  // ---------- Helpers ----------
+  // Build API-ready items array: [{ productName, productImage, price, quantity }]
+  const cartToApiItems = (items = []) =>
+    items.map((item) => ({
+      productName: item.name || "",
+      productImage: item.image || "",
+      price: Number(item.discountedPrice) || 0,
+      quantity: Number(item.quantity) || 0,
+    }));
+
+  // Reusable totals computed from normalized items
+  const apiItems = cartToApiItems(cartItems);
+  const subtotal = apiItems.reduce((sum, it) => sum + it.price * it.quantity, 0);
   const shipping = 0;
-  const total = subtotal + shipping;
+  const gst = subtotal * 0.18; // 18% GST (adjust if needed)
+  const total = subtotal + shipping + gst;
 
+  // Fetch user-specific addresses on mount
   useEffect(() => {
-    const stored = localStorage.getItem("addresses");
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      setSavedAddresses(parsed);
-      setSelectedAddress(parsed[0]);
+    window.scrollTo(0, 0);
+
+    if (storedUser && storedUser.email) {
+      axios
+        .get(`https://api.themysoreoils.com/api/addresses/email/${storedUser.email}`)
+        .then((response) => {
+          const list = response.data || [];
+          setSavedAddresses(list);
+
+          if (list.length > 0) {
+            setSelectedAddress(list[0]);
+            // prefill local form state from first address
+            setAddress({
+              firstName: list[0].firstName || "",
+              lastName: list[0].lastName || "",
+              phoneCode: (list[0].mobileNumber || "").slice(0, 3) || "+91",
+              phoneNumber: (list[0].mobileNumber || "").slice(3) || "",
+              address1: (list[0].address || "").split(" ")[0] || "",
+              address2: (list[0].address || "").split(" ").slice(1).join(" ") || "",
+              city: list[0].city || "",
+              state: list[0].state || "",
+              pincode: list[0].pincode || "",
+              country: list[0].country || "",
+            });
+            setIsEditing(false);
+          } else {
+            // no addresses → show form
+            setIsEditing(true);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching addresses:", error);
+          setIsEditing(true);
+        });
+    } else {
+      setIsEditing(true);
     }
-  }, []);
+  }, []); // eslint-disable-line
+
+  const handleChange = (e) => {
+    setAddress({ ...address, [e.target.name]: e.target.value });
+  };
 
   const handleSelectAddress = (addr) => {
     setSelectedAddress(addr);
+    setAddress({
+      firstName: addr.firstName || "",
+      lastName: addr.lastName || "",
+      phoneCode: (addr.mobileNumber || "").slice(0, 3) || "+91",
+      phoneNumber: (addr.mobileNumber || "").slice(3) || "",
+      address1: (addr.address || "").split(" ")[0] || "",
+      address2: (addr.address || "").split(" ").slice(1).join(" ") || "",
+      city: addr.city || "",
+      state: addr.state || "",
+      pincode: addr.pincode || "",
+      country: addr.country || "",
+    });
+    setIsEditing(false);
+    setEditingAddressId(null);
   };
 
-  const handleDeleteAddress = (id) => {
-  const updated = savedAddresses.filter((addr) => addr._id !== id);
-  setSavedAddresses(updated);
-  localStorage.setItem("addresses", JSON.stringify(updated));
+  const handleAddAddress = () => {
+    setAddress({
+      firstName: "",
+      lastName: "",
+      phoneCode: "+91",
+      phoneNumber: "",
+      address1: "",
+      address2: "",
+      city: "",
+      state: "",
+      pincode: "",
+      country: "",
+    });
+    setSaveAddress(false);
+    setIsEditing(true);
+    setEditingAddressId(null);
+  };
 
-  if (selectedAddress?._id === id) {
-    setSelectedAddress(updated.length > 0 ? updated[0] : null);
-  }
+  const handleEditClick = (addr) => {
+    setAddress({
+      firstName: addr.firstName || "",
+      lastName: addr.lastName || "",
+      phoneCode: (addr.mobileNumber || "").slice(0, 3) || "+91",
+      phoneNumber: (addr.mobileNumber || "").slice(3) || "",
+      address1: (addr.address || "").split(" ")[0] || "",
+      address2: (addr.address || "").split(" ").slice(1).join(" ") || "",
+      city: addr.city || "",
+      state: addr.state || "",
+      pincode: addr.pincode || "",
+      country: addr.country || "",
+    });
+    setSaveAddress(true);
+    setIsEditing(true);
+    setEditingAddressId(addr._id);
+  };
 
-  alert("Address deleted successfully!");
-};
+  const handleCancel = () => {
+    if (selectedAddress) {
+      handleSelectAddress(selectedAddress);
+      setSaveAddress(false);
+    } else {
+      setAddress({
+        firstName: "",
+        lastName: "",
+        phoneCode: "+91",
+        phoneNumber: "",
+        address1: "",
+        address2: "",
+        city: "",
+        state: "",
+        pincode: "",
+        country: "",
+      });
+    }
+    setIsEditing(false);
+    setEditingAddressId(null);
+  };
 
-  const handlePayNow = () => {
-    if (!selectedAddress) return alert("Please select a delivery address.");
-    if (cartItems.length === 0) return alert("Cart is empty");
-    alert("Order placed!");
-    dispatch({ type: "cart/clearCart" });
-    navigate("/thankyou");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!saveAddress) {
+      alert("Please check 'Save address' to save the address.");
+      return;
+    }
+    if (!storedUser || !storedUser.email) {
+      alert("User email not found. Please login again.");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const payload = {
+        firstName: address.firstName,
+        lastName: address.lastName,
+        email: storedUser.email,
+        mobileNumber: `${address.phoneCode}${address.phoneNumber}`,
+        state: address.state,
+        city: address.city,
+        address: `${address.address1} ${address.address2 || ""}`.trim(),
+        pincode: address.pincode,
+        country: address.country,
+      };
+
+      let response;
+      if (editingAddressId) {
+        response = await axios.put(
+          `https://api.themysoreoils.com/api/addresses/${editingAddressId}`,
+          payload
+        );
+      } else {
+        response = await axios.post(
+          "https://api.themysoreoils.com/api/addresses",
+          payload
+        );
+      }
+
+      if (response.status === 200 || response.status === 201) {
+        alert(editingAddressId ? "Address updated successfully!" : "Address saved successfully!");
+        const updatedAddress = response.data.address;
+
+        let newList;
+        if (editingAddressId) {
+          newList = savedAddresses.map((a) => (a._id === editingAddressId ? updatedAddress : a));
+        } else {
+          newList = [...savedAddresses, updatedAddress];
+        }
+
+        setSavedAddresses(newList);
+        setSelectedAddress(updatedAddress);
+        setIsEditing(false);
+        setEditingAddressId(null);
+      } else {
+        alert(`Failed to ${editingAddressId ? "update" : "save"} address. Please try again.`);
+      }
+    } catch (error) {
+      console.error(`Error ${editingAddressId ? "updating" : "saving"} address:`, error);
+      alert(`An error occurred while ${editingAddressId ? "updating" : "saving"} address.`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handlePayNow = async () => {
+    // Guard rails
+    if (!cartItems || cartItems.length === 0) {
+      alert("Your cart is empty. Please add items to proceed.");
+      navigate("/categories"); // redirect to categories
+      return;
+    }
+
+    if (!selectedAddress || !selectedAddress._id) {
+      alert("Please select or add a valid address before proceeding to payment.");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // ✅ Build API-normalized items array
+      const items = cartToApiItems(cartItems);
+
+      // Recalculate using the same items we’ll send
+      const computedSubtotal = items.reduce((sum, it) => sum + it.price * it.quantity, 0);
+      const shippingFee = 0;
+      const taxAmount = computedSubtotal * 0.18;
+      const grandTotal = computedSubtotal + shippingFee + taxAmount;
+
+      // ✅ EXACT API structure you shared
+      const orderPayload = {
+        addressId: selectedAddress._id,
+        amount: Number(grandTotal.toFixed(2)), // number
+        paymentMode,                           // "Online" | "COD"
+        items,                                 // [{ productName, productImage, price, quantity }]
+        // Optional:
+        // tax: Number(taxAmount.toFixed(2)),
+        // shippingFee,
+      };
+
+      const response = await axios.post(
+        "https://api.themysoreoils.com/api/orders",
+        orderPayload
+      );
+
+      if (response.status === 200 || response.status === 201) {
+        alert("Order placed successfully!");
+        dispatch({ type: "cart/clearCart" });
+        navigate("/thankyou");
+      } else {
+        alert("Failed to place order, please try again.");
+      }
+    } catch (error) {
+      console.error("Order API error:", error);
+      alert("An error occurred while placing your order.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDeleteAddress = async (addrId) => {
+    if (!addrId) return;
+    if (!window.confirm("Delete this address?")) return;
+
+    try {
+      setIsLoading(true);
+      await axios.delete(`https://api.themysoreoils.com/api/addresses/${addrId}`);
+
+      const remaining = savedAddresses.filter((a) => a._id !== addrId);
+      setSavedAddresses(remaining);
+
+      // If we deleted the selected one, pick another or open form
+      if (selectedAddress?._id === addrId) {
+        if (remaining[0]) {
+          setSelectedAddress(remaining[0]);
+          handleSelectAddress(remaining[0]);
+        } else {
+          setSelectedAddress(null);
+          setIsEditing(true); // no addresses left → show form
+        }
+      }
+
+      alert("Address deleted.");
+    } catch (err) {
+      console.error("Delete address error:", err);
+      alert("Failed to delete address. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -902,210 +1161,252 @@ export default function Checkout() {
       <Container className="mt-4">
         <Row>
           {/* Left Section */}
-          <Col md={6} style={{marginBottom:"30px"}}>
+          <Col md={6} style={{ marginBottom: "30px" }}>
             <div className="d-flex justify-content-between align-items-center mb-3">
-              <h4 style={{ fontFamily: "poppins", fontWeight: 600 }}>Select a delivery address</h4>
-              <Button
-               style={{fontFamily:"poppins"}}
-                variant="primary"
-                size="sm"
-                onClick={() => {
-                  setIsEditing(true);
-                  setAddress({
-                    firstName: "",
-                    lastName: "",
-                    phoneNumber: "",
-                    address: "",
-                    city: "",
-                    state: "",
-                    pincode: "",
-                    country: "India"
-                  });
-                }}
-              >
-                + Add New Address
-              </Button>
-            </div>
-
-           
-
-            <div className="mt-4">
-              {savedAddresses.map((addr) => (
-                <Card
-                  key={addr._id}
-                  onClick={() => handleSelectAddress(addr)}
-                  style={{
-                    border: selectedAddress?._id === addr._id ? "2px solid #c45500" : "1px solid #ddd",
-                    marginBottom: "15px",
-                    backgroundColor: selectedAddress?._id === addr._id ? "#fff8e1" : "#fff",
-                    cursor: "pointer"
-                  }}
+              <h4 style={{ fontFamily: "poppins", fontWeight: 600 }}>Enter Delivery Address</h4>
+              {!isEditing && (
+                <Button
+                  variant="success"
+                  size="sm"
+                  onClick={handleAddAddress}
+                  style={{ fontFamily: "poppins" }}
                 >
-                  <Card.Body>
-                    <Form.Check
-                      type="radio"
-                      name="selectedAddress"
-                      checked={selectedAddress?._id === addr._id}
-                      onChange={() => handleSelectAddress(addr)}
-                      label={
-                        <div style={{ fontFamily: "poppins" }}>
-                          <strong>{addr.firstName} {addr.lastName}</strong><br />
-                          {addr.address}, {addr.city}, {addr.state} - {addr.pincode}<br />
-                          Phone: {addr.phoneNumber}<br />
-                          {addr.country}
-                        </div>
-                      }
-                    />
-                    <div className="d-flex align-items-center justify-content-start gap-3 mt-2">
-                    <Button
-                    style={{fontFamily:"poppins", fontWeight:"500", padding:"6px 15px"}}
-                      size="sm"
-                      variant="outline-secondary"
-                      className=" search-button-slider"
-                      onClick={(e) => {
-                        e.stopPropagation(); // prevent radio select
-                        setIsEditing(true);
-                        setAddress(addr);
-                      }}
-                    >
-                      Edit
-                    </Button>
-                     <Button
-            style={{fontFamily:"poppins", padding:"6px 15px"}}
-              variant="outline-danger"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleDeleteAddress(addr._id);
-                
-              }}
-            >
-              Delete
-            </Button>
-            </div>
-                  </Card.Body>
-                </Card>
-              ))}
+                  + Add Address
+                </Button>
+              )}
             </div>
 
-            {/* Add/Edit Address Form */}
-            {isEditing && (
+            {/* Saved addresses list */}
+            {!isEditing && savedAddresses.length > 0 && (
+              <>
+                <div className="d-flex justify-content-between align-items-center mb-2">
+                  <h5 style={{ fontFamily: "poppins", margin: 0 }}>Choose a saved address</h5>
+                </div>
+
+                {savedAddresses.map((addr) => {
+                  const isSelected = selectedAddress?._id === addr._id;
+                  return (
+                    <Card
+                      key={addr._id}
+                      className="mb-2"
+                      style={isSelected ? { borderColor: "#28a745" } : {}}
+                    >
+                      <Card.Body className="d-flex justify-content-between">
+                        <div style={{ fontFamily: "poppins", fontSize: "15px" }}>
+                          <Form.Check
+                            type="radio"
+                            name="savedAddress"
+                            id={`addr-${addr._id}`}
+                            checked={isSelected}
+                            onChange={() => handleSelectAddress(addr)}
+                            className="mb-2"
+                            label={
+                              <>
+                                <strong>{addr.firstName} {addr.lastName}</strong><br />
+                                {addr.address}<br />
+                                {addr.city}, {addr.state} - {addr.pincode}<br />
+                                {addr.country}<br />
+                                Phone: {addr.mobileNumber}
+                              </>
+                            }
+                          />
+                        </div>
+
+                        <div className="d-flex align-items-start gap-2">
+                          <Button
+                            variant="outline-secondary"
+                            size="sm"
+                            onClick={() => handleEditClick(addr)}
+                            style={{ fontFamily: "poppins" }}
+                          >
+                            Edit
+                          </Button>
+
+                          <Button
+                            className="ms-2"
+                            variant="danger"
+                            size="sm"
+                            onClick={() => handleDeleteAddress(addr._id)} // delete the clicked card
+                            style={{ fontFamily: "poppins" }}
+                            disabled={isLoading}
+                          >
+                            Delete
+                          </Button>
+
+                          {!isSelected && (
+                            <Button
+                              variant="outline-success"
+                              size="sm"
+                              onClick={() => handleSelectAddress(addr)}
+                              style={{ fontFamily: "poppins" }}
+                            >
+                              Deliver here
+                            </Button>
+                          )}
+                        </div>
+                      </Card.Body>
+                    </Card>
+                  );
+                })}
+              </>
+            )}
+
+            {/* Address Form — show if editing OR no saved addresses */}
+            {(isEditing || savedAddresses.length === 0) && (
               <Card className="mt-3">
                 <Card.Body>
-                  <h5 style={{ fontFamily: "poppins" }}>{address._id ? "Edit Address" : "Add New Address"}</h5>
-                  <Form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      let updatedList;
-
-                      if (address._id) {
-                        // Edit mode
-                        updatedList = savedAddresses.map(a =>
-                          a._id === address._id ? address : a
-                        );
-                      } else {
-                        // Add mode
-                        const newAddress = { ...address, _id: Date.now().toString() };
-                        updatedList = [...savedAddresses, newAddress];
-                      }
-
-                      localStorage.setItem("addresses", JSON.stringify(updatedList));
-                      setSavedAddresses(updatedList);
-                      setSelectedAddress(address);
-                      setIsEditing(false);
-                    }}
-                  >
-                    <Row >
+                  <h5 style={{ fontFamily: "poppins" }}>
+                    {editingAddressId ? "Edit Address" : "Add New Address"}
+                  </h5>
+                  <Form onSubmit={handleSubmit}>
+                    <Row>
                       <Col md={6}>
                         <Form.Control
+                          type="text"
                           className="mb-2"
                           placeholder="First Name"
+                          name="firstName"
                           value={address.firstName}
-                          onChange={(e) => setAddress({ ...address, firstName: e.target.value })}
+                          onChange={handleChange}
                           required
-                          style={{fontFamily:"poppins"}}
+                          style={{ fontFamily: "poppins" }}
                         />
                       </Col>
                       <Col md={6}>
                         <Form.Control
                           className="mb-2"
                           placeholder="Last Name"
+                          name="lastName"
                           value={address.lastName}
-                          onChange={(e) => setAddress({ ...address, lastName: e.target.value })}
+                          onChange={handleChange}
                           required
-                           style={{fontFamily:"poppins"}}
+                          style={{ fontFamily: "poppins" }}
                         />
                       </Col>
                     </Row>
+
                     <Form.Control
                       className="mb-2"
                       placeholder="Phone Number"
+                      name="phoneNumber"
                       value={address.phoneNumber}
-                      onChange={(e) => setAddress({ ...address, phoneNumber: e.target.value })}
+                      onChange={handleChange}
                       required
-                       style={{fontFamily:"poppins"}}
+                      style={{ fontFamily: "poppins" }}
+                    />
+
+                    <Form.Control
+                      className="mb-2"
+                      placeholder="Address Line 1"
+                      name="address1"
+                      value={address.address1}
+                      onChange={handleChange}
+                      required
+                      style={{ fontFamily: "poppins" }}
                     />
                     <Form.Control
                       className="mb-2"
-                      placeholder="Address"
-                      value={address.address}
-                      onChange={(e) => setAddress({ ...address, address: e.target.value })}
-                      required
-                       style={{fontFamily:"poppins"}}
+                      placeholder="Address Line 2"
+                      name="address2"
+                      value={address.address2}
+                      onChange={handleChange}
+                      style={{ fontFamily: "poppins" }}
                     />
+
                     <Row>
                       <Col md={6}>
                         <Form.Control
                           className="mb-2"
                           placeholder="City"
+                          name="city"
                           value={address.city}
-                          onChange={(e) => setAddress({ ...address, city: e.target.value })}
+                          onChange={handleChange}
                           required
-                           style={{fontFamily:"poppins"}}
+                          style={{ fontFamily: "poppins" }}
                         />
                       </Col>
                       <Col md={6}>
                         <Form.Control
                           className="mb-2"
                           placeholder="State"
+                          name="state"
                           value={address.state}
-                          onChange={(e) => setAddress({ ...address, state: e.target.value })}
+                          onChange={handleChange}
                           required
-                           style={{fontFamily:"poppins"}}
+                          style={{ fontFamily: "poppins" }}
                         />
                       </Col>
                     </Row>
+
                     <Row>
                       <Col md={6}>
                         <Form.Control
                           className="mb-2"
                           placeholder="Pincode"
+                          name="pincode"
                           value={address.pincode}
-                          onChange={(e) => setAddress({ ...address, pincode: e.target.value })}
+                          onChange={handleChange}
                           required
-                           style={{fontFamily:"poppins"}}
+                          style={{ fontFamily: "poppins" }}
                         />
                       </Col>
                       <Col md={6}>
                         <Form.Control
                           className="mb-2"
                           placeholder="Country"
+                          name="country"
                           value={address.country}
-                          onChange={(e) => setAddress({ ...address, country: e.target.value })}
+                          onChange={handleChange}
                           required
-                           style={{fontFamily:"poppins"}}
+                          style={{ fontFamily: "poppins" }}
                         />
                       </Col>
                     </Row>
+
+                    <Form.Group controlId="saveAddress" className="mb-3">
+                      <Form.Check
+                        type="checkbox"
+                        label="Save this address for this session"
+                        checked={saveAddress}
+                        onChange={(e) => setSaveAddress(e.target.checked)}
+                        style={{ fontFamily: "poppins", fontSize: "16px" }}
+                      />
+                    </Form.Group>
+
                     <div className="d-flex justify-content-end gap-2 mt-2">
-                      <Button variant="secondary" onClick={() => setIsEditing(false)}  style={{fontFamily:"poppins"}}>Cancel</Button>
-                      <Button variant="primary" type="submit"  style={{fontFamily:"poppins"}}>{address._id ? "Update" : "Save Address"}</Button>
+                      {editingAddressId && (
+                        <Button variant="outline-secondary" onClick={handleCancel}>
+                          Cancel
+                        </Button>
+                      )}
+                      <Button variant="primary" type="submit" disabled={isLoading}>
+                        {editingAddressId ? "Update Address" : "Save Address"}
+                      </Button>
                     </div>
                   </Form>
                 </Card.Body>
               </Card>
             )}
+
+            {/* Current selection summary (optional) */}
+            {!isEditing && selectedAddress && (
+              <Card className="mt-3">
+                <Card.Body>
+                  <h5 style={{ fontFamily: "poppins", marginBottom: 10 }}>Delivery Address</h5>
+                  <p style={{ fontFamily: "poppins", fontSize: 16 }}>
+                    {selectedAddress.firstName} {selectedAddress.lastName}<br />
+                    {selectedAddress.address}<br />
+                    {selectedAddress.city}, {selectedAddress.state} - {selectedAddress.pincode}<br />
+                    {selectedAddress.country}<br />
+                    Phone: {selectedAddress.mobileNumber}
+                  </p>
+                </Card.Body>
+              </Card>
+            )}
           </Col>
-            <Col md={2}></Col>
+
+          <Col md={2}></Col>
+
           {/* Right Section */}
           <Col md={4}>
             <Card style={{ padding: "20px", backgroundColor: "#fff" }}>
@@ -1118,23 +1419,39 @@ export default function Checkout() {
                   border: "none",
                   fontWeight: "600",
                   padding: "10px",
-                  fontFamily: "poppins"
+                  fontFamily: "poppins",
                 }}
               >
                 Deliver to this address
               </Button>
+
               <div className="mt-4" style={{ fontFamily: "poppins", fontSize: "16px" }}>
                 <p><strong>Order Summary:</strong></p>
                 {cartItems.map((item) => (
-                  <div key={item.id} style={{ marginBottom: "10px" }} >
-                    <Col xs={4} >
-                <img src={item.image} alt={item.name} style={{ width: "100%", objectFit: "contain" }} />
-              </Col>
-                    <p style={{ marginBottom: "4px" }}><strong>{item.name}</strong></p>
-                    <p style={{ marginBottom: "2px" }}>Qty: {item.quantity}</p>
-                    <p style={{ marginBottom: "2px" }}>Price: ₹{parseFloat(item.discountedPrice).toFixed(2)}</p>
+                  <div
+                    key={item.id}
+                    className="d-flex align-items-start mb-3"
+                    style={{ gap: "10px" }}
+                  >
+                    <div style={{ width: "70px", flexShrink: 0 }}>
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        style={{ width: "100%", objectFit: "contain", borderRadius: "4px" }}
+                      />
+                    </div>
+                    <div style={{ flexGrow: 1 }}>
+                      <p className="mb-1 fw-semibold" style={{ fontSize: "14px" }}>{item.name}</p>
+                      <p className="mb-1" style={{ fontSize: "13px", color: "#666" }}>
+                        Qty: {item.quantity}
+                      </p>
+                      <p className="mb-0" style={{ fontSize: "13px", color: "#111" }}>
+                        Price: ₹{(Number(item.discountedPrice || 0) * Number(item.quantity || 0)).toFixed(2)}
+                      </p>
+                    </div>
                   </div>
                 ))}
+
                 <hr />
                 <div className="d-flex justify-content-between">
                   <span>Subtotal:</span>
@@ -1143,6 +1460,10 @@ export default function Checkout() {
                 <div className="d-flex justify-content-between">
                   <span>Shipping:</span>
                   <span>₹{shipping.toLocaleString("en-IN")}</span>
+                </div>
+                <div className="d-flex justify-content-between">
+                  <span>GST (18%):</span>
+                  <span>₹{gst.toLocaleString("en-IN")}</span>
                 </div>
                 <div className="d-flex justify-content-between fw-bold mt-2">
                   <span>Total:</span>

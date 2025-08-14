@@ -21,7 +21,81 @@ import Navbar_Menu from "../components/Navbar_Menu";
 
 export default function ClayCategory() {
   const [isVisible, setIsVisible] = useState(false);
-   const productType = [
+  const [searchTerm, setSearchTerm] = useState("");
+  const [products, setProducts] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState(null); // Initialize as null
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsVisible(true);
+    }, 100);
+    return () => clearTimeout(timeout);
+  }, []);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await axios.get("https://api.themysoreoils.com/api/categories");
+        setCategories(res.data.filter((cat) => cat.status === "Active"));
+      } catch (err) {
+        console.error("Error fetching categories:", err);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+ useEffect(() => {
+  const fetchProducts = async () => {
+    if (!selectedCategory) {
+      setProducts([]);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+      const res = await axios.get("https://api.themysoreoils.com/api/products", {
+        params: { category: selectedCategory },
+      });
+
+      const formattedProducts = res.data.map((product) => ({
+        id: product._id,
+        name: product.name,
+        images: product.images,
+        Link: `/Clay-Utensils/${product.name.replace(/\s+/g, "")}`,
+        originalPrice: product.variants[0]?.price || 0,
+        discountedPrice: product.discountPrice || product.variants[0]?.price || 0,
+      }));
+      setProducts(formattedProducts);
+    } catch (err) {
+      setError("Failed to fetch products");
+      setProducts([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchProducts();
+}, [selectedCategory]);
+
+
+  const handleCategorySelect = (categoryName) => {
+    setSelectedCategory(categoryName);
+  };
+
+  const filteredProducts = products.filter((card) =>
+    card.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  {/*} const productType = [
     {
       id: "52",
       name: "Clay Cooking Pot",
@@ -35,7 +109,7 @@ export default function ClayCategory() {
       images: ["/media/clay-kadai.jpeg"],
       Link:"/Clay-Utensils/Clay-kadai"
     },
-   /*} {
+   
       id: "50",
       name: "Browntop Millet",
       images: ["/media/browntop-millet.png"],
@@ -70,49 +144,10 @@ export default function ClayCategory() {
       name: "Quinoa Millet",
       images: ["/media/millet-quinoa.png"],
       Link:"/Millets/QuinoaMillet"
-    },*/
+    },
     
-  ];
-  const [products, setProducts] = useState(productType);
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setIsVisible(true);
-    }, 100);
-
-    return () => clearTimeout(timeout);
-  }, []);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-  const navigate = useNavigate();
-
-  const [searchTerm, setSearchTerm] = useState("");
-
-
-   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await axios.get("http://localhost:8011/api/products");
-        const SpiceProducts = res.data.filter(
-          (product) => product.category?.toLowerCase() === "spices"
-        );
-        setProducts(SpiceProducts);
-      } catch (err) {
-        console.error("Error fetching products:", err);
-      }
-    };
-
-    fetchProducts();
-  }, []);
-
-  const filteredProducts = products.filter((card) =>
-    card.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const handleCardClick = (id) => {
-    navigate(`/product-spice/${id}`);
-  };
+  ];*/}
+  
 
   return (
     <>
@@ -190,7 +225,10 @@ export default function ClayCategory() {
                   >
                     Categories
                   </h4>
-                  <ProductAccordian />
+                  <ProductAccordian
+                  onCategorySelect={handleCategorySelect}
+                  currentCategory={selectedCategory} 
+                  />
                 </Col>
 
                 <Col md={9} >

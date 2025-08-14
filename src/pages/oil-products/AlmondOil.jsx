@@ -298,7 +298,7 @@ export default AlmondOil;*/}
 
 import { useState } from "react";
 import { Container, Row, Col, Image, Button, Tab, Tabs } from "react-bootstrap";
-import OilCategory from "./oilcategory";
+import OilCategory from "./OilCategory";
 import Navbar_Menu from "../../components/Navbar_Menu";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../redux/cartSlice";

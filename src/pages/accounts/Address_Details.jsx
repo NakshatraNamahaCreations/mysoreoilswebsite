@@ -1,4 +1,4 @@
-import Accordion from "react-bootstrap/Accordion";
+{/*import Accordion from "react-bootstrap/Accordion";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -101,7 +101,7 @@ export default function Address_Details() {
     });
   };*/}
 
-  const navigate = useNavigate();
+  {/*const navigate = useNavigate();
   const [showForm, setShowForm] = useState(true);
   const [savedAddresses, setSavedAddresses] = useState([]);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -564,5 +564,241 @@ export default function Address_Details() {
         </Accordion.Item>
       </Accordion>
     </Container>
+  );
+}*/}
+
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
+import NavbarMenu from "../../components/NavMenuBar";
+
+export default function Address_Details() {
+  const navigate = useNavigate();
+  const [showForm, setShowForm] = useState(true);
+  const [savedAddresses, setSavedAddresses] = useState([]);
+  const [defaultAddress, setDefaultAddress] = useState(null);
+  const [address, setAddress] = useState({
+    firstName: "",
+    lastName: "",
+    phoneCode: "+91",
+    phoneNumber: "",
+    address1: "",
+    address2: "",
+    city: "",
+    state: "",
+    pincode: "",
+    country: "",
+  });
+
+  // Fetch addresses & default address on mount
+  useEffect(() => {
+    fetchAddresses();
+    const defaultAddr = JSON.parse(localStorage.getItem("userAddress"));
+    setDefaultAddress(defaultAddr);
+  }, []);
+
+  const fetchAddresses = () => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    const allAddresses = JSON.parse(localStorage.getItem("addresses")) || [];
+    if (!storedUser?.email) return;
+    const userAddresses = allAddresses.filter(a => a.email === storedUser.email);
+    setSavedAddresses(userAddresses);
+    setShowForm(userAddresses.length === 0);
+  };
+
+  const handleChange = (e) => {
+    setAddress({ ...address, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (!storedUser?.email) return;
+
+    const newAddress = {
+      firstName: address.firstName,
+      lastName: address.lastName,
+      email: storedUser.email,
+      mobileNumber: `${address.phoneCode}${address.phoneNumber}`,
+      state: address.state,
+      city: address.city,
+      address: `${address.address1} ${address.address2}`.trim(),
+      pincode: address.pincode,
+      country: address.country,
+    };
+
+    const existingAddresses = JSON.parse(localStorage.getItem("addresses")) || [];
+    const updatedAddresses = [...existingAddresses, newAddress];
+
+    // Save in addresses list
+    localStorage.setItem("addresses", JSON.stringify(updatedAddresses));
+
+    // Also set as default address for checkout
+    localStorage.setItem("userAddress", JSON.stringify(newAddress));
+    setDefaultAddress(newAddress);
+
+    fetchAddresses();
+    resetForm();
+    alert("✅ Address added successfully!");
+  };
+
+  const handleDeleteAddress = (addrToDelete) => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (!storedUser?.email) return;
+
+    const existingAddresses = JSON.parse(localStorage.getItem("addresses")) || [];
+    const updatedAddresses = existingAddresses.filter(
+      addr =>
+        !(
+          addr.email === addrToDelete.email &&
+          addr.mobileNumber === addrToDelete.mobileNumber &&
+          addr.address === addrToDelete.address
+        )
+    );
+
+    localStorage.setItem("addresses", JSON.stringify(updatedAddresses));
+
+    // If deleted address is default → remove default
+    const currentDefault = JSON.parse(localStorage.getItem("userAddress"));
+    if (
+      currentDefault &&
+      currentDefault.mobileNumber === addrToDelete.mobileNumber &&
+      currentDefault.address === addrToDelete.address
+    ) {
+      localStorage.removeItem("userAddress");
+      setDefaultAddress(null);
+    }
+
+    fetchAddresses();
+  };
+
+  const handleSetDefault = (addr) => {
+    localStorage.setItem("userAddress", JSON.stringify(addr));
+    setDefaultAddress(addr);
+    alert("Default address updated for Checkout.");
+  };
+
+  const resetForm = () => {
+    setAddress({
+      firstName: "",
+      lastName: "",
+      phoneCode: "+91",
+      phoneNumber: "",
+      address1: "",
+      address2: "",
+      city: "",
+      state: "",
+      pincode: "",
+      country: "",
+    });
+  };
+
+  return (
+    <>
+      <NavbarMenu />
+      <Container style={{ maxWidth: "900px", marginTop: "30px" }} className="d-flex justify-content-between align-items-center flex-column">
+        <div className="d-flex justify-content-between align-items-center mb-4" style={{ width: "70%" }}>
+          <h4 style={{ fontFamily: "Montserrat", fontWeight: "600", color: "#002209" }}>
+            Address Book
+          </h4>
+          <Button
+            variant="outline-dark"
+            onClick={() => setShowForm(!showForm)}
+            style={{ fontSize: "14px", fontWeight: "500", fontFamily: "Poppins" }}
+          >
+            {showForm ? "Hide Form" : "Add New Address"}
+          </Button>
+        </div>
+
+        {showForm && (
+          <Card className="p-4 mb-4" style={{ border: "1px solid #ddd", borderRadius: "10px", width: "70%" }}>
+            <Form onSubmit={handleSubmit}>
+              <Row className="g-3">
+                <Col md={6}>
+                  <Form.Control type="text" placeholder="First Name" name="firstName" value={address.firstName} onChange={handleChange} required style={{ fontFamily: "Poppins" }} />
+                </Col>
+                <Col md={6}>
+                  <Form.Control type="text" placeholder="Last Name" name="lastName" value={address.lastName} onChange={handleChange} required style={{ fontFamily: "Poppins" }} />
+                </Col>
+                <Col md={4}>
+                  <Form.Select name="phoneCode" value={address.phoneCode} onChange={handleChange} required style={{ fontFamily: "Poppins" }}>
+                    <option value="+91">+91 (India)</option>
+                    <option value="+1">+1 (USA)</option>
+                    <option value="+44">+44 (UK)</option>
+                  </Form.Select>
+                </Col>
+                <Col md={8}>
+                  <Form.Control type="text" placeholder="Phone Number" name="phoneNumber" value={address.phoneNumber} onChange={handleChange} required style={{ fontFamily: "Poppins" }} />
+                </Col>
+                <Col md={12}>
+                  <Form.Control type="text" placeholder="Address Line 1" name="address1" value={address.address1} onChange={handleChange} required style={{ fontFamily: "Poppins" }} />
+                </Col>
+                <Col md={12}>
+                  <Form.Control type="text" placeholder="Address Line 2 (Optional)" name="address2" value={address.address2} onChange={handleChange} style={{ fontFamily: "Poppins" }} />
+                </Col>
+                <Col md={4}>
+                  <Form.Control type="text" placeholder="City" name="city" value={address.city} onChange={handleChange} required style={{ fontFamily: "Poppins" }} />
+                </Col>
+                <Col md={4}>
+                  <Form.Control type="text" placeholder="State" name="state" value={address.state} onChange={handleChange} required style={{ fontFamily: "Poppins" }} />
+                </Col>
+                <Col md={4}>
+                  <Form.Control type="text" placeholder="Pincode" name="pincode" value={address.pincode} onChange={handleChange} required style={{ fontFamily: "Poppins" }} />
+                </Col>
+                <Col md={12}>
+                  <Form.Select name="country" value={address.country} onChange={handleChange} required style={{ fontFamily: "Poppins" }}>
+                    <option value="">Select Country</option>
+                    <option value="India">India</option>
+                    <option value="USA">USA</option>
+                    <option value="UK">UK</option>
+                  </Form.Select>
+                </Col>
+              </Row>
+              <div className="mt-3 d-flex justify-content-end gap-3">
+                <Button type="submit" variant="dark" style={{ fontSize: "14px", fontWeight: "500", fontFamily: "Poppins" }}>
+                  Save Address
+                </Button>
+                <Button variant="outline-secondary" onClick={resetForm} style={{ fontSize: "14px", fontFamily: "Poppins" }}>
+                  Reset
+                </Button>
+              </div>
+            </Form>
+          </Card>
+        )}
+
+        {/* Saved Addresses */}
+        {savedAddresses.length > 0 && (
+          <Row className="g-3" style={{ width: "70%" }}>
+            {savedAddresses.map((addr, idx) => (
+              <Col md={6} key={idx}>
+                <Card style={{ backgroundColor: "#FFF3E7", padding: "15px", border: "1px solid #ddd" }}>
+                  <p style={{ margin: "0", fontFamily: "Poppins", fontWeight: "500" }}>{addr.firstName} {addr.lastName}</p>
+                  <p style={{ margin: "0", fontSize: "14px" }}>{addr.mobileNumber}</p>
+                  <p style={{ margin: "0", fontSize: "14px" }}>{addr.address}</p>
+                  <p style={{ margin: "0", fontSize: "14px" }}>{addr.city}, {addr.state} - {addr.pincode}</p>
+                  <p style={{ margin: "0", fontSize: "14px" }}>{addr.country}</p>
+
+                  {/* Default Address Tag */}
+                  {defaultAddress && addr.mobileNumber === defaultAddress.mobileNumber && addr.address === defaultAddress.address && (
+                    <p style={{ color: "green", fontSize: "13px", margin: "5px 0 0" }}>Default Address</p>
+                  )}
+
+                  <div className="mt-2 d-flex justify-content-between">
+                    <Button variant="link" onClick={() => handleDeleteAddress(addr)} style={{ fontSize: "13px", padding: "0", color: "#D9534F" }}>
+                      Delete
+                    </Button>
+                    {(!defaultAddress || defaultAddress.mobileNumber !== addr.mobileNumber || defaultAddress.address !== addr.address) && (
+                      <Button variant="link" onClick={() => handleSetDefault(addr)} style={{ fontSize: "13px", padding: "0", color: "#0d6efd" }}>
+                        Set as Default
+                      </Button>
+                    )}
+                  </div>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        )}
+      </Container>
+    </>
   );
 }

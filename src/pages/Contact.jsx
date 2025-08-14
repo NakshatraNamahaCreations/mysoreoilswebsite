@@ -11,6 +11,7 @@ import { useState, useEffect } from "react";
 // import Navbar_Menu from "../components/Navbar_Menu";
 // import Footer from "../components/Footer";
 import ScrollToTop from "../components/ScrollToTop";
+import Navbar_Menu from "../components/Navbar_Menu";
 
 const schema = yup.object().shape({
   firstName: yup.string().required("First name is required"),
@@ -69,10 +70,10 @@ export default function Contact() {
         }}
       >
         {/* NAVBAR MENU */}
-        {/* <Navbar_Menu /> */}
+         <Navbar_Menu/>
 
         {/* SEARCH */}
-        <Container className="mt-3">
+       {/*} <Container className="mt-3">
           <InputGroup
             className="mb-5 footer-subscribe-input"
             style={{
@@ -108,7 +109,7 @@ export default function Contact() {
               SEARCH
             </div>
           </InputGroup>
-        </Container>
+        </Container>*/}
 
         <div style={{ position: "relative" }}>
           <div
@@ -156,7 +157,7 @@ export default function Contact() {
                         marginBottom: "10px",
                       }}
                     />
-                    <h3 style={{ fontWeight: "700", fontSize: "20px" }}>
+                    <h3 style={{ fontWeight: "700", fontSize: "20px", fontFamily:"poppins" }}>
                       ADDRESS
                     </h3>
                     <p
@@ -164,6 +165,7 @@ export default function Contact() {
                         letterSpacing: "1px",
                         fontWeight: "400",
                         fontSize: "16px",
+                        fontFamily:"poppins"
                       }}
                     >
                       #1881/3A, WESLEY ROAD, MYSORE, KARNATAKA 570001
@@ -192,7 +194,7 @@ export default function Contact() {
                         marginBottom: "10px",
                       }}
                     />
-                    <h3 style={{ fontWeight: "700", fontSize: "20px" }}>
+                    <h3 style={{ fontWeight: "700", fontSize: "20px", fontFamily:"poppins" }}>
                       CALL US
                     </h3>
                     <p
@@ -200,9 +202,10 @@ export default function Contact() {
                         letterSpacing: "1px",
                         fontWeight: "400",
                         fontSize: "16px",
+                        fontFamily:"poppins"
                       }}
                     >
-                      07899830366
+                     7899830366
                     </p>
                   </div>
                 </Col>
@@ -228,7 +231,7 @@ export default function Contact() {
                         marginBottom: "10px",
                       }}
                     />
-                    <h3 style={{ fontWeight: "700", fontSize: "20px" }}>
+                    <h3 style={{ fontWeight: "700", fontSize: "20px" , fontFamily:"poppins"}}>
                       EMAIL US
                     </h3>
                     <p
@@ -236,9 +239,10 @@ export default function Contact() {
                         letterSpacing: "1px",
                         fontWeight: "400",
                         fontSize: "16px",
+                        fontFamily:"poppins"
                       }}
                     >
-                  themysuruoils@gmail.com
+                  support@themysoreoils.com
                     </p>
                   </div>
                 </Col>
@@ -246,166 +250,136 @@ export default function Contact() {
             </Container>
 
             {/* CONTACT FORM */}
-            <Container style={{ margin: "5% auto" ,}}>
-              <Row className="justify-content-md-center">
-                <Col md={6} style={{ width: "75%" }}>
-                  <div
-                    className="p-4"
-                    style={{
-                      borderRadius: "10px",
-                      border: "2px solid lightgray",
-                    }}
-                  >
-                    <Form
-                      onSubmit={handleSubmit(onSubmit)}
-                      style={{ padding: "10px" }}
-                    >
-                      {/* First Name */}
-                      <Form.Group className="mb-3">
-                        <Form.Control
-                          type="text"
-                          placeholder="First Name"
-                          {...register("firstName")}
-                          isInvalid={!!errors.firstName}
-                          style={{
-                            height: "50px",
-                            fontSize: "18px",
-                            fontWeight: "400",
-                          }}
-                        />
-                        <Form.Control.Feedback type="invalid">
-                          {errors.firstName?.message}
-                        </Form.Control.Feedback>
-                      </Form.Group>
+          <Container style={{ margin: "5% auto" }}>
+  <Row className="justify-content-md-center">
+    <Col md={6} style={{ width: "55%" }}>
+      <div
+        className="p-4"
+        style={{
+          borderRadius: "12px",
+          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+          backgroundColor: "#fff",
+        }}
+      >
+        <Form onSubmit={handleSubmit(onSubmit)} style={{ padding: "10px" }}>
+          {/* First Name */}
+          <Form.Group className="mb-4">
+            <Form.Control
+              type="text"
+              placeholder="First Name"
+              {...register("firstName")}
+              isInvalid={!!errors.firstName}
+            
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors.firstName?.message}
+            </Form.Control.Feedback>
+          </Form.Group>
 
-                      {/* Last Name */}
-                      <Form.Group className="mb-3">
-                        <Form.Control
-                          type="text"
-                          placeholder="Last Name"
-                          {...register("lastName")}
-                          isInvalid={!!errors.lastName}
-                          style={{
-                            height: "50px",
-                            fontSize: "18px",
-                            fontWeight: "400",
-                          }}
-                        />
-                        <Form.Control.Feedback type="invalid">
-                          {errors.lastName?.message}
-                        </Form.Control.Feedback>
-                      </Form.Group>
+          {/* Last Name */}
+          <Form.Group className="mb-4">
+            <Form.Control
+              type="text"
+              placeholder="Last Name"
+              {...register("lastName")}
+              isInvalid={!!errors.lastName}
+             
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors.lastName?.message}
+            </Form.Control.Feedback>
+          </Form.Group>
 
-                      {/* Email */}
-                      <Form.Group className="mb-3">
-                        <Form.Control
-                          type="email"
-                          placeholder="Email"
-                          {...register("email")}
-                          isInvalid={!!errors.email}
-                          style={{
-                            height: "50px",
-                            fontSize: "18px",
-                            fontWeight: "400",
-                          }}
-                        />
-                        <Form.Control.Feedback type="invalid">
-                          {errors.email?.message}
-                        </Form.Control.Feedback>
-                      </Form.Group>
+          {/* Email */}
+          <Form.Group className="mb-4">
+            <Form.Control
+              type="email"
+              placeholder="Email"
+              {...register("email")}
+              isInvalid={!!errors.email}
+              
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors.email?.message}
+            </Form.Control.Feedback>
+          </Form.Group>
 
-                      {/* Phone Code & Number */}
-                      <Row>
-                        <Col md={4}>
-                          <Form.Group className="mb-3">
-                            <Form.Control
-                              type="text"
-                              placeholder="+91"
-                              {...register("phoneCode")}
-                              isInvalid={!!errors.phoneCode}
-                              style={{
-                                height: "50px",
-                                fontSize: "18px",
-                                fontWeight: "400",
-                              }}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                              {errors.phoneCode?.message}
-                            </Form.Control.Feedback>
-                          </Form.Group>
-                        </Col>
-                        <Col md={8}>
-                          <Form.Group className="mb-3">
-                            <Form.Control
-                              type="text"
-                              placeholder="Phone Number"
-                              {...register("phoneNumber")}
-                              isInvalid={!!errors.phoneNumber}
-                              style={{
-                                height: "50px",
-                                fontSize: "18px",
-                                fontWeight: "400",
-                              }}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                              {errors.phoneNumber?.message}
-                            </Form.Control.Feedback>
-                          </Form.Group>
-                        </Col>
-                      </Row>
+          {/* Phone Code & Number */}
+          <Row>
+            <Col md={4}>
+              <Form.Group className="mb-4">
+                <Form.Control
+                  type="text"
+                  placeholder="+91"
+                  {...register("phoneCode")}
+                  isInvalid={!!errors.phoneCode}
+                
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.phoneCode?.message}
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Col>
+            <Col md={8}>
+              <Form.Group className="mb-4">
+                <Form.Control
+                  type="text"
+                  placeholder="Phone Number"
+                  {...register("phoneNumber")}
+                  isInvalid={!!errors.phoneNumber}
+                 
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.phoneNumber?.message}
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Col>
+          </Row>
 
-                      {/* Message */}
-                      <Form.Group className="mb-3">
-                        <Form.Control
-                          as="textarea"
-                          rows={3}
-                          placeholder="Send Message"
-                          {...register("message")}
-                          isInvalid={!!errors.message}
-                          style={{
-                            height: "200px",
-                            fontSize: "18px",
-                            fontWeight: "400",
-                          }}
-                        />
-                        <Form.Control.Feedback type="invalid">
-                          {errors.message?.message}
-                        </Form.Control.Feedback>
-                      </Form.Group>
+          {/* Message */}
+          <Form.Group className="mb-4">
+            <Form.Control
+              as="textarea"
+              rows={3}
+              placeholder="Message"
+              {...register("message")}
+              isInvalid={!!errors.message}
+              style={{
+               
+                height: "150px",
+                resize: "none",
+              }}
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors.message?.message}
+            </Form.Control.Feedback>
+          </Form.Group>
 
-                      {/* Submit Button */}
-                      <Button
-                        variant="none"
-                        type="submit"
-                        className=" mt-2"
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          width: "200px",
-                          height: "60px",
-                          fontWeight: "bold",
-                          color: "black",
-                          backgroundColor: "#D3B353",
-                          fontSize: "24px",
-                          letterSpacing: "1px",
-                          textAlign: "center",
-                          textDecoration: "none",
-                          borderRadius: "0",
-                          position: "relative",
-                          zIndex: 1000,
-                          pointerEvents: "auto",
-                          border: "none",
-                          margin: "20px auto",
-                        }}
-                      >
-                        SUBMIT
-                      </Button>
-                    </Form>
-                  </div>
-                </Col>
-              </Row>
-            </Container>
+          {/* Submit Button */}
+          <Button
+            variant="dark"
+            type="submit"
+            style={{
+              width: "100%",
+              height: "50px",
+              fontSize: "18px",
+              fontWeight: "600",
+              letterSpacing: "1px",
+              borderRadius: "8px",
+              backgroundColor: "#D3B353",
+              border: "none",
+              color: "#000",
+              fontFamily:"poppins"
+            }}
+          >
+            SUBMIT
+          </Button>
+        </Form>
+      </div>
+    </Col>
+  </Row>
+</Container>
+
           </div>
         </div>
 

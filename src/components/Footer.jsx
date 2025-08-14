@@ -301,9 +301,7 @@ export default function Footer() {
                 </li>
                 <li>
                   {" "}
-                  <Link to="/" className="linkstyle">
-                    Retail
-                  </Link>
+                  
                 </li>
               </ul>
             </Col>
@@ -330,10 +328,18 @@ export default function Footer() {
                   paddingLeft: "0",
                 }}
               >
+                <Link to="/terms-conditions" style={{color:"inherit", textDecoration:"none"}}>
                 <li className="mb-1">Terms of Service</li>
+                </Link>
+                <Link to="/privacy" style={{color:"inherit", textDecoration:"none"}}>
                 <li className="mb-1">Privacy Policy</li>
+                </Link>
+                <Link to="/shipping-policy" style={{color:"inherit", textDecoration:"none"}}>
                 <li className="mb-1">Shipping Policy</li>
+                </Link>
+                <Link to="/refund-policy" style={{color:"inherit", textDecoration:"none"}}>
                 <li>Return and Refund Policy</li>
+                </Link>
               </ul>
             </Col>
           </Row>
@@ -361,8 +367,7 @@ export default function Footer() {
                 <a
                   href="mailto:themysuruoils@gmail.com"
                   style={{ color: "inherit", textDecoration: "none" }}
-                >
-                  themysuruoils@gmail.com
+                >support@themysoreoils.com
                 </a>
               </p>
             </div>

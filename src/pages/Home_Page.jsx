@@ -252,8 +252,11 @@ export default function Home_Page() {
           >
             <Container style={{ marginTop: "5%" }}>
               <Row>
-                <Col sm={6}>
-                <img src="/media/wodeyar.webp" alt="wodeyar" style={{width:"100%", height:"450px", objectFit:"cover"}}/>
+                <Col sm={3}>
+                <img src="/media/Krishnaraja-Wodeyar.jpg" alt="wodeyar" style={{width:"100%", height:"400px", objectFit:"cover"}}/>
+                </Col>
+                <Col sm={3}>
+                <img src="/media/vishveshvaraiah.jpg" alt="vishveshvaraiah" style={{width:"100%", height:"400px", objectFit:"cover"}}/>
                 </Col>
                 <Col sm={6}>
                

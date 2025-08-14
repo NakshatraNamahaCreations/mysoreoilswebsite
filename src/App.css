@@ -831,3 +831,9 @@ font-weight: bold;
     flex-direction: column;
   }
 }
+
+.para{
+  font-family: 'poppins';
+  font-weight: 500;
+  letter-spacing: 0;
+}

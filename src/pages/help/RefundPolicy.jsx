@@ -29,10 +29,10 @@ export default function RefundPolicy() {
         }}
       >
         {/* NAVBAR MENU */}
-        {/* <Navbar_Menu /> */}
+        <Navbar_Menu /> 
 
           {/* SEARCH */}
-          <Container className="mt-3">
+        {/*}  <Container className="mt-3">
             <InputGroup
               className="mb-5 footer-subscribe-input"
               style={{
@@ -68,7 +68,7 @@ export default function RefundPolicy() {
                 SEARCH
               </div>
             </InputGroup>
-          </Container>
+          </Container>*/}
 
         {/* REFUND POLICY */}
         <div style={{ backgroundColor: "white", padding: "5% 0" }}>
@@ -82,28 +82,21 @@ export default function RefundPolicy() {
               <h1
                 style={{
                   lineHeight: "1.5",
-                  letterSpacing: "1px",
+                  
                   fontSize: "50px",
                   maxWidth: "100%",
                   fontWeight: "800",
                   textAlign: "center",
                   marginBottom: "5%",
                   color: "#002209",
+                  fontFamily:"montserrat"
                 }}
               >
                 REFUND POLICY
               </h1>
               <div className="div-p-ul">
-                <p>At Avitri Spices,</p>
-                <p>
-                  Customer Satisfaction is Our Priority We at Avitri Spices
-                  strive to ensure that our customers receive the best quality
-                  spices and service.
-                </p>
-                <p>
-                  However, if you are not entirely satisfied with your purchase,
-                  we are here to help. Eligibility for Refunds
-                </p>
+                <p className="para fw-bold" style={{fontSize:"18px"}}>Due to the nature of our products (oils and natural items), we follow strict hygiene and quality protocols.</p>
+               
 
                 <p
                   style={{
@@ -111,15 +104,51 @@ export default function RefundPolicy() {
                     marginRight: "5px",
                     fontWeight:'700',
                   
-                  }}
+                  }} className="para"
                 >
-                  1. Damaged or Defective Products:
+                  Returns
                 </p>
-                <ul>
+                <p className="para">We accept returns only if:</p>
+                <ul className="para">
                   <li>
-                    If the product you received is damaged or defective, you are
-                    eligible for a refund or replacement. Please report the
-                    issue within 7 days of receiving the product.
+                    You received a damaged or defective product.
+                  </li>
+                  <li>The product delivered is different from what was ordered.</li>
+                </ul>
+
+                <p
+                  style={{
+                 fontSize: "16px",
+                    marginRight: "5px",
+                    fontWeight:'700',
+                  
+                  }} className="para"
+                >
+                 Return Conditions
+                </p>
+                <ul className="para">
+                  <li>
+                   You must notify us within 48 hours of delivery with photo/video proof.
+                  </li>
+                  <li>Returned items must be unused, sealed, and in their original packaging.</li>
+                </ul>
+
+                <p
+                  style={{
+                 fontSize: "16px",
+                    marginRight: "5px",
+                    fontWeight:'700',
+                  
+                  }} className="para"
+                >
+                  Refunds
+                </p>
+                <ul className="para">
+                  <li>
+                   Once your return is approved, your refund will be credited within 7–10 business days to your original payment method.
+                  </li>
+                  <li>
+                   Shipping charges are non-refundable.
                   </li>
                 </ul>
 
@@ -129,243 +158,13 @@ export default function RefundPolicy() {
                     marginRight: "5px",
                     fontWeight:'700',
                   
-                  }}
+                    marginTop: "2%",
+                  }} className="para"
                 >
-                  2. Incorrect Order:
+                  Cancellations
                 </p>
-                <ul>
-                  <li>
-                    If you receive an incorrect product, please notify us within
-                    7 days, and we will arrange for the correct product to be
-                    delivered or issue a refund.
-                  </li>
-                </ul>
-
-                <p
-                  style={{
-                 fontSize: "16px",
-                    marginRight: "5px",
-                    fontWeight:'700',
-                  
-                  }}
-                >
-                  3. Return Conditions:
-                </p>
-                <ul>
-                  <li>
-                    Products must be unused and in the same condition as
-                    received.
-                  </li>
-                  <li>
-                    The original packaging and invoice must be intact and
-                    included with the return.
-                  </li>
-                </ul>
-
-                <p
-                  style={{
-                 fontSize: "16px",
-                    marginRight: "5px",
-                    fontWeight:'700',
-                  
-                    marginTop: "5%",
-                  }}
-                >
-                  Non-Refundable Items:
-                </p>
-                <p>We regret that the following items are non-refundable:</p>
-                <ul>
-                  <li>Opened or used products.</li>
-                  <li>Products purchased on clearance or promotional sale.</li>
-                  <li>
-                    Custom or personalized orders. How to Request a Refund
-                  </li>
-                </ul>
-
-                <p
-                  style={{
-                 fontSize: "16px",
-                    marginRight: "5px",
-                    fontWeight:'700',
-                  
-                  }}
-                >
-                  1. Contact Us:
-                </p>
-                <ul>
-                  <li>
-                    Email us at{" "}
-                    <span
-                      style={{
-                        fontSize: "16px",
-                        marginRight: "5px",
-                        fontWeight:'700',
-                      
-                      }}
-                    >
-                      support@avitrispices.in
-                    </span>{" "}
-                    with your order number, details of the issue, and photos of
-                    the product (if applicable).
-                  </li>
-                  <li>
-                    Alternatively, call us at{" "}
-                    <span
-                      style={{
-                        fontSize: "16px",
-                        marginRight: "5px",
-                        fontWeight:'700',
-                      
-                      }}
-                    >
-                      +91734 944 4419
-                    </span>{" "}
-                    during business hours.
-                  </li>
-                </ul>
-
-                <p
-                  style={{
-                 fontSize: "16px",
-                    marginRight: "5px",
-                    fontWeight:'700',
-                  
-                  }}
-                >
-                  2. Processing Time:
-                </p>
-                <ul>
-                  <li>
-                    Once we receive and inspect your return, we will notify you
-                    of the approval or rejection of your refund.
-                  </li>
-                  <li>
-                    Approved refunds will be processed within 7-10 business
-                    days, and the amount will be credited in 10-15 Business
-                    days.
-                  </li>
-                </ul>
-
-                <p
-                  style={{
-                 fontSize: "16px",
-                    marginRight: "5px",
-                    fontWeight:'700',
-                  
-                  }}
-                >
-                  Return Shipping
-                </p>
-                <ul>
-                  <li>
-                    For eligible returns due to damaged, defective, or incorrect
-                    items, we will cover the return shipping costs.
-                  </li>
-                  <li>
-                    For other returns, shipping costs will be borne by the
-                    customer. Exchanges If you wish to exchange a product,
-                    please contact us. Exchanges are subject to stock
-                    availability and applicable terms.
-                  </li>
-                </ul>
-
-                <p
-                  style={{
-                 fontSize: "16px",
-                    marginRight: "5px",
-                    fontWeight:'700',
-                  
-                  }}
-                >
-                  Cancellation Policy
-                </p>
-                <ul>
-                  <li>
-                    Orders can be cancelled within 24 hours of placing the order
-                    for a full refund.
-                  </li>
-                  <li>
-                    If the order has already been shipped, cancellation will not
-                    be possible.
-                  </li>
-                </ul>
-
-                <p
-                  style={{
-                 fontSize: "16px",
-                    marginRight: "5px",
-                    fontWeight:'700',
-                  
-                  }}
-                >
-                  Contact Us
-                </p>
-                <ul>
-                  <p>
-                    If you have any questions about our Refund Policy or need
-                    assistance, feel free to reach out:
-                  </p>
-                  <li>
-                    Email:{" "}
-                    <span
-                      style={{
-                        fontSize: "16px",
-                        marginRight: "5px",
-                        fontWeight:'700',
-                      
-                      }}
-                    >
-                      support@avitrispices.in
-                    </span>
-                  </li>
-                  <li>
-                    Phone:{" "}
-                    <span
-                      style={{
-                        fontSize: "16px",
-                        marginRight: "5px",
-                        fontWeight:'700',
-                      
-                      }}
-                    >
-                      +91 734 944 4419
-                    </span>
-                  </li>
-                  <li>
-                    Address:{" "}
-                    <span
-                      style={{
-                        fontSize: "16px",
-                        marginRight: "5px",
-                        fontWeight:'700',
-                      
-                      }}
-                    >
-                      Avitri Spices Pvt Ltd., No. 24/2, Behind Bharath Petrol
-                      Bunk, Yentaganahalli, Nelamangala Taluk Bangalore (Rural)
-                      - 562123
-                    </span>
-                  </li>
-                  <li>
-                    State Name:{" "}
-                    <span
-                      style={{
-                        fontSize: "16px",
-                        marginRight: "5px",
-                        fontWeight:'700',
-                      
-                      }}
-                    >
-                      Karnataka, Code : 29
-                    </span>
-                  </li>
-                </ul>
-
-                <p>
-                  We value your feedback and look forward to serving you better!
-                  Thank you for choosing Avitri Spices!
-                </p>
-              </div>
+                <p className="para">Orders can be cancelled only before dispatch. Once shipped, cancellations are not possible.</p>
+                </div>
             </div>
           </Container>
         </div>
@@ -374,6 +173,7 @@ export default function RefundPolicy() {
 
 
         {/* <Footer /> */}
+        <Footer/>
       </div>
     </>
   )

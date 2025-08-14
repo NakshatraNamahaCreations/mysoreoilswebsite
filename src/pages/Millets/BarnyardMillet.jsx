@@ -5,7 +5,7 @@ import Navbar_Menu from "../../components/Navbar_Menu";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../redux/cartSlice";
 import { useNavigate } from "react-router-dom";
-import OilCategory from "../oil-products/oilcategory";
+import OilCategory from "../oil-products/OilCategory";
 
 
 

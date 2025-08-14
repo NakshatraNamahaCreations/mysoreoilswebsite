@@ -29,10 +29,10 @@ export default function ShippingPolicy() {
         }}
       >
         {/* NAVBAR MENU */}
-        {/* <Navbar_Menu /> */}
+         <Navbar_Menu /> 
 
           {/* SEARCH */}
-          <Container className="mt-3">
+        {/*}  <Container className="mt-3">
             <InputGroup
               className="mb-5 footer-subscribe-input"
               style={{
@@ -69,7 +69,7 @@ export default function ShippingPolicy() {
                 SEARCH
               </div>
             </InputGroup>
-          </Container>
+          </Container>*/}
 
         {/* SHIPPING POLICY */}
         <div style={{ backgroundColor: "white", padding: "5% 0" }}>
@@ -83,183 +83,50 @@ export default function ShippingPolicy() {
               <h1
                 style={{
                   lineHeight: "1.5",
-                  letterSpacing: "1px",
+                 
                   fontSize: "50px",
                   maxWidth: "100%",
                   fontWeight: "800",
                   textAlign: "center",
                   marginBottom: "5%",
                   color: "#002209",
+                  fontFamily:"montserrat"
                 }}
               >
                 SHIPPING POLICY
               </h1>
               <div className="div-p-ul">
-                <p style={{ textAlign: "right", marginBottom: "5%" }}>
+                <p style={{ textAlign: "right", marginBottom: "5%" }} className="para">
                   Last Updated:{" "}
-                  <span style={{ fontFamily: "kapraneue, sans-serif" }}>
-                    October 12, 2024
+                  <span style={{ fontFamily: "poppins" }}>
+                    August 14, 2025
                   </span>
                 </p>
-                <p>Thank you for choosing Avitri Spices PVT LTD!</p>
-                <p>
-                  Below are the details of our shipping process to ensure a
-                  seamless experience. Processing Time Orders are processed
-                  within 5-7 business days after purchase. During peak times
-                  (e.g., holidays, sales), processing times may be slightly
-                  extended.
+                <p className="para fw-bold" style={{fontSize:"18px"}}>At The Mysore Oils, we are committed to delivering your order accurately, in good condition, and on time.</p>
+                
+                <p className="para fw-bold">Shipping Coverage:</p>
+                
+                  <p className="para">We currently ship across India. International shipping is not available at this time.</p>
+                
+                <p className="para fw-bold mt-4">
+                 Processing Time:
                 </p>
-                <p>Shipping Methods & Delivery Times We offer the following</p>
-                <ul>
-                  <p>Shipping Options:</p>
-                  <li>
-                    Standard Shipping:{" "}
-                    <span
-                      style={{
-                        fontSize: "16px",
-                        marginLeft: "5px",
-                        fontWeight:'700',
-                        
-                      }}
-                    >
-                      Delivery in 4-7 days.
-                    </span>
-                  </li>
-                  <li>
-                    Expedited Shipping:{" "}
-                    <span
-                      style={{
-                        fontSize: "16px",
-                        marginLeft: "5px",
-                        fontWeight:'700',
-                        
-                      }}
-                    >
-                      Delivery in 4-7 days.
-                    </span>
-                  </li>
-                  <li>
-                    International Shipping (if applicable):{" "}
-                    <span
-                      style={{
-                        fontSize: "16px",
-                        marginLeft: "5px",
-                        fontWeight:'700',
-                        
-                      }}
-                    >
-                      Delivery in 10-14 days.
-                    </span>
-                  </li>
-                  <li>
-                    Note:{" "}
-                    <span
-                      style={{
-                        fontSize: "16px",
-                        marginLeft: "5px",
-                        fontWeight:'700',
-                        
-                      }}
-                    >
-                      {" "}
-                      Delivery times may vary depending on your location,
-                      carrier delays, or external factors.
-                    </span>
-                  </li>
-                  <li>
-                    Shipping Rates Free Shipping:{" "}
-                    <span
-                      style={{
-                        fontSize: "16px",
-                        marginLeft: "5px",
-                        fontWeight:'700',
-                        
-                      }}
-                    >
-                      For orders over ₹5,000.
-                    </span>
-                  </li>
-                  <li>
-                    Flat-Rate Shipping:{" "}
-                    <span
-                      style={{
-                        fontSize: "16px",
-                        marginLeft: "5px",
-                        fontWeight:'700',
-                        
-                      }}
-                    >
-                      ₹40-60.
-                    </span>
-                  </li>
-                  <li>
-                    Real-Time Rates:{" "}
-                    <span
-                      style={{
-                        fontSize: "16px",
-                        marginLeft: "5px",
-                        fontWeight:'700',
-                        
-                      }}
-                    >
-                      Displayed at checkout based on your location.
-                    </span>
-                  </li>
+                <ul className="para">
+                  <li>Orders are processed within 1–2 business days after payment confirmation.</li>
+                  <li>Orders placed on weekends or public holidays will be processed on the next business day.</li>
                 </ul>
-                <p>
-                  Order Tracking Once shipped, you will receive a tracking
-                  number via email. Track your order on our website or directly
-                  with the carrier. International Shipping Customs, duties, and
-                  taxes may apply and are the responsibility of the customer.
-                </p>
-                <p>
-                  Check your local customs policies before placing an order.
-                  Lost or Delayed Packages For delayed or lost packages, contact
-                  us at{" "}
-                  <span
-                    style={{
-                      fontWeight:'700',
-                      letterSpacing: "1px",
-                      fontSize: "16px",
-                    }}
-                  >
-                    info@avitrispicies.com
-                  </span>
-                  . We will coordinate with the carrier to resolve the issue.
-                  Address Errors Please double-check your shipping address at
-                  checkout. Orders sent to an incorrect address may incur
-                  additional shipping fees.
-                </p>
-                <ul>
-                  <p>Contact Us For any questions, feel free to reach out: </p>
-                  <li>
-                    Email:{" "}
-                    <span
-                      style={{
-                        fontSize: "16px",
-                        marginLeft: "5px",
-                        fontWeight:'700',
-                        
-                      }}
-                    >
-                      info@avitrispicies.com
-                    </span>
-                  </li>
-                  <li>
-                    Phone:{" "}
-                    <span
-                      style={{
-                        fontSize: "16px",
-                        marginLeft: "5px",
-                        fontWeight:'700',
-                        
-                      }}
-                    >
-                      +91 734 944 4419
-                    </span>
-                  </li>
+                
+               
+                <p className="para fw-bold mt-4"> Delivery Time:</p>
+                <ul className="para">
+                  <li>Metro Cities: 3–5 business days</li>
+                  <li>Non-Metro Cities & Remote Areas: 5–10 business days</li>
                 </ul>
-                <p> Thank you for shopping with Avitri Spices!</p>
+
+                    <p className="para">Delivery timelines may vary depending on courier availability and unforeseen delays.</p>
+
+                <p className="para fw-bold mt-4">Order Tracking:</p>
+                <p className="para">Once shipped, you will receive an email/SMS with tracking details.</p>
               </div>
             </div>
           </Container>
@@ -268,7 +135,7 @@ export default function ShippingPolicy() {
         <ScrollToTop />
 
         {/* FOOTER */}
-        {/* <Footer /> */}
+         <Footer /> 
       </div>
     </>
   );

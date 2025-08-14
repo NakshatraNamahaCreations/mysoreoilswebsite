@@ -9,7 +9,7 @@ import { addToCart } from "../../redux/cartSlice";
 import { useNavigate } from "react-router-dom";
 import { Table, Badge } from "react-bootstrap";
 import { FaCheckCircle } from "react-icons/fa";
-import OilCategory from "./oilcategory";
+import OilCategory from "./OilCategory";
 
 
 
