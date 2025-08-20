@@ -102,22 +102,22 @@ export default function Products_Sliders() {
 
   const productsData = [
    
-    {
-      id: 2,
-      name: "Castor Oil",
-      image: "/media/castor-one.png",
-      originalPrice: 150,
-      discountedPrice: 130,
-      link:"/oil-products/CastorOil"
-    },
-    {
-      id: 3,
-      name: "Black Sesame Oil",
-      image: "/media/oil-black-sesame.jpeg",
-      originalPrice: 140,
-      discountedPrice: 120,
-      link:"/oil-products/BlackSesameOil"
-    },
+    //{
+     // id: 2,
+     // name: "Castor Oil",
+    //  image: "/media/castor-one.png",
+     // originalPrice: 150,
+     // discountedPrice: 130,
+     // link:"/oil-products/CastorOil"
+   // },
+    //{
+    //  id: 3,
+     // name: "Black Sesame Oil",
+    //  image: "/media/oil-black-sesame.jpeg",
+     // originalPrice: 140,
+   //   discountedPrice: 120,
+    //  link:"/oil-products/BlackSesameOil"
+   // },
     {
       id: 4,
       name: "Coconut Oil",
@@ -135,28 +135,52 @@ export default function Products_Sliders() {
       link:"/oil-products/GroundnutOil"
     },
     {
-      id: 6,
-      name: "Hair Oil",
-      image: "/media/oil-hair.png",
-      originalPrice: 135,
-      discountedPrice: 115,
-      link:"/oil-products/HairOil"
+      id: 11,
+      name: "White Sesame Oil",
+      image: "/media/oil-white-sesame.jpeg",
+      originalPrice: 350,
+      discountedPrice:300,
+      link:"/oil-products/WhiteSesameOil"
     },
     {
-      name: "Honge Oil",
-      image: "/media/oil-honge.png",
-      originalPrice: 145,
-      discountedPrice: 125,
-      link:"/oil-products/HongeOil"
+      id:6,
+      name: "Sunflower Oil",
+      image:"/media/safflower-one.png",
+      originalPrice: 380,
+      discountedPrice: 380,
+      link:"/oil-products/SunflowerOil"
     },
     {
-      id: 8,
-      name: "Mustard Oil",
-      image: "/media/mustard-one.png",
-      originalPrice: 155,
-      discountedPrice: 130,
-      link:"/oil-products/MustardOil"
-    },
+      id:10,
+      name: "Safflower Oil",
+      image:"/media/sunflower-one.png",
+      originalPrice: 480,
+      discountedPrice: 480,
+      link:"/oil-products/SafflowerOil"
+    }
+    //{
+    //  id: 6,
+    //  name: "Hair Oil",
+     // image: "/media/oil-hair.png",
+    //  originalPrice: 135,
+    //  discountedPrice: 115,
+    //  link:"/oil-products/HairOil"
+   // },
+   // {
+    //  name: "Honge Oil",
+    //  image: "/media/oil-honge.png",
+    //  originalPrice: 145,
+    //  discountedPrice: 125,
+    //  link:"/oil-products/HongeOil"
+   // },
+  //  {
+    //  id: 8,
+    //  name: "Mustard Oil",
+    //  image: "/media/mustard-one.png",
+    //  originalPrice: 155,
+     // discountedPrice: 130,
+     // link:"/oil-products/MustardOil"
+   // },
   ];
 
   // Chunk the products into rows of 4

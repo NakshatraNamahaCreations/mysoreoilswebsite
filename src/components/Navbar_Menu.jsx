@@ -480,26 +480,36 @@ export default function Navbar_Menu() {
               onToggle={(open) => setIsOpen(open)}
             >
               <div style={{ width: "240px" }}>
-                {loading ? (
-                  <NavDropdown.Item disabled>Loading...</NavDropdown.Item>
-                ) : error ? (
-                  <NavDropdown.Item disabled>{error}</NavDropdown.Item>
-                ) : categories.length === 0 ? (
-                  <NavDropdown.Item disabled>No categories available</NavDropdown.Item>
-                ) : (
-                  categories.map((category) => (
-                    <NavDropdown.Item
-                      key={category._id}
-                      as={Link}
-                      to={`/categories?category=${encodeURIComponent(category.slug || toSlug(category.name))}`}
-                      className="nav-hover-effect-categories"
-                      style={{ color: "black", fontSize: "18px", letterSpacing: "1px", fontWeight: "700" }}
-                    >
-                      {category.name}
-                    </NavDropdown.Item>
-                  ))
-                )}
-              </div>
+  {loading ? (
+    <NavDropdown.Item disabled>Loading...</NavDropdown.Item>
+  ) : error ? (
+    <NavDropdown.Item disabled>{error}</NavDropdown.Item>
+  ) : categories.length === 0 ? (
+    <NavDropdown.Item disabled>No categories available</NavDropdown.Item>
+  ) : (
+    categories
+      .filter((category) => category.name.toLowerCase() === "oils") // ✅ only Oils category
+      .map((category) => (
+        <NavDropdown.Item
+          key={category._id}
+          as={Link}
+          to={`/categories?category=${encodeURIComponent(
+            category.slug || toSlug(category.name)
+          )}`}
+          className="nav-hover-effect-categories"
+          style={{
+            color: "black",
+            fontSize: "18px",
+            letterSpacing: "1px",
+            fontWeight: "700",
+          }}
+        >
+          {category.name}
+        </NavDropdown.Item>
+      ))
+  )}
+</div>
+
             </NavDropdown>
           </Nav>
 
@@ -581,23 +591,25 @@ export default function Navbar_Menu() {
                         <div className="px-2 pt-1 pb-2 text-secondary" style={{ fontSize: 12, fontWeight: 700 }}>
                           CATEGORIES
                         </div>
-                        {suggestions.categories.map((c) => (
-                          <button
-                            key={c._id}
-                            type="button"
-                            className="dropdown-item"
-                            onClick={() => {
-                              setShowSuggestions(false);
-                              navigate(
-                                `/categories?category=${encodeURIComponent(
-                                  c.slug || c.name.toLowerCase().replace(/\s+/g, "-")
-                                )}`
-                              );
-                            }}
-                          >
-                            {c.name}
-                          </button>
-                        ))}
+                       {suggestions.categories
+  .filter((c) => c.name.toLowerCase() === "oils") 
+  .map((c) => (
+    <button
+      key={c._id}
+      type="button"
+      className="dropdown-item"
+      onClick={() => {
+        setShowSuggestions(false);
+        navigate(
+          `/categories?category=${encodeURIComponent(
+            c.slug || c.name.toLowerCase().replace(/\s+/g, "-")
+          )}`
+        );
+      }}
+    >
+      {c.name}
+    </button>
+))}
                       </>
                     )}
 

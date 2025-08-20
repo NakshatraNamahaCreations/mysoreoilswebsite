@@ -46,10 +46,10 @@ function BasicExample({ onCategorySelect, currentCategory }) {
   }
 
   
-  const bodyContent = {
-    Oils: "Cooking Oils<br/>Essential oils",
+//  const bodyContent = {
+   // Oils: "Cooking Oils<br/>Essential oils",
    
-  };
+//  };
 
   const imageStyles = {
     "Millets":{width:"120px", height:"80px", objectFit:"cover", right:"20%"},
@@ -168,7 +168,7 @@ function BasicExample({ onCategorySelect, currentCategory }) {
         </div>
       </Accordion.Header>
 
-      {bodyContent[item.name] && (
+     {/*} {bodyContent[item.name] && (
         <Accordion.Body
           style={{
             fontFamily: "montserrat",
@@ -178,7 +178,7 @@ function BasicExample({ onCategorySelect, currentCategory }) {
           }}
           dangerouslySetInnerHTML={{ __html: bodyContent[item.name] }}
         />
-      )}
+      )}*/}
     </Accordion.Item>
             );
           })

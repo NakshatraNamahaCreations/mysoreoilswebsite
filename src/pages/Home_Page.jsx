@@ -62,7 +62,7 @@ export default function Home_Page() {
           {/* BANNER */}
         <div className="banner" >
           
-          <Container  style={{ padding: "5% 0", position: "relative", bottom:"100px" }} >
+          <Container  style={{ padding: "5% 0", position: "relative", bottom:"50px" }} >
             <Row>
               <Col sm={12}>
                 <div
@@ -160,9 +160,9 @@ export default function Home_Page() {
               </div>
             </InputGroup>
           </Container>*/}
-         <div >
+        {/*} <div >
           <BrowserSlider/>
-          </div>
+          </div>*/}
 </div>
               </Col>
                   

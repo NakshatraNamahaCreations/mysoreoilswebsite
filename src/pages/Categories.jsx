@@ -582,7 +582,8 @@ useEffect(() => {
                   ) : error ? (
                     <p>{error}</p>
                   ) : filteredProducts.length === 0 ? (
-                    <p>No products found.</p>
+                    //<p>No products found.</p>
+                    <p style={{fontFamily:"montserrat", fontSize:"30px", fontWeight:"bold"}}>Coming Soon</p>
                   ) : (
                     <div
                       className="product-grid"
