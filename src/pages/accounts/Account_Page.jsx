@@ -313,7 +313,7 @@ export default function Account_Page() {
 }*/}
 
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import { FaUser, FaShoppingBag, FaHeart, FaAddressBook } from "react-icons/fa";
@@ -321,6 +321,8 @@ import ScrollToTop from "../../components/ScrollToTop";
 import Navbar_Menu from "../../components/Navbar_Menu";
 import { Modal } from "react-bootstrap";
 import NavbarMenu from "../../components/NavMenuBar";
+import { Breadcrumb } from "react-bootstrap";
+
 
 
 export default function Account_Page() {
@@ -365,6 +367,22 @@ const [showLogoutModal, setShowLogoutModal] = useState(false);
   return (
     <>
       <NavbarMenu/>
+      <Container>
+ <div
+    className="d-flex justify-content-flex-start align-items-center gap-2"
+    style={{ color: '#8d5662', fontSize: '1rem', marginBottom: '30px' , padding:"5px"}}
+  >
+    <Breadcrumb  style={{ background: 'transparent', marginLeft:"10px", marginTop:"5px" }}>
+      <Breadcrumb.Item linkAs={Link} linkProps={{to:"/"}}  className="text-reset text-decoration-none" style={{ fontFamily:"poppins"}} >
+        Home
+      </Breadcrumb.Item>
+      <Breadcrumb.Item active style={{ color: '#00614a', fontWeight:"bold", fontFamily:"poppins" }}>
+        Account
+      </Breadcrumb.Item>
+      
+    </Breadcrumb>
+  </div>
+        </Container> 
       <div
         className="page-content"
         style={{

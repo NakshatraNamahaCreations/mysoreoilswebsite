@@ -667,7 +667,7 @@ export default function Checkout() {
 
 import { Container, Form, Row, Col, Button, Card } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import NavbarMenu from "../../components/NavMenuBar";
@@ -676,6 +676,7 @@ import {
   splitStorageToForm,
   normalizeBackendToStorage, // (not used directly, but handy if needed)
 } from "../AddressStore";
+import { Breadcrumb } from "react-bootstrap";
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -1034,6 +1035,22 @@ const orderId = paymentResponse.data.phonepeResponse?.orderId;
   return (
     <>
       <NavbarMenu />
+      <Container>
+ <div
+    className="d-flex justify-content-flex-start align-items-center gap-2"
+    style={{ color: '#8d5662', fontSize: '1rem', marginBottom: '30px' , padding:"5px"}}
+  >
+    <Breadcrumb  style={{ background: 'transparent', marginLeft:"10px", marginTop:"5px" }}>
+      <Breadcrumb.Item linkAs={Link} linkProps={{to:"/"}}  className="text-reset text-decoration-none" style={{ fontFamily:"poppins"}} >
+        Home
+      </Breadcrumb.Item>
+      <Breadcrumb.Item active style={{ color: '#00614a', fontWeight:"bold", fontFamily:"poppins" }}>
+        Checkout
+      </Breadcrumb.Item>
+      
+    </Breadcrumb>
+  </div>
+        </Container> 
       <Container className="mt-4">
         <Row>
           {/* Left Section */}
@@ -1306,6 +1323,22 @@ const orderId = paymentResponse.data.phonepeResponse?.orderId;
                 </Card.Body>
               </Card>
             )}
+
+            <Button
+                  className="mt-3"
+                  onClick={() => navigate("/categories")}
+                  style={{
+                    width: "fit-content",
+                    backgroundColor: "#FFD814",
+                    color: "#111",
+                    border: "none",
+                    fontWeight: "600",
+                    padding: "10px",
+                    fontFamily: "poppins",
+                  }}
+                >
+                  Continue Shopping
+                </Button>
           </Col>
 
           <Col md={2}></Col>
@@ -1313,21 +1346,7 @@ const orderId = paymentResponse.data.phonepeResponse?.orderId;
           {/* Right Section */}
           <Col md={4}>
             <Card style={{ padding: "20px", backgroundColor: "#fff" }}>
-              <Button
-                onClick={handlePayNow}
-                style={{
-                  width: "100%",
-                  backgroundColor: "#FFD814",
-                  color: "#111",
-                  border: "none",
-                  fontWeight: "600",
-                  padding: "10px",
-                  fontFamily: "poppins",
-                }}
-                disabled={isLoading}
-              >
-                Deliver to this address
-              </Button>
+              
 
               <div className="mt-4" style={{ fontFamily: "poppins", fontSize: "16px" }}>
                 <p>
@@ -1384,20 +1403,22 @@ const orderId = paymentResponse.data.phonepeResponse?.orderId;
                 </div>
 
                 <Button
-                  className="mt-3"
-                  onClick={() => navigate("/categories")}
-                  style={{
-                    width: "100%",
-                    backgroundColor: "#FFD814",
-                    color: "#111",
-                    border: "none",
-                    fontWeight: "600",
-                    padding: "10px",
-                    fontFamily: "poppins",
-                  }}
-                >
-                  Continue Shopping
-                </Button>
+                onClick={handlePayNow}
+                style={{
+                  width: "100%",
+                  backgroundColor: "#FFD814",
+                  color: "#111",
+                  border: "none",
+                  fontWeight: "600",
+                  padding: "10px",
+                  fontFamily: "poppins",
+                }}
+                disabled={isLoading}
+              >
+                Proceed to Payment
+              </Button>
+
+                
               </div>
             </Card>
           </Col>

@@ -369,6 +369,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import NavbarMenu from "../../components/NavMenuBar";
 import FooterOne from "../../components/FooterOne";
+import { Breadcrumb } from "react-bootstrap";
 
 export default function Create_Account() {
   const [showModal, setShowModal] = useState(false);
@@ -443,6 +444,22 @@ const [phoneError, setPhoneError] = useState("");
   return (
     <>
     <NavbarMenu/>
+    <Container>
+ <div
+    className="d-flex justify-content-flex-start align-items-center gap-2"
+    style={{ color: '#8d5662', fontSize: '1rem', marginBottom: '30px' , padding:"5px"}}
+  >
+    <Breadcrumb  style={{ background: 'transparent', marginLeft:"10px", marginTop:"5px" }}>
+      <Breadcrumb.Item linkAs={Link} linkProps={{to:"/"}}  className="text-reset text-decoration-none" style={{ fontFamily:"poppins"}} >
+        Home
+      </Breadcrumb.Item>
+      <Breadcrumb.Item active style={{ color: '#00614a', fontWeight:"bold", fontFamily:"poppins" }}>
+       Create Account
+      </Breadcrumb.Item>
+      
+    </Breadcrumb>
+  </div>
+        </Container> 
       <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
         <div style={{ width: "100%", maxWidth: "500px", padding: "30px", background: "#fffbe8", borderRadius: "10px" }}>
           <h2 className="text-center mb-4" style={{ fontFamily: "Montserrat", fontWeight: "bold" }}>Create Account</h2>
