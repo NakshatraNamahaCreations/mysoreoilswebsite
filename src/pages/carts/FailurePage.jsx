@@ -150,11 +150,11 @@ export default function PaymentFailed() {
             <div
               style={{
                 position: "absolute",
-                top: "72%",
+                top: "82%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
                 width: "35vw",
-                maxWidth: 220,
+                maxWidth: 180,
               }}
             >
               <img

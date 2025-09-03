@@ -826,15 +826,27 @@ export default function Order_Details() {
         setError(null);
 
         const storedUser = JSON.parse(localStorage.getItem("user"));
-        if (!storedUser?.email) {
-          setOrders([]);
+
+        // Hard require login
+        if (!storedUser) {
           setLoading(false);
+          navigate("/login", { replace: true, state: { from: "/orders" } });
           return;
         }
 
-        // Fetch orders
+        const userEmail = (storedUser.email || "").trim().toLowerCase();
+        const userId =
+          (storedUser.id || storedUser._id || storedUser.userId || "").toString();
+
+        if (!userEmail && !userId) {
+          setLoading(false);
+          setError("No user identity found. Please log in again.");
+          return;
+        }
+
+        // Fetch orders (backend returns all -> we filter strictly on client)
         const ordersRes = await axios.get("https://api.themysoreoils.com/api/orders");
-        const allOrders = ordersRes.data || [];
+        const allOrders = Array.isArray(ordersRes.data) ? ordersRes.data : [];
 
         // newest first
         allOrders.sort(
@@ -843,11 +855,18 @@ export default function Order_Details() {
             new Date(a.updatedAt || a.createdAt || 0)
         );
 
-        const userOrders = allOrders.filter((o) => o?.address?.email === storedUser.email);
+        // STRICT filter: by email (case-insensitive) OR by userId if present in payload
+        const userOrders = allOrders.filter((o) => {
+          const oEmail = (o?.address?.email || "").trim().toLowerCase();
+          const oUserId = (o?.userId || o?.user?._id || "").toString();
+          const emailMatch = userEmail && oEmail && oEmail === userEmail;
+          const idMatch = userId && oUserId && oUserId === userId;
+          return emailMatch || idMatch;
+        });
 
-        // Fetch products for live pricing
+        // Fetch products for live pricing (leave as-is)
         const productsRes = await axios.get("https://api.themysoreoils.com/api/products");
-        const productsArr = productsRes.data || [];
+        const productsArr = Array.isArray(productsRes.data) ? productsRes.data : [];
 
         // Build a quick lookup: name -> product
         const idx = {};
@@ -866,7 +885,7 @@ export default function Order_Details() {
     };
 
     fetchAll();
-  }, []);
+  }, [navigate]);
 
   if (loading) return <Container>Loading order details...</Container>;
 
@@ -876,21 +895,30 @@ export default function Order_Details() {
       <>
         <NavbarMenu />
         <Container>
- <div
-    className="d-flex justify-content-flex-start align-items-center gap-2"
-    style={{ color: '#8d5662', fontSize: '1rem', marginBottom: '30px' , padding:"5px"}}
-  >
-    <Breadcrumb  style={{ background: 'transparent', marginLeft:"10px", marginTop:"5px" }}>
-      <Breadcrumb.Item linkAs={Link} linkProps={{to:"/"}}  className="text-reset text-decoration-none" style={{ fontFamily:"poppins"}} >
-        Home
-      </Breadcrumb.Item>
-      <Breadcrumb.Item active style={{ color: '#00614a', fontWeight:"bold", fontFamily:"poppins" }}>
-        Account
-      </Breadcrumb.Item>
-      
-    </Breadcrumb>
-  </div>
-        </Container> 
+          <div
+            className="d-flex justify-content-flex-start align-items-center gap-2"
+            style={{ color: "#8d5662", fontSize: "1rem", marginBottom: "30px", padding: "5px" }}
+          >
+            <Breadcrumb
+              style={{ background: "transparent", marginLeft: "10px", marginTop: "5px" }}
+            >
+              <Breadcrumb.Item
+                linkAs={Link}
+                linkProps={{ to: "/" }}
+                className="text-reset text-decoration-none"
+                style={{ fontFamily: "poppins" }}
+              >
+                Home
+              </Breadcrumb.Item>
+              <Breadcrumb.Item
+                active
+                style={{ color: "#00614a", fontWeight: "bold", fontFamily: "poppins" }}
+              >
+                Account
+              </Breadcrumb.Item>
+            </Breadcrumb>
+          </div>
+        </Container>
         <Container style={{ paddingTop: "20px", paddingBottom: "40px" }}>
           <h1
             style={{
@@ -936,21 +964,31 @@ export default function Order_Details() {
     <>
       <NavbarMenu />
       <Container>
- <div
-    className="d-flex justify-content-flex-start align-items-center gap-2"
-    style={{ color: '#8d5662', fontSize: '1rem', marginBottom: '30px' , padding:"5px"}}
-  >
-    <Breadcrumb  style={{ background: 'transparent', marginLeft:"10px", marginTop:"5px" }}>
-      <Breadcrumb.Item linkAs={Link} linkProps={{to:"/"}}  className="text-reset text-decoration-none" style={{ fontFamily:"poppins"}} >
-        Home
-      </Breadcrumb.Item>
-      <Breadcrumb.Item active style={{ color: '#00614a', fontWeight:"bold", fontFamily:"poppins" }}>
-       Order Details
-      </Breadcrumb.Item>
-      
-    </Breadcrumb>
-  </div>
-        </Container> 
+        <div
+          className="d-flex justify-content-flex-start align-items-center gap-2"
+          style={{ color: "#8d5662", fontSize: "1rem", marginBottom: "30px", padding: "5px" }}
+        >
+          <Breadcrumb
+            style={{ background: "transparent", marginLeft: "10px", marginTop: "5px" }}
+          >
+            <Breadcrumb.Item
+              linkAs={Link}
+              linkProps={{ to: "/" }}
+              className="text-reset text-decoration-none"
+              style={{ fontFamily: "poppins" }}
+            >
+              Home
+            </Breadcrumb.Item>
+            <Breadcrumb.Item
+              active
+              style={{ color: "#00614a", fontWeight: "bold", fontFamily: "poppins" }}
+            >
+              Order Details
+            </Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
+      </Container>
+
       <Container>
         <h1
           style={{
@@ -1188,4 +1226,3 @@ export default function Order_Details() {
     </>
   );
 }
-
