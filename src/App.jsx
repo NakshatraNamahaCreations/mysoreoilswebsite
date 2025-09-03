@@ -58,6 +58,8 @@ import CategoryPage from "./pages/oil-products/CategoryPage";
 import PrivateRoute from "./components/PrivateRoute";
 import ProfileDetails from "./pages/accounts/Profile-details";
 import SearchResults from "./components/SearchResults";
+import ResetPassword from "./pages/accounts/ResetPassword";
+import PaymentFailed from "./pages/carts/FailurePage";
 
 
 
@@ -103,7 +105,9 @@ function App() {
        {/*<Route path="/oilcategory" element={<OilCategory/>}/>*/}
         <Route path="/oil-products/:productName" element={<ProductDetails />} />
       <Route path="/categories/:categoryName" element={<CategoryPage />} />
-
+      <Route path="/reset-password/:token" element={<ResetPassword/>}/>
+      <Route path="/payment-failed" element={<PaymentFailed/>}/>
+ 
      
 
 <Route

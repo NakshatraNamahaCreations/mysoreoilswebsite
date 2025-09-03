@@ -543,8 +543,9 @@ export default function Login() {
   );
 }*/}
 
-import React, { useEffect } from "react";
-import { Container, Form, Button, Card } from "react-bootstrap";
+
+import React, { useEffect, useState } from "react";
+import { Container, Form, Button, Card, InputGroup } from "react-bootstrap";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import NavbarMenu from "../../components/NavMenuBar";
 import FooterOne from "../../components/FooterOne";
@@ -552,15 +553,20 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
+import ForgotPasswordModal from "./ForgotPasswordModal";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; 
 
 const schema = yup.object().shape({
   email: yup.string().email("Invalid email format").required("Email is required"),
   password: yup.string().required("Password is required"),
 });
 
+
 export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
+const [showForgot, setShowForgot] = useState(false);
+const [showPassword, setShowPassword] = useState(false); 
 
   // Redirect if user already logged in
   useEffect(() => {
@@ -589,7 +595,7 @@ export default function Login() {
       localStorage.setItem("user", JSON.stringify(userData));
 
       // ✅ Redirect to previous page or fallback
-      const redirectPath = localStorage.getItem("redirectAfterLogin") || "/checkout";
+      const redirectPath = localStorage.getItem("redirectAfterLogin") || "/categories";
       localStorage.removeItem("redirectAfterLogin");
       navigate(redirectPath);
     } catch (error) {
@@ -643,20 +649,34 @@ export default function Login() {
               <Form.Control.Feedback type="invalid">{errors.email?.message}</Form.Control.Feedback>
             </Form.Group>
 
-            <Form.Group className="mb-4">
-              <Form.Control
-                type="password"
-                placeholder="Password"
-                {...register("password")}
-                isInvalid={!!errors.password}
-                style={{
-                  height: "50px",
-                  border: "1.5px solid #002209",
-                  fontSize: "16px",
-                  fontFamily: "Poppins",
-                }}
-              />
-              <Form.Control.Feedback type="invalid">{errors.password?.message}</Form.Control.Feedback>
+           <Form.Group className="mb-4">
+              <InputGroup>
+                <Form.Control
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  {...register("password")}
+                  isInvalid={!!errors.password}
+                  style={{
+                    height: "50px",
+                    border: "1.5px solid #002209",
+                    fontSize: "16px",
+                    fontFamily: "Poppins",
+                  }}
+                />
+                <InputGroup.Text
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    cursor: "pointer",
+                    background: "white",
+                    border: "1.5px solid #002209",
+                  }}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </InputGroup.Text>
+                <Form.Control.Feedback type="invalid">
+                  {errors.password?.message}
+                </Form.Control.Feedback>
+              </InputGroup>
             </Form.Group>
 
             <Button
@@ -673,8 +693,16 @@ export default function Login() {
             >
               CONTINUE
             </Button>
+            <p style={{ textAlign: "center", marginTop: "15px" }}>
+  <span
+    style={{ color: "#b38900", cursor: "pointer", fontWeight: "600" }}
+    onClick={() => setShowForgot(true)}
+  >
+    Forgot Password?
+  </span>
+</p>
           </Form>
-
+<ForgotPasswordModal show={showForgot} handleClose={() => setShowForgot(false)} />
           <div style={{ textAlign: "center", marginTop: "25px" }}>
             <p style={{ fontFamily: "Poppins", color: "#555" }}>Don’t have an account?</p>
             <Link
