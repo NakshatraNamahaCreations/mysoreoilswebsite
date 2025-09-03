@@ -316,9 +316,29 @@ Join us in our journey to revive the traditional ways of oil extraction, while e
                 >
                   SHOP NOW
                 </h1>
-                <div style={{marginBottom:"80px"}}>
+                <div style={{marginBottom:"0px"}}>
                   <Products_Sliders />
                 </div>
+                                          <Button
+                            onClick={() => navigate(item.link)}
+                            variant="none"
+                            className="view-button-slider mb-5"
+                            style={{
+                              fontWeight: "600",
+                              border: "none",
+                              borderRadius: "0",
+                              fontSize: "20px",
+                              padding: "6px 8px",
+                              letterSpacing: "0.3px",
+                              width: "fit-content",
+                              alignItems: "center",
+                              display: "block",
+                              fontFamily: "montserrat",
+                              marginInline:"auto"
+                            }}
+                          >
+                            View All Products
+                          </Button>
               </div>
             </div>
           </div>

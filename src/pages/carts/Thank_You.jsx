@@ -1,5 +1,5 @@
 // import Navbar_Menu from "../../components/Navbar_Menu";
-import {
+{/*import {
   Container,
   Row,
   Col,
@@ -81,7 +81,7 @@ export default function Thank_You() {
         </Container>*/}
 
         {/* THANK YOU */}
-        <div
+       {/*} <div
           style={{
             backgroundColor: "#ffff",
             color: "black",
@@ -148,6 +148,173 @@ export default function Thank_You() {
         </div>
         {/* YOU MAY ALSO LIKE */}
       
+
+       {/*} <ScrollToTop />
+      </div>
+    </>
+  );
+}*/}
+
+
+import { Container, Row, Col } from "react-bootstrap";
+import thankyou from "/media/Thankyou.png";
+import ScrollToTop from "../../components/ScrollToTop";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+
+export default function ThankYou() {
+  const [isVisible, setIsVisible] = useState(false);
+  const [statusMessage, setStatusMessage] = useState("Verifying your payment...");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   const verifyPayment = async () => {
+  //     try {
+  //       const orderDetails = JSON.parse(localStorage.getItem("orderDetails"));
+  //       if (!orderDetails || !orderDetails.merchantTransactionId) {
+  //         setStatusMessage("Invalid payment session. Please try again.");
+  //         return;
+  //       }
+
+  //       const { merchantTransactionId, items, grandTotal, addressId } = orderDetails;
+
+  //       const response = await axios.post(
+  //         "https://api.themysoreoils.com/api/payment/verify",
+  //         {
+  //           merchantTransactionId,
+  //           orderData: { items, grandTotal, addressId },
+  //         }
+  //       );
+
+  //       if (response.data.success) {
+  //         setStatusMessage("✅ Payment successful! Your order has been placed.");
+  //         localStorage.removeItem("orderDetails");
+  //         dispatch({ type: "cart/clearCart" });
+  //       } else {
+  //         setStatusMessage("❌ Payment failed. Please try again.");
+  //       }
+  //     } catch (error) {
+  //       console.error("Payment verification error:", error);
+  //       setStatusMessage("⚠️ Error verifying payment. Contact support.");
+  //     }
+  //   };
+
+  //   verifyPayment();
+  // }, [dispatch]);
+
+
+  useEffect(() => {
+  const orderDetails = JSON.parse(localStorage.getItem("orderDetails"));
+  if (!orderDetails) return;
+
+  axios.post("https://api.themysoreoils.com/api/payment/verify", {
+    orderId: orderDetails.orderId,
+    merchantTransactionId: orderDetails.orderId, // backend matches by merchantOrderId
+  })
+  .then((res) => {
+    if (res.data.status === "Paid") {
+      dispatch({ type: "cart/clearCart" });
+    }
+  })
+  .catch((err) => console.error("Verify error:", err));
+}, []);
+
+  useEffect(() => {
+    const fadeInTimeout = setTimeout(() => {
+      setIsVisible(true);
+    }, 100);
+
+    const redirectTimeout = setTimeout(() => {
+      navigate("/");
+    }, 7000);
+
+    return () => {
+      clearTimeout(fadeInTimeout);
+      clearTimeout(redirectTimeout);
+    };
+  }, [navigate]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  return (
+    <>
+      <div
+        className="page-content"
+        style={{
+          opacity: isVisible ? 1 : 0,
+          transition: "opacity 0.5s ease-in-out",
+        }}
+      >
+        <div
+          style={{
+            backgroundColor: "#ffff",
+            color: "black",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              position: "relative",
+              textAlign: "center",
+              fontWeight: "bold",
+              backgroundImage: "url('/media/Thankyoudecoration.png')",
+              backgroundSize: "contain",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+              padding: "20px",
+              minHeight: "120vh",
+            }}
+          >
+            <h1
+              style={{
+                fontWeight: "900",
+                fontSize: "90px",
+                letterSpacing: "2px",
+                margin: "10% 0 0 0",
+                color: "#002209",
+              }}
+            >
+              THANK YOU!
+            </h1>
+
+            <p
+              style={{
+                fontSize: "26px",
+                letterSpacing: "1px",
+                opacity: "0.8",
+                marginTop: "10px",
+                color: "#002209",
+              }}
+            >
+              {statusMessage}
+            </p>
+
+            <div
+              style={{
+                position: "absolute",
+                top: "80%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              <img
+                src={thankyou}
+                alt="Thank you"
+                style={{
+                  width: "35vw",
+                  height: "auto",
+                  objectFit: "cover",
+                  display: "block",
+                }}
+              />
+            </div>
+          </div>
+        </div>
 
         <ScrollToTop />
       </div>

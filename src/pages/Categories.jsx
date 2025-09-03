@@ -429,14 +429,13 @@ import {
   Col,
 } from "react-bootstrap";
 import Reviews from "./Reviews";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import ScrollToTop from "../components/ScrollToTop";
 import ProductAccordian from "./ProductAccordian";
 import Footer from "../components/Footer";
 import Navbar_Menu from "../components/Navbar_Menu";
-import { useLocation } from "react-router-dom";
 
 export default function Categories() {
   const [isVisible, setIsVisible] = useState(false);
@@ -446,7 +445,6 @@ export default function Categories() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const location = useLocation();
-
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -459,57 +457,100 @@ export default function Categories() {
     window.scrollTo(0, 0);
   }, []);
 
+  // read ?category= from URL; handles kebab-case -> Title Case
   useEffect(() => {
-  const queryParams = new URLSearchParams(location.search);
-  const categoryFromURL = queryParams.get("category");
-  if (categoryFromURL) {
-    setSelectedCategory(categoryFromURL.charAt(0).toUpperCase() + categoryFromURL.slice(1));
-  }
-}, [location.search]);
-useEffect(() => {
-  const queryParams = new URLSearchParams(location.search);
-  const categoryFromURL = queryParams.get("category");
-  if (categoryFromURL) {
-    // Convert 'home-essentials' -> 'Home Essentials'
-    const formattedCategory = categoryFromURL
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
-    setSelectedCategory(formattedCategory);
-  }
-}, [location.search]);
-
+    const queryParams = new URLSearchParams(location.search);
+    const categoryFromURL = queryParams.get("category");
+    if (categoryFromURL) {
+      const formattedCategory = categoryFromURL
+        .split("-")
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(" ");
+      setSelectedCategory(formattedCategory);
+    }
+  }, [location.search]);
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const res = await axios.get("https://api.themysoreoils.com/api/categories");
-        setCategories(res.data.filter((cat) => cat.status === "Active"));
+        setCategories((res.data || []).filter((cat) => cat.status === "Active"));
       } catch (err) {
         console.error("Error fetching categories:", err);
       }
     };
-
     fetchCategories();
   }, []);
+
+  // --- robust sale/MRP resolver (same idea as PDP) ---
+  const resolveVariantPrice = (variant, productLevelMRP) => {
+    const vPrice = Number(variant?.price) || 0;
+    const vDisc  = Number(variant?.discountPrice) || 0;
+    const pMrp   = Number(productLevelMRP) || 0;
+
+    // Case A: explicit discount where discountPrice is the SALE
+    if (vDisc > 0 && vDisc < vPrice) {
+      return { sale: vDisc, mrp: vPrice };
+    }
+    // Case B: discountPrice is actually the MRP (e.g., 350 price, 500 discountPrice)
+    if (vDisc > vPrice) {
+      return { sale: vPrice, mrp: vDisc };
+    }
+    // Case C: no per-variant discount; maybe product-level MRP exists
+    if (pMrp > vPrice) {
+      return { sale: vPrice, mrp: pMrp };
+    }
+    // Fallback: no discount
+    return { sale: vPrice, mrp: vPrice };
+  };
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
         setError(null);
+
         const res = await axios.get("https://api.themysoreoils.com/api/products");
-        const formattedProducts = res.data.map((product) => ({
-          id: product._id,
-          name: product.name,
-          images: product.images,
-          category: product.category,
-          Link: `/oil-products/${product.name.replace(/\s+/g, "")}`,
-          originalPrice: product.variants[0]?.price || 0,
-          discountedPrice: product.discountPrice || product.variants[0]?.price || 0,
-        }));
+        const all = Array.isArray(res.data) ? res.data : [];
+
+        const formattedProducts = all.map((product) => {
+          const variants = Array.isArray(product?.variants) ? product.variants : [];
+
+          // choose the variant with the lowest SALE price for the card
+          let best = null; // { sale, mrp, variant }
+          variants.forEach((v) => {
+            const { sale, mrp } = resolveVariantPrice(v, product?.discountPrice);
+            if (!best || sale < best.sale) {
+              best = { sale, mrp, variant: v };
+            }
+          });
+
+          // fallback if product has no variants
+          if (!best) {
+            const pMrp = Number(product?.discountPrice) || 0;
+            const sale = pMrp || 0;
+            best = { sale, mrp: sale, variant: null };
+          }
+
+          const salePrice = Number(best.sale) || 0;
+          const mrp = Number(best.mrp) || salePrice;
+
+          return {
+            id: product._id,
+            name: product.name,
+            images: product.images || [],
+            category: product.category,
+            Link: `/oil-products/${String(product.name || "")
+              .trim()
+              .replace(/\s+/g, "")}`,
+            originalPrice: mrp,        // MRP (strike-through)
+            discountPrice: salePrice,  // sale (prominent)
+          };
+        });
+
         setProducts(formattedProducts);
       } catch (err) {
+        console.error(err);
         setError("Failed to fetch products");
         setProducts([]);
       } finally {
@@ -582,8 +623,9 @@ useEffect(() => {
                   ) : error ? (
                     <p>{error}</p>
                   ) : filteredProducts.length === 0 ? (
-                    //<p>No products found.</p>
-                    <p style={{fontFamily:"montserrat", fontSize:"30px", fontWeight:"bold"}}>Coming Soon</p>
+                    <p style={{ fontFamily: "montserrat", fontSize: "30px", fontWeight: "bold" }}>
+                      Coming Soon
+                    </p>
                   ) : (
                     <div
                       className="product-grid"
@@ -594,65 +636,97 @@ useEffect(() => {
                         marginTop: "3%",
                       }}
                     >
-                      {filteredProducts.map((item) => (
-                        <Link
-                          key={item.id}
-                          to={item.Link}
-                          style={{ textDecoration: "none", color: "inherit" }}
-                        >
-                          <div className="product-card">
-                            <img
-                              src={`https://api.themysoreoils.com${item.images[0]}`}
-                              alt={item.name}
-                              style={{
-                                width: "100%",
-                                height: "240px",
-                                objectFit: "contain",
-                              }}
-                            />
-                            <h4
-                              style={{
-                                fontSize: "16px",
-                                fontWeight: "600",
-                              }}
-                            >
-                              {item.name}
-                            </h4>
-                            <div
-                              className="product-price"
-                              style={{
-                                display: "flex",
-                                alignItems: "baseline",
-                                gap: "8px",
-                                marginBottom: "16px",
-                              }}
-                            >
-                              <p
+                      {filteredProducts.map((item) => {
+                        const hasDiscount = item.originalPrice > item.discountPrice;
+                        const pct =
+                          hasDiscount && item.originalPrice > 0
+                            ? Math.round(((item.originalPrice - item.discountPrice) / item.originalPrice) * 100)
+                            : 0;
+
+                        return (
+                          <Link
+                            key={item.id}
+                            to={item.Link}
+                            style={{ textDecoration: "none", color: "inherit" }}
+                          >
+                            <div className="product-card">
+                              <img
+                                src={`https://api.themysoreoils.com${item.images[0] || ""}`}
+                                alt={item.name}
                                 style={{
-                                  opacity: 0.5,
-                                  textDecoration: "line-through",
+                                  width: "100%",
+                                  height: "240px",
+                                  objectFit: "contain",
+                                }}
+                                onError={(e) => { e.currentTarget.src = "/media/fallback.png"; }}
+                              />
+                              <h4
+                                style={{
                                   fontSize: "16px",
-                                  margin: 0,
-                                  fontWeight: "700",
-                                  whiteSpace: "nowrap",
+                                  fontWeight: "600",
                                 }}
                               >
-                                Rs {item.originalPrice}
-                              </p>
-                              <p
+                                {item.name}
+                              </h4>
+
+                              <div
+                                className="product-price"
                                 style={{
-                                  fontSize: "18px",
-                                  fontWeight: "700",
-                                  margin: 0,
-                                  whiteSpace: "nowrap",
+                                  display: "flex",
+                                  alignItems: "baseline",
+                                  gap: "8px",
+                                  marginBottom: "8px",
                                 }}
                               >
-                                Rs {item.discountedPrice}
-                              </p>
+                                {/* MRP (strike-through) — only when discounted */}
+                                {hasDiscount && (
+                                  <p
+                                    style={{
+                                      opacity: 0.5,
+                                      textDecoration: "line-through",
+                                      fontSize: "16px",
+                                      margin: 0,
+                                      fontWeight: "700",
+                                      whiteSpace: "nowrap",
+                                    }}
+                                  >
+                                    Rs {item.originalPrice}
+                                  </p>
+                                )}
+
+                                {/* Sale price (prominent) */}
+                                <p
+                                  style={{
+                                    fontSize: "18px",
+                                    fontWeight: "700",
+                                    margin: 0,
+                                    whiteSpace: "nowrap",
+                                  }}
+                                >
+                                  Rs {item.discountPrice}
+                                </p>
+                              </div>
+
+                              {/* Optional % OFF badge */}
+                             {/*} {hasDiscount && (
+                                <div
+                                  style={{
+                                    display: "inline-block",
+                                    fontSize: "12px",
+                                    fontWeight: 700,
+                                    background: "#e6ffed",
+                                    color: "#137333",
+                                    padding: "2px 8px",
+                                    borderRadius: "12px",
+                                  }}
+                                >
+                                  {pct}% OFF
+                                </div>
+                              )}*/}
                             </div>
-                          </div>
-                        </Link>
-                      ))}
+                          </Link>
+                        );
+                      })}
                     </div>
                   )}
                 </Col>
@@ -660,7 +734,7 @@ useEffect(() => {
             </Container>
           </div>
 
-          <Reviews />
+          {/*<Reviews />*/}
           <ScrollToTop />
           <Footer />
         </div>

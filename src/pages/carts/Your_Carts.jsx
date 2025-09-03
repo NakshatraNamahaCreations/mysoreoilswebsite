@@ -852,7 +852,7 @@ export default function CartPage() {
 }*/}
 
 
-import {
+{/*import {
   Container,
   Row,
   Col,
@@ -972,7 +972,7 @@ const handleAddFromWishlist = () => {
         ) : (
           <Row>
             {/* LEFT SIDE: Cart Items */}
-            <Col md={8}>
+           {/*} <Col md={8}>
               {subtotal >= 1500 && subtotal < 2000 && (
                 <Alert variant="info">
                   You're just ₹{2000 - subtotal} away from <strong>Free Delivery</strong>! 🎉
@@ -1077,7 +1077,7 @@ const handleAddFromWishlist = () => {
             </Col>
 
             {/* RIGHT SIDE: Price Summary */}
-            <Col md={4}>
+            {/*<Col md={4}>
               <div className="p-4 border rounded">
                 <div className="p-3 bg-light-subtle border rounded mb-3">
                   <p className="mb-1 fw-medium" style={{ fontFamily: "Poppins" }}>
@@ -1090,15 +1090,342 @@ const handleAddFromWishlist = () => {
                   <span style={{ fontFamily: "Poppins" }}>Sub-total</span>
                   <span style={{ fontFamily: "Poppins" }}>₹{subtotal.toFixed(0)}</span>
                 </div>
-                <div className="d-flex justify-content-between mb-2 text-success">
+                {/*<div className="d-flex justify-content-between mb-2 text-success">
                   <span style={{ fontFamily: "Poppins" }}>Product Discount</span>
                   <span style={{ fontFamily: "Poppins" }}>₹{discount.toFixed(0)}</span>
-                </div>
-                <div className="d-flex justify-content-between mb-2">
+                </div>*/}
+              {/*}  <div className="d-flex justify-content-between mb-2">
                   <span style={{ fontFamily: "Poppins" }}>Shipping</span>
                   <span style={{ fontFamily: "Poppins" }}>₹0</span>
                 </div>
                 <hr />
+                <div className="d-flex justify-content-between fw-bold fs-5">
+                  <span style={{ fontFamily: "Poppins" }}>Grand Total</span>
+                  <span>₹{grandTotal.toFixed(0)}</span>
+                </div>
+
+                <Button
+                  variant="dark"
+                  className="w-100 mt-4"
+                  onClick={() => {
+                    if (isLoggedIn) {
+                      navigate("/checkout");
+                    } else {
+                      alert("Please login to proceed to checkout.");
+                      navigate("/login");
+                    }
+                  }}
+                  style={{ fontFamily: "Poppins" }}
+                >
+                  Proceed to Checkout
+                </Button>
+
+                <Button
+                  variant="outline-dark"
+                  className="w-100 mt-3"
+                  onClick={() => navigate("/categories")}
+                  style={{ fontFamily: "Poppins" }}
+                >
+                  Continue Shopping
+                </Button>
+              </div>
+            </Col>
+          </Row>
+        )}
+      </Container>
+    </>
+  );
+}*/}
+
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  Form,
+  Alert
+} from "react-bootstrap";
+import { useSelector, useDispatch } from "react-redux";
+import { removeFromCart, updateQuantity, addToCart } from "../../redux/cartSlice";
+import { useNavigate } from "react-router-dom";
+import Navbar_Menu from "../../components/Navbar_Menu";
+import ScrollToTop from "../../components/ScrollToTop";
+import { useEffect, useState } from "react";
+
+export default function Your_Carts() {
+  const cartItems = useSelector((state) => state.cart.cartItems);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  // Helpers
+  const toNum = (v) => {
+    const n = typeof v === "string" ? parseFloat(v) : Number(v);
+    return Number.isFinite(n) ? n : 0;
+  };
+
+  const unitSellingPrice = (item) =>
+    toNum(
+      item.discountedPrice ??
+      item.discountPrice ??
+      item.price ??
+      item.originalPrice
+    );
+
+  const unitMrp = (item) =>
+    toNum(
+      item.originalPrice ??
+      item.price ??
+      item.discountPrice ??
+      item.discountedPrice
+    );
+
+  const lineQty = (item) => Math.max(1, toNum(item.quantity));
+  const lineSellingTotal = (item) => unitSellingPrice(item) * lineQty(item);
+  const lineOriginalTotal = (item) => unitMrp(item) * lineQty(item);
+
+  const subtotal = (cartItems ?? []).reduce((sum, item) => sum + lineSellingTotal(item), 0);
+  const discount = Math.max(
+    0,
+    (cartItems ?? []).reduce(
+      (sum, item) => sum + (lineOriginalTotal(item) - lineSellingTotal(item)),
+      0
+    )
+  );
+
+  const gst = 0;
+  const shipping = 0;
+  const grandTotal = subtotal + shipping + gst;
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) setIsLoggedIn(true);
+  }, []);
+
+  // If you support a local wishlist, make sure you keep variantId too
+  const handleAddFromWishlist = () => {
+    const wishlistItems = JSON.parse(localStorage.getItem("wishlist")) || [];
+    if (wishlistItems.length === 0) {
+      alert("Your Wishlist is empty.");
+      return;
+    }
+
+    wishlistItems.forEach((item) => {
+      const isAlreadyInCart = (cartItems || []).some(
+        (ci) => ci.id === item.id && (ci.variantId ?? "") === (item.variantId ?? "")
+      );
+      if (!isAlreadyInCart) {
+        dispatch(addToCart({ ...item, quantity: 1 }));
+      }
+    });
+
+    alert("Wishlist items added to Cart!");
+  };
+
+  return (
+    <>
+      <Navbar_Menu />
+      <ScrollToTop />
+      <Container className="my-5">
+        {cartItems.length > 0 && (
+          <h2 className="mb-4 fw-bold" style={{ fontFamily: "Poppins" }}>
+            Cart : {cartItems.length} Item{cartItems.length > 1 ? "s" : ""}
+          </h2>
+        )}
+
+        {cartItems.length === 0 ? (
+          <div className="text-center py-5">
+            <img
+              src="/media/Emptycart.png"
+              alt="Empty Cart"
+              style={{ width: "300px", marginBottom: "20px" }}
+            />
+            <h3 style={{ fontFamily: "Poppins", marginBottom: "20px" }}>
+              Your Cart is Empty
+            </h3>
+            <Button
+              variant="dark"
+              onClick={() => navigate("/categories")}
+              style={{ fontFamily: "Poppins", padding: "10px 30px" }}
+            >
+              Shop Now
+            </Button>
+          </div>
+        ) : (
+          <Row>
+            {/* LEFT SIDE: Cart Items */}
+            <Col md={8}>
+              {grandTotal >= 1500 && grandTotal < 2000 && (
+                <Alert variant="info">
+                  You're just ₹{Math.max(0, 2000 - Math.round(grandTotal))} away from{" "}
+                  <strong>Free Delivery</strong>! 🎉
+                </Alert>
+              )}
+              {grandTotal >= 2000 && (
+                <Alert variant="success">
+                  Congratulations! You're eligible for <strong>Free Delivery</strong> 🚚
+                </Alert>
+              )}
+
+              {cartItems.map((item) => {
+                const mrp = unitMrp(item);
+                const sell = unitSellingPrice(item);
+                const hasDiscount = mrp > sell;
+
+                return (
+                  <div
+                    key={`${item.id}-${item.variantId ?? item.weight ?? ""}-${sell}`}
+                    className="p-3 border-bottom mb-4"
+                  >
+                    <Row className="align-items-center">
+                      <Col xs={4}>
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="img-fluid rounded"
+                          style={{ maxWidth: "120px" }}
+                        />
+                      </Col>
+
+                      <Col xs={8}>
+                        <h5 className="fw-semibold" style={{ fontFamily: "Poppins" }}>
+                          {item.name}
+                        </h5>
+
+                        {item.weight && item.unit && (
+                          <div className="text-muted" style={{ fontSize: 12 }}>
+                            {item.weight} {item.unit}
+                          </div>
+                        )}
+
+                        {hasDiscount && (
+                          <div className="text-muted text-decoration-line-through mt-1">
+                            ₹{lineOriginalTotal(item).toFixed(2)}
+                          </div>
+                        )}
+
+                        {/* Quantity controls */}
+                        <div className="d-flex align-items-center gap-2 my-2">
+                          <Button
+                            variant="outline-secondary"
+                            size="sm"
+                            onClick={() =>
+                              dispatch(
+                                updateQuantity({
+                                  id: item.id,
+                                  variantId: item.variantId, // <<< key the line by variant
+                                  quantity: Math.max(1, toNum(item.quantity) - 1),
+                                })
+                              )
+                            }
+                          >
+                            -
+                          </Button>
+                          <Form.Control
+                            value={item.quantity}
+                            readOnly
+                            className="text-center"
+                            style={{ maxWidth: "50px" }}
+                          />
+                          <Button
+                            variant="outline-secondary"
+                            size="sm"
+                            onClick={() =>
+                              dispatch(
+                                updateQuantity({
+                                  id: item.id,
+                                  variantId: item.variantId, // <<< key the line by variant
+                                  quantity: toNum(item.quantity) + 1,
+                                })
+                              )
+                            }
+                          >
+                            +
+                          </Button>
+                        </div>
+
+                        {/* Selling total x qty */}
+                        <div className="fw-bold text-success">
+                          ₹{lineSellingTotal(item).toFixed(2)}
+                        </div>
+
+                        <div className="mt-2">
+                          <Button
+                            variant="transparent"
+                            style={{
+                              fontSize: "12px",
+                              padding: "5px 0px",
+                              fontWeight: "600",
+                              lineHeight: "1",
+                              textDecoration: "underline",
+                              textTransform: "uppercase",
+                            }}
+                            onClick={() =>
+                              dispatch(
+                                removeFromCart({
+                                  id: item.id,
+                                  variantId: item.variantId, // <<< key the line by variant
+                                })
+                              )
+                            }
+                          >
+                            Remove
+                          </Button>
+                        </div>
+                      </Col>
+                    </Row>
+                  </div>
+                );
+              })}
+
+              <Button
+                variant="outline-dark"
+                className="mt-3"
+                onClick={handleAddFromWishlist}
+                style={{ fontFamily: "Poppins" }}
+              >
+                + Add from Wishlist
+              </Button>
+            </Col>
+
+            {/* RIGHT SIDE: Price Summary */}
+            <Col md={4}>
+              <div className="p-4 border rounded">
+                <div className="p-3 bg-light-subtle border rounded mb-3">
+                  <p className="mb-1 fw-medium" style={{ fontFamily: "Poppins" }}>
+                    🎁 Spend ₹2000 and get free delivery on your order.
+                  </p>
+                </div>
+
+                <h5 className="fw-bold mb-3" style={{ fontFamily: "Poppins" }}>
+                  Price Detail
+                </h5>
+
+                <div className="d-flex justify-content-between mb-2">
+                  <span style={{ fontFamily: "Poppins" }}>Sub-total</span>
+                  <span style={{ fontFamily: "Poppins" }}>
+                    ₹{subtotal.toFixed(0)}
+                  </span>
+                </div>
+
+                {/* If you want to show total savings later, uncomment:
+                <div className="d-flex justify-content-between mb-2 text-success">
+                  <span style={{ fontFamily: "Poppins" }}>Product Discount</span>
+                  <span style={{ fontFamily: "Poppins" }}>₹{discount.toFixed(0)}</span>
+                </div> */}
+
+                <div className="d-flex justify-content-between mb-2">
+                  <span style={{ fontFamily: "Poppins" }}>Shipping</span>
+                  <span style={{ fontFamily: "Poppins" }}>₹{shipping.toFixed(0)}</span>
+                </div>
+
+                <div className="d-flex justify-content-between mb-2">
+                  <span style={{ fontFamily: "Poppins" }}>GST</span>
+                  <span style={{ fontFamily: "Poppins" }}>₹{gst.toFixed(0)}</span>
+                </div>
+
+                <hr />
+
                 <div className="d-flex justify-content-between fw-bold fs-5">
                   <span style={{ fontFamily: "Poppins" }}>Grand Total</span>
                   <span>₹{grandTotal.toFixed(0)}</span>

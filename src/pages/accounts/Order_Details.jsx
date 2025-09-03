@@ -304,80 +304,231 @@ export default function Order_Details() {
   );
 }*/}
 
-import { Container, Table, Row, Col } from "react-bootstrap";
+import { Container, Table, Row, Col, Button } from "react-bootstrap";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import DownloadPDF from "../../components/DownloadPDF";
+import NavbarMenu from "../../components/NavMenuBar";
 
 export default function Order_Details() {
   const [orders, setOrders] = useState([]);
+  const [productsIndex, setProductsIndex] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
+  // ---------- helpers ----------
+  const toNum = (v) => {
+    const n = typeof v === "string" ? parseFloat(v) : Number(v);
+    return Number.isFinite(n) ? n : 0;
+  };
+
+  const variantSalePrice = (variant) => {
+    const p = toNum(variant?.price);
+    const d = toNum(variant?.discountPrice);
+    return d > 0 && d < p ? d : p;
+  };
+
+  const bestSaleForProduct = (product) => {
+    const vs = Array.isArray(product?.variants) ? product.variants : [];
+    if (!vs.length) return { sale: 0, mrp: 0 };
+    return vs.reduce(
+      (acc, v) => {
+        const sale = variantSalePrice(v);
+        const mrp = toNum(v?.price) || sale;
+        if (acc.sale === null || sale < acc.sale) return { sale, mrp };
+        return acc;
+      },
+      { sale: null, mrp: null }
+    );
+  };
+
+  // Try to price an order line from backend products
+  const backendPriceForItem = (item) => {
+    const name = item?.productName;
+    if (!name) return null;
+    const p = productsIndex[name];
+    if (!p) return null;
+
+    // If the order item has variant specifics, try to match
+    const weight = String(item?.weight ?? "").trim();
+    const unit = String(item?.unit ?? "").trim();
+
+    if (weight && unit && Array.isArray(p.variants)) {
+      const v = p.variants.find(
+        (vv) =>
+          String(vv?.quantity ?? "").trim() === weight &&
+          String(vv?.unit ?? "").trim().toLowerCase() === unit.toLowerCase()
+      );
+      if (v) return variantSalePrice(v);
+    }
+
+    // Otherwise, use best (lowest) sale across variants
+    return bestSaleForProduct(p).sale ?? null;
+  };
+
+  // Normalize items for UI (and compute price from backend)
+  const normalizeOrderItems = (order) => {
+    const rawItems = Array.isArray(order.items)
+      ? order.items
+      : [
+          {
+            productName: order.productName || "",
+            productImage: order.productImage || "",
+            price: toNum(order.amount) || 0,
+            quantity: toNum(order.quantity) || 0,
+          },
+        ];
+
+    return rawItems.map((it) => {
+      const backendPrice = backendPriceForItem(it);
+      const price = backendPrice != null ? backendPrice : toNum(it.price);
+      return {
+        productName: it.productName || "",
+        productImage: it.productImage || "",
+        quantity: toNum(it.quantity) || 0,
+        // keep these if present (so variant matching can succeed)
+        weight: it.weight,
+        unit: it.unit,
+        price,
+      };
+    });
+  };
+
+  // ---------- data fetch ----------
   useEffect(() => {
-    const fetchOrderDetails = async () => {
+    const fetchAll = async () => {
       try {
+        setLoading(true);
+        setError(null);
+
         const storedUser = JSON.parse(localStorage.getItem("user"));
         if (!storedUser?.email) {
+          setOrders([]);
           setLoading(false);
           return;
         }
 
-        const ordersResponse = await axios.get("https://api.themysoreoils.com/api/orders");
-        const allOrders = ordersResponse.data;
-
-        const userOrders = allOrders.filter(order =>
-          order.address?.email === storedUser.email
+        // Fetch orders
+        const ordersRes = await axios.get("https://api.themysoreoils.com/api/orders");
+        const allOrders = ordersRes.data || [];
+        const userOrders = allOrders.filter(
+          (o) => o?.address?.email === storedUser.email
         );
 
-        if (userOrders.length === 0) {
-          setError("No orders found for this user.");
-          setLoading(false);
-          return;
-        }
+        // Fetch products for live pricing
+        const productsRes = await axios.get("https://api.themysoreoils.com/api/products");
+        const productsArr = productsRes.data || [];
 
+        // Build a quick lookup: name -> product
+        const idx = {};
+        for (const p of productsArr) {
+          if (p?.name) idx[p.name] = p;
+        }
+        setProductsIndex(idx);
+
+        // Store filtered orders (let empty UI handle "no orders" state)
         setOrders(userOrders);
-        setLoading(false);
       } catch (err) {
-        console.error("❌ Failed to fetch order details:", err.response?.data || err.message);
-        setError(err.response?.data?.error || "Failed to load order details.");
+        console.error("❌ Failed to fetch order details:", err?.response?.data || err?.message);
+        setError(err?.response?.data?.error || "Failed to load order details.");
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchOrderDetails();
+    fetchAll();
   }, []);
 
   if (loading) return <Container>Loading order details...</Container>;
+
+  // Fancy empty state (like Wishlist)
+  if (!error && (!orders || orders.length === 0)) {
+    return (
+      <>
+    <NavbarMenu/>
+      <Container style={{ paddingTop: "20px", paddingBottom: "40px" }}>
+        <h1
+          style={{
+            textAlign: "center",
+            letterSpacing: "1px",
+            fontSize: "50px",
+            fontWeight: "800",
+            textTransform: "uppercase",
+          }}
+        >
+          Your Orders
+        </h1>
+
+        <div style={{ textAlign: "center", marginTop: "40px" }}>
+          <img
+            src="/media/empty-orders.png"
+            alt="No orders yet"
+            style={{ width: "250px" }}
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = "/media/wishlist.png"; // fallback image you already have
+            }}
+          />
+          <p style={{ fontFamily: "poppins", marginTop: "12px" }}>
+            You haven’t placed any orders yet.
+          </p>
+          <Button
+            variant="dark"
+            style={{ padding: "10px 30px", fontFamily: "Poppins", marginTop: "20px" }}
+            onClick={() => navigate("/categories")}
+          >
+            Shop Now
+          </Button>
+        </div>
+      </Container>
+      </>
+    );
+  }
+
   if (error) return <Container>{error}</Container>;
-  if (!orders || orders.length === 0) return <Container>No order details available.</Container>;
 
   return (
+    <>
+    <NavbarMenu/>
     <Container>
+      <h1
+        style={{
+          textAlign: "center",
+          letterSpacing: "1px",
+          fontSize: "50px",
+          fontWeight: "800",
+          textTransform: "uppercase",
+          marginTop: "10px",
+          marginBottom: "10px",
+        }}
+      >
+        Your Orders
+      </h1>
+
       {orders.map((order, index) => {
-        const shipping = order.shippingFee || 50;
+        const shipping = toNum(order.shippingFee ?? 0);
 
-        // ✅ Always create normalized array
-        const products = Array.isArray(order.items)
-          ? order.items.map(item => ({
-              productName: item.productName || "",
-              productImage: item.productImage || "",
-              price: Number(item.price) || 0,
-              quantity: Number(item.quantity) || 0
-            }))
-          : [{
-              productName: order.productName || "",
-              productImage: order.productImage || "",
-              price: Number(order.amount) || 0,
-              quantity: Number(order.quantity) || 0
-            }];
-
-        const subtotal = products.reduce((acc, p) => acc + (p.price * p.quantity), 0);
+        const products = normalizeOrderItems(order);
+        const subtotal = products.reduce(
+          (acc, p) => acc + toNum(p.price) * toNum(p.quantity),
+          0
+        );
         const tax = 0;
         const total = subtotal + shipping + tax;
 
         return (
-          <div key={order._id} style={{ boxShadow: "1px 1px 6px #D3B353", padding: "20px", borderRadius: "10px", marginTop: "30px" }}>
+        
+          <div
+            key={order._id || index}
+            style={{
+              boxShadow: "1px 1px 6px #D3B353",
+              padding: "20px",
+              borderRadius: "10px",
+              marginTop: "30px",
+            }}
+          >
             <h2 style={{ fontWeight: "700", color: "#002209", fontSize: "24px" }}>
               Order #{index + 1}
             </h2>
@@ -389,7 +540,7 @@ export default function Order_Details() {
                 <DownloadPDF
                   order={order}
                   address={order.address}
-                  orderItems={products} // ✅ Pass normalized array
+                  orderItems={products}
                   subtotal={subtotal}
                   shipping={shipping}
                   tax={tax}
@@ -418,7 +569,10 @@ export default function Order_Details() {
                                   item.productImage
                                     ? item.productImage.startsWith("http")
                                       ? item.productImage
-                                      : `https://api.themysoreoils.com/${item.productImage}`
+                                      : `https://api.themysoreoils.com/${item.productImage.replace(
+                                          /^\/+/,
+                                          ""
+                                        )}`
                                     : "/media/cart-product.png"
                                 }
                                 alt={item.productName}
@@ -430,18 +584,25 @@ export default function Order_Details() {
                               />
                             </div>
                             <div style={{ marginLeft: "20px", textAlign: "left" }}>
-                              <h3 style={{ fontSize: "20px", fontWeight: "700" }}>{item.productName}</h3>
+                              <h3 style={{ fontSize: "20px", fontWeight: "700" }}>
+                                {item.productName}
+                              </h3>
                               <div>
+                                {item.weight && item.unit ? (
+                                  <div style={{ fontSize: "14px", opacity: 0.7 }}>
+                                    {item.weight} {item.unit}
+                                  </div>
+                                ) : null}
                                 <div style={{ fontSize: "16px", fontWeight: "700" }}>
-                                  Rs {item.price.toFixed(2)}
+                                  Rs {toNum(item.price).toFixed(2)}
                                 </div>
                               </div>
                             </div>
                           </div>
                         </td>
-                        <td>{item.quantity}</td>
+                        <td>{toNum(item.quantity)}</td>
                         <td className="text-end fw-bold">
-                          Rs {(item.price * item.quantity).toFixed(2)}
+                          Rs {(toNum(item.price) * toNum(item.quantity)).toFixed(2)}
                         </td>
                       </tr>
                     ))}
@@ -455,9 +616,12 @@ export default function Order_Details() {
                   <p>Shipping Address</p>
                   {order.address ? (
                     <p>
-                      {order.address.firstName} {order.address.lastName}<br />
-                      {order.address.address}<br />
-                      {order.address.city}, {order.address.state}, {order.address.pincode}<br />
+                      {order.address.firstName} {order.address.lastName}
+                      <br />
+                      {order.address.address}
+                      <br />
+                      {order.address.city}, {order.address.state} - {order.address.pincode}
+                      <br />
                       {order.address.country}
                     </p>
                   ) : (
@@ -484,13 +648,31 @@ export default function Order_Details() {
             {/* Order Tracking */}
             <div className="tracking-container mt-5">
               <h5 className="tracking-title">Track Order</h5>
-              <p className="fw-bold">Order #{order._id.slice(-8)} - {order.status}</p>
+              <p className="fw-bold">
+                Order #{String(order._id || "").slice(-8)} - {order.status}
+              </p>
 
               <Row className="text-center align-items-center my-4">
                 {[
-                  { label: "Order Placed", icon: "/media/orderPlaced.png", isActive: true, time: order.createdAt },
-                  { label: "Order Dispatched", icon: "/media/orderDispatched.png", isActive: order.status === "Ready for Dispatch" || order.status === "Delivered", time: order.updatedAt },
-                  { label: "Delivered Successfully", icon: "/media/delivered.png", isActive: order.status === "Delivered", time: new Date() },
+                  {
+                    label: "Order Placed",
+                    icon: "/media/orderPlaced.png",
+                    isActive: true,
+                    time: order.createdAt,
+                  },
+                  {
+                    label: "Order Dispatched",
+                    icon: "/media/orderDispatched.png",
+                    isActive:
+                      order.status === "Ready for Dispatch" || order.status === "Delivered",
+                    time: order.updatedAt,
+                  },
+                  {
+                    label: "Delivered Successfully",
+                    icon: "/media/delivered.png",
+                    isActive: order.status === "Delivered",
+                    time: new Date(),
+                  },
                 ].map((step, i) => (
                   <Col key={i} xs={12} sm={4} className="mb-4">
                     <div
@@ -521,7 +703,12 @@ export default function Order_Details() {
                       {step.time ? new Date(step.time).toLocaleDateString() : "—"}
                     </p>
                     <p style={{ fontSize: "12px" }}>
-                      {step.time ? new Date(step.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "—"}
+                      {step.time
+                        ? new Date(step.time).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })
+                        : "—"}
                     </p>
                   </Col>
                 ))}
@@ -530,6 +717,8 @@ export default function Order_Details() {
           </div>
         );
       })}
+      
     </Container>
+    </>
   );
 }
