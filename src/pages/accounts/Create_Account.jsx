@@ -384,10 +384,32 @@ export default function Create_Account() {
     smsConsent: false,
   });
 
-  const handleChange = (e) => {
+  const phone10 = /^[0-9]{10}$/;
+const [phoneError, setPhoneError] = useState("");
+
+
+
+{/*}  const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
-  };
+  };*/}
+
+
+ const handleChange = (e) => {
+  const { name, value, type, checked } = e.target;
+    setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
+
+  if (name === "mobilenumber") {
+    // keep digits only and hard-limit to 10
+    const digits = value.replace(/\D/g, "").slice(0, 10);
+    setFormData((p) => ({ ...p, [name]: digits }));
+    setPhoneError(phone10.test(digits) ? "" : "Enter exactly 10 digits");
+    return;
+  }
+
+  setFormData((p) => ({ ...p, [name]: value }));
+};
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -450,17 +472,29 @@ export default function Create_Account() {
                 style={{ fontFamily: "poppins" }}
               />
             </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Control
-                type="text"
-                name="mobilenumber"
-                placeholder="Mobile Number"
-                value={formData.mobilenumber}
-                onChange={handleChange}
-                required
-                style={{ fontFamily: "poppins" }}
-              />
-            </Form.Group>
+            <Form.Group controlId="mobilenumber">
+  
+  <Form.Control className="mb-3"
+    type="tel"
+    inputMode="numeric"
+    name="mobilenumber"
+    placeholder="Mobile Number"
+    value={formData.mobilenumber}
+    onChange={handleChange}
+    onBlur={(e) => setPhoneError(phone10.test(e.target.value) ? "" : "Enter exactly 10 digits")}
+    required
+    maxLength={10}
+    pattern="^[0-9]{10}$"
+    title="Enter valid phone number"
+    isInvalid={!!phoneError}
+    style={{ fontFamily: "poppins" }}
+  />
+  <Form.Control.Feedback type="invalid">
+    {phoneError || "Enter exactly 10 digits."}
+  </Form.Control.Feedback>
+</Form.Group>
+
+
             <Form.Group className="mb-3">
               <Form.Control
                 type="email"

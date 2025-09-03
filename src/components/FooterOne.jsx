@@ -9,8 +9,8 @@ export default function FooterOne() {
           <Col md={4}>
             <h5>Shop By Category</h5>
             <ul style={{ listStyle: "none", padding: 0 }}>
-              <li>Oils | Cold Pressed Oils | Coconut | Groundnut | Sunflower | Mustard | Sesame | Castor</li>
-              <li>Millets | Foxtail | Barnyard | Little | Kodo | Pearl | Finger Millet</li>
+              <li>Oils | Cold Pressed Oils | Coconut | Groundnut | Sunflower | Safflower | Sesame </li>
+             {/*} <li>Millets | Foxtail | Barnyard | Little | Kodo | Pearl | Finger Millet</li>
               <li>Dry Fruits | Almonds | Cashews | Raisins | Walnuts | Pistachios | Dates | Anjeer</li>
               <li>Ice Cream | Natural Fruit | Jaggery | Vegan | Traditional Kulfi</li>
               <li>Gifting Solutions | Custom Hampers | Festival Packs | Corporate Gifting</li>
@@ -19,8 +19,22 @@ export default function FooterOne() {
               <li>Vegetables | Leafy Greens | Root Veggies | Organic Packs</li>
               <li>Fruits | Farm Fresh | Exotic Fruits | Seasonal Baskets</li>
               <li>Cosmetics | Herbal Skincare | Hair Oils | Lip Balms | Organic Soaps</li>
-              <li>Snacks | Millet Snacks | Jaggery Sweets | Healthy Namkeens | Fryums</li>
+              <li>Snacks | Millet Snacks | Jaggery Sweets | Healthy Namkeens | Fryums</li>*/}
             </ul>
+
+            <h5 className="mt-4">Contact Us</h5>
+            <p>
+              Call: <a href="tel:+91740680003" style={{textDecoration:"none", color:"inherit"}}>+91-7899830366</a><br/>
+              Email: <a href="mailto:support@yourwebsite.com" style={{textDecoration:"none", color:"inherit"}}>support@themysoreoils.com</a><br/>
+              WhatsApp: <a href="https://wa.me/91740680003" style={{textDecoration:"none", color:"inherit"}}>+91-7899830366</a><br/>
+              Monday – Saturday (10 AM - 7 PM)
+            </p>
+            <div className="d-flex gap-3 mt-3">
+              <a href="#"><i className="fab fa-facebook-f"></i></a>
+              <a href="#"><i className="fab fa-instagram"></i></a>
+              <a href="#"><i className="fab fa-pinterest"></i></a>
+              <a href="#"><i className="fab fa-youtube"></i></a>
+            </div>
           </Col>
 
           <Col md={4}>
@@ -39,7 +53,7 @@ export default function FooterOne() {
             <h5 className="mt-4">Top Collections</h5>
             <ul style={{ listStyle: "none", padding: 0 }}>
               <li>Cold Pressed Oil Essentials</li>
-              <li>Millet Superfood Basket</li>
+             {/*} <li>Millet Superfood Basket</li>
               <li>Premium Dry Fruit Combos</li>
               <li>Vegan & Jaggery Ice Creams</li>
               <li>Handpicked Gifting Hampers</li>
@@ -47,7 +61,7 @@ export default function FooterOne() {
               <li>Clay & Cast Iron Cookware</li>
               <li>Seasonal Fruit Delight Baskets</li>
               <li>Herbal Beauty Care Essentials</li>
-              <li>Healthy Snack Box Collections</li>
+              <li>Healthy Snack Box Collections</li>*/}
             </ul>
           </Col>
 
@@ -68,19 +82,7 @@ export default function FooterOne() {
               <li>Site Map</li>
             </ul>
 
-            <h5 className="mt-4">Contact Us</h5>
-            <p>
-              Call: <a href="tel:+91740680003" style={{textDecoration:"none", color:"inherit"}}>+91-7899830366</a><br/>
-              Email: <a href="mailto:support@yourwebsite.com" style={{textDecoration:"none", color:"inherit"}}>support@themysoreoils.com</a><br/>
-              WhatsApp: <a href="https://wa.me/91740680003" style={{textDecoration:"none", color:"inherit"}}>+91-7899830366</a><br/>
-              Monday – Saturday (10 AM - 7 PM)
-            </p>
-            <div className="d-flex gap-3 mt-3">
-              <a href="#"><i className="fab fa-facebook-f"></i></a>
-              <a href="#"><i className="fab fa-instagram"></i></a>
-              <a href="#"><i className="fab fa-pinterest"></i></a>
-              <a href="#"><i className="fab fa-youtube"></i></a>
-            </div>
+            
           </Col>
         </Row>
 
