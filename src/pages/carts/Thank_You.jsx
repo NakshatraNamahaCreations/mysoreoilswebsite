@@ -156,17 +156,18 @@ export default function Thank_You() {
 }*/}
 
 
-import { Container, Row, Col } from "react-bootstrap";
+{/*import { Container, Row, Col } from "react-bootstrap";
 import thankyou from "/media/Thankyou.png";
 import ScrollToTop from "../../components/ScrollToTop";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
+import { Breadcrumb } from "react-bootstrap";
 
 export default function ThankYou() {
   const [isVisible, setIsVisible] = useState(false);
-  const [statusMessage, setStatusMessage] = useState("Verifying your payment...");
+  const [statusMessage, setStatusMessage] = useState("Your Order has been Confirmed!.....");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -229,7 +230,7 @@ export default function ThankYou() {
 
     const redirectTimeout = setTimeout(() => {
       navigate("/");
-    }, 7000);
+    }, 10000);
 
     return () => {
       clearTimeout(fadeInTimeout);
@@ -243,6 +244,22 @@ export default function ThankYou() {
 
   return (
     <>
+    <Container>
+ <div
+    className="d-flex justify-content-flex-start align-items-center gap-2"
+    style={{ color: '#8d5662', fontSize: '1rem', marginBottom: '30px' , padding:"5px"}}
+  >
+    <Breadcrumb  style={{ background: 'transparent', marginLeft:"10px", marginTop:"5px" }}>
+      <Breadcrumb.Item linkAs={Link} linkProps={{to:"/"}}  className="text-reset text-decoration-none" style={{ fontFamily:"poppins"}} >
+        Home
+      </Breadcrumb.Item>
+      <Breadcrumb.Item active style={{ color: '#00614a', fontWeight:"bold", fontFamily:"poppins" }}>
+        Thank you
+      </Breadcrumb.Item>
+      
+    </Breadcrumb>
+  </div>
+        </Container> 
       <div
         className="page-content"
         style={{
@@ -320,4 +337,155 @@ export default function ThankYou() {
       </div>
     </>
   );
+}*/}
+
+
+import { Container } from "react-bootstrap";
+import thankyou from "/media/Thankyou.png";
+import ScrollToTop from "../../components/ScrollToTop";
+import { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Breadcrumb } from "react-bootstrap";
+import { clearCart } from "../../redux/cartSlice";
+
+export default function ThankYou() {
+  const [isVisible, setIsVisible] = useState(false);
+  const [statusMessage, setStatusMessage] = useState("Your Order has been Confirmed!.....");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // ✅ Pure localStorage flow — no API verify:
+  // We assume that reaching /thankyou == success (as per your callbackUrl).
+  useEffect(() => {
+    try {
+      const orderDetails = JSON.parse(localStorage.getItem("orderDetails"));
+      // If you ever add URL params like ?status=success, you can parse and gate on that too.
+      const orderId = orderDetails?.orderId;
+      if (!orderId) {
+        setStatusMessage("Your order has been confirmed!....");
+        return;
+      }
+
+      // Prevent double-clearing on reloads for the same order
+      const clearedKey = `cartClearedFor:${orderId}`;
+      if (localStorage.getItem(clearedKey) !== "1") {
+        // Clear Redux cart
+        dispatch(clearCart());
+        // Mark as cleared for this order
+        localStorage.setItem(clearedKey, "1");
+      }
+
+      // Remove temp order session info
+      localStorage.removeItem("orderDetails");
+      setStatusMessage("✅ Payment successful! Your order has been placed.");
+    } catch {
+      setStatusMessage("Your Order has been Confirmed!");
+    }
+  }, [dispatch]);
+
+  // same fade + auto-redirect to home after a few seconds
+  useEffect(() => {
+    const fadeInTimeout = setTimeout(() => setIsVisible(true), 100);
+    const redirectTimeout = setTimeout(() => navigate("/"), 7000);
+    return () => {
+      clearTimeout(fadeInTimeout);
+      clearTimeout(redirectTimeout);
+    };
+  }, [navigate]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  return (
+    <>
+      <Container>
+        <div
+          className="d-flex justify-content-flex-start align-items-center gap-2"
+          style={{ color: "#8d5662", fontSize: "1rem", marginBottom: "30px", padding: "5px" }}
+        >
+          <Breadcrumb style={{ background: "transparent", marginLeft: "10px", marginTop: "5px" }}>
+            <Breadcrumb.Item
+              linkAs={Link}
+              linkProps={{ to: "/" }}
+              className="text-reset text-decoration-none"
+              style={{ fontFamily: "poppins" }}
+            >
+              Home
+            </Breadcrumb.Item>
+            <Breadcrumb.Item
+              active
+              style={{ color: "#00614a", fontWeight: "bold", fontFamily: "poppins" }}
+            >
+              Thank you
+            </Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
+      </Container>
+
+      <div
+        className="page-content"
+        style={{ opacity: isVisible ? 1 : 0, transition: "opacity 0.5s ease-in-out" }}
+      >
+        <div style={{ backgroundColor: "#ffff", color: "black", overflow: "hidden" }}>
+          <div
+            style={{
+              position: "relative",
+              textAlign: "center",
+              fontWeight: "bold",
+              backgroundImage: "url('/media/Thankyoudecoration.png')",
+              backgroundSize: "contain",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+              padding: "20px",
+              minHeight: "120vh",
+            }}
+          >
+            <h1
+              style={{
+                fontWeight: "900",
+                fontSize: "90px",
+                letterSpacing: "2px",
+                margin: "10% 0 0 0",
+                color: "#002209",
+              }}
+            >
+              THANK YOU!
+            </h1>
+
+            <p
+              style={{
+                fontSize: "26px",
+                letterSpacing: "1px",
+                opacity: "0.8",
+                marginTop: "10px",
+                color: "#002209",
+              }}
+            >
+              {statusMessage}
+            </p>
+
+            <div
+              style={{
+                position: "absolute",
+                top: "80%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              <img
+                src={thankyou}
+                alt="Thank you"
+                style={{ width: "35vw", height: "auto", objectFit: "cover", display: "block" }}
+              />
+            </div>
+          </div>
+        </div>
+
+        <ScrollToTop />
+      </div>
+    </>
+  );
 }
+

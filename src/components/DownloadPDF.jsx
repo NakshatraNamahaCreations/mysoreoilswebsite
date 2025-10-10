@@ -139,7 +139,7 @@ const DownloadPDF = ({ order, address, orderItems, subtotal, shipping, tax, tota
     doc.text(`Rs ${Number(shipping || 0).toFixed(2)}`, pageWidth - 20, yPosition, { align: "right" });
     yPosition += 10;
 
-    doc.text("GST (18%)", pageWidth - 70, yPosition, { align: "right" });
+    doc.text("GST", pageWidth - 70, yPosition, { align: "right" });
     doc.text(`Rs ${Number(tax || 0).toFixed(2)}`, pageWidth - 20, yPosition, { align: "right" });
     yPosition += 10;
 

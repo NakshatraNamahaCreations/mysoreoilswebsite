@@ -155,9 +155,10 @@ export default function ProfileDetails() {
 
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Form, Button, InputGroup } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Navbar_Menu from "../../components/Navbar_Menu";
 import FooterOne from "../../components/FooterOne";
+import { Breadcrumb } from "react-bootstrap";
 
 export default function ProfileDetails() {
   const [formData, setFormData] = useState({
@@ -213,6 +214,22 @@ export default function ProfileDetails() {
   return (
     <>
       <Navbar_Menu />
+      <Container>
+ <div
+    className="d-flex justify-content-flex-start align-items-center gap-2"
+    style={{ color: '#8d5662', fontSize: '1rem', marginBottom: '30px' , padding:"5px"}}
+  >
+    <Breadcrumb  style={{ background: 'transparent', marginLeft:"10px", marginTop:"5px" }}>
+      <Breadcrumb.Item linkAs={Link} linkProps={{to:"/"}}  className="text-reset text-decoration-none" style={{ fontFamily:"poppins"}} >
+        Home
+      </Breadcrumb.Item>
+      <Breadcrumb.Item active style={{ color: '#00614a', fontWeight:"bold", fontFamily:"poppins" }}>
+        Profile Details
+      </Breadcrumb.Item>
+      
+    </Breadcrumb>
+  </div>
+        </Container> 
       <Container className="py-5" style={{ maxWidth: "1140px" }}>
         <Row>
           {/* Sidebar */}

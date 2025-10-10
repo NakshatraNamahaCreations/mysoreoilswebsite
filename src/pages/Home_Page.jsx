@@ -121,7 +121,7 @@ export default function Home_Page() {
           {/* <Navbar_Menu /> */}
 
           {/* SEARCH */}
-          {/*<Container className="mt-3 ">
+        {/*}  <Container className="mt-3 ">
             <InputGroup
               className="mb-5 footer-subscribe-input"
               style={{
@@ -160,9 +160,9 @@ export default function Home_Page() {
               </div>
             </InputGroup>
           </Container>*/}
-        {/*} <div >
+         <div >
           <BrowserSlider/>
-          </div>*/}
+          </div>
 </div>
               </Col>
                   

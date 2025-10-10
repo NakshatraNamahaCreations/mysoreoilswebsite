@@ -479,7 +479,7 @@ export default function Navbar_Menu() {
               id="basic-nav-dropdown"
               onToggle={(open) => setIsOpen(open)}
             >
-              <div style={{ width: "240px" }}>
+            {/*}  <div style={{ width: "240px" }}>
   {loading ? (
     <NavDropdown.Item disabled>Loading...</NavDropdown.Item>
   ) : error ? (
@@ -508,7 +508,37 @@ export default function Navbar_Menu() {
         </NavDropdown.Item>
       ))
   )}
+</div>*/}
+
+<div style={{ width: "240px" }}>
+  {loading ? (
+    <NavDropdown.Item disabled>Loading...</NavDropdown.Item>
+  ) : error ? (
+    <NavDropdown.Item disabled>{error}</NavDropdown.Item>
+  ) : categories.length === 0 ? (
+    <NavDropdown.Item disabled>No categories available</NavDropdown.Item>
+  ) : (
+    categories.map((category) => (
+      <NavDropdown.Item
+        key={category._id}
+        as={Link}
+        to={`/categories?category=${encodeURIComponent(
+          category.slug || toSlug(category.name)
+        )}`}
+        className="nav-hover-effect-categories"
+        style={{
+          color: "black",
+          fontSize: "18px",
+          letterSpacing: "1px",
+          fontWeight: "700",
+        }}
+      >
+        {category.name}
+      </NavDropdown.Item>
+    ))
+  )}
 </div>
+
 
             </NavDropdown>
           </Nav>

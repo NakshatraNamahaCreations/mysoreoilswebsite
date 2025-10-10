@@ -77,7 +77,7 @@ const handleCategorySelect = (name) => {
 
 
   return (
-    <div className="browse-wrapper d-flex align-items-center justify-content-center flex-column">
+    <div className="browse-wrapper d-flex  justify-content-center flex-column">
       <div className="browse-header" style={{ marginTop: "30px" }}>
         <h2 style={{
           textAlign: "left",
@@ -86,10 +86,10 @@ const handleCategorySelect = (name) => {
           fontWeight: "800",
           marginBottom: "2%",
         }}>Browse by Category</h2>
-       {/*} <div className="arrow-buttons">
+        <div className="arrow-buttons">
           <button onClick={() => scroll("left")} style={{ backgroundColor: "#fff" }}>‹</button>
           <button onClick={() => scroll("right")} style={{ backgroundColor: "#fff" }}>›</button>
-        </div>*/}
+        </div>
       </div>
 
       <div className="category-slider" ref={scrollRef}>

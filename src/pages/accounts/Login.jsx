@@ -555,6 +555,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import ForgotPasswordModal from "./ForgotPasswordModal";
 import { FaEye, FaEyeSlash } from "react-icons/fa"; 
+import { Breadcrumb } from "react-bootstrap";
 
 const schema = yup.object().shape({
   email: yup.string().email("Invalid email format").required("Email is required"),
@@ -611,7 +612,23 @@ const [showPassword, setShowPassword] = useState(false);
   return (
     <>
       <NavbarMenu />
-      <Container className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
+      <Container>
+ <div
+    className="d-flex justify-content-flex-start align-items-center gap-2"
+    style={{ color: '#8d5662', fontSize: '1rem', marginBottom: '30px' , padding:"5px"}}
+  >
+    <Breadcrumb  style={{ background: 'transparent', marginLeft:"10px", marginTop:"5px" }}>
+      <Breadcrumb.Item linkAs={Link} linkProps={{to:"/"}}  className="text-reset text-decoration-none" style={{ fontFamily:"poppins"}} >
+        Home
+      </Breadcrumb.Item>
+      <Breadcrumb.Item active style={{ color: '#00614a', fontWeight:"bold", fontFamily:"poppins" }}>
+        Login
+      </Breadcrumb.Item>
+      
+    </Breadcrumb>
+  </div>
+        </Container> 
+      <Container className="d-flex justify-content-center align-items-center" style={{ height: "70vh" }}>
         <Card
           style={{
             width: "400px",
