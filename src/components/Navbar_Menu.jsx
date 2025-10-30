@@ -225,6 +225,8 @@ export default function Navbar_Menu() {
     </Navbar>
   );
 }*/}
+// src/components/Navbar_Menu.jsx
+// src/components/Navbar_Menu.jsx
 import { useState, useEffect, useRef } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -232,6 +234,7 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import Offcanvas from "react-bootstrap/Offcanvas";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
@@ -246,8 +249,8 @@ import Cart from "/media/Cart.png";
 
 // ====== CONFIG ======
 const CATEGORIES_URL = "https://api.themysoreoils.com/api/categories";
-const PRODUCTS_URL = "https://api.themysoreoils.com/api/products"; // list endpoint (NOT /search)
-const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24h cache
+const PRODUCTS_URL = "https://api.themysoreoils.com/api/products";
+const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 
 // In-memory cache for this session
 let __PRODUCT_INDEX_MEMO = null;
@@ -273,14 +276,12 @@ async function loadProductIndex() {
   const items = Array.isArray(res.data) ? res.data : (res.data?.items || []);
 
   const index = items.map((p) => {
-    // Prefer real product fields; never fall back to category
     const displayName = String(p.productName || p.name || p.title || "").trim();
     const nameNoSpaces = displayName.replace(/\s+/g, "");
-
     return {
       _id: p._id,
       name: displayName,
-      link: `/oil-products/${nameNoSpaces}`, // same format as your Categories page
+      link: `/oil-products/${nameNoSpaces}`, // matches your product URL format
       imageUrl: p.images?.[0]
         ? `https://api.themysoreoils.com${p.images[0]}`
         : "/media/placeholder.png",
@@ -324,6 +325,7 @@ export default function Navbar_Menu() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [productIndexReady, setProductIndexReady] = useState(false);
 
+  const [showDrawer, setShowDrawer] = useState(false); // controls Offcanvas
   const searchWrapRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
@@ -366,13 +368,15 @@ export default function Navbar_Menu() {
     loadProductIndex()
       .then(() => mounted && setProductIndexReady(true))
       .catch(() => mounted && setProductIndexReady(false));
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const handleSearchToggle = () => {
     setShowSearch((s) => !s);
     setShowSuggestions(false);
-    if (!showSearch) setTimeout(() => setShowSuggestions(true), 0);
+    setTimeout(() => setShowSuggestions(true), 0);
   };
 
   const handleSearchSubmit = (e) => {
@@ -380,15 +384,16 @@ export default function Navbar_Menu() {
     if (!query.trim()) return;
     setShowSuggestions(false);
     navigate(`/search?q=${encodeURIComponent(query.trim())}`);
+    setShowSearch(false); // close on mobile after submit
   };
 
-  // click outside to close suggestion panel
+  // click outside to close suggestion panel (desktop)
   useEffect(() => {
     const onClickOutside = (e) => {
       if (!searchWrapRef.current) return;
       if (!searchWrapRef.current.contains(e.target)) setShowSuggestions(false);
     };
-    document.addEventListener("mousedown", onClickOutside);
+    document.addEventListener("mousedown", onClickOutside, { passive: true });
     return () => document.removeEventListener("mousedown", onClickOutside);
   }, []);
 
@@ -417,7 +422,7 @@ export default function Navbar_Menu() {
         if (!cancelled) setIsSearching(false);
         if (!cancelled) setShowSuggestions(true);
       }
-    }, 250);
+    }, 220);
 
     return () => {
       cancelled = true;
@@ -427,261 +432,407 @@ export default function Navbar_Menu() {
 
   const toSlug = (s) => s.toLowerCase().replace(/\s+/g, "-");
 
+  // Close drawer when route changes
+  useEffect(() => {
+    setShowDrawer(false);
+  }, [location.pathname]);
+
   return (
-    <Navbar expand="lg" className="navbar-sticky banner">
-      <Container>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav" className="justify-content-between navbar-collapse">
-          {/* Left */}
-          <Nav
-            className="me-auto navbar-links"
-            style={{ fontSize: "20px", gap: "25px", display: "flex", alignItems: "center" }}
-          >
-            <NavLink
-              to="/"
-              className={({ isActive }) => (isActive ? "nav-hover-effect active-link" : "nav-hover-effect")}
-              style={{ color: "#fff", letterSpacing: "1px", fontWeight: "700" }}
-            >
-              HOME
-            </NavLink>
-            <NavLink
-              to="/best-seller"
-              className={({ isActive }) => (isActive ? "nav-hover-effect active-link" : "nav-hover-effect")}
-              style={{ color: "#fff", letterSpacing: "1px", fontWeight: "700" }}
-            >
-              BEST SELLER
-            </NavLink>
+    <>
+      <Navbar expand="md" className="navbar-sticky banner py-2" sticky="top">
+        <Container fluid className="px-3">
+          {/* ===== Mobile header row: LEFT = search + cart, RIGHT = hamburger ===== */}
+          {/* ===== Mobile header row: LEFT = search + wishlist + cart + account, RIGHT = hamburger ===== */}
+<div className="d-flex d-md-none w-100 align-items-center justify-content-between">
+  {/* LEFT: search + wishlist + cart + account */}
+  <div className="d-flex align-items-center gap-2">
+    {/* Search (mobile) */}
+    <button
+      aria-label="Open search"
+      className="icon-btn"
+      onClick={handleSearchToggle}
+      type="button"
+    >
+      <img src={loupe} alt="Search" className="icon-img" loading="lazy" />
+    </button>
 
-            <NavDropdown
-              title={
-                <span
-                  style={{
-                    color: "#fff",
-                    letterSpacing: "1px",
-                    fontWeight: "700",
-                    display: "inline-flex",
-                    alignItems: "center",
-                  }}
-                >
-                  CATEGORIES
-                  <FontAwesomeIcon
-                    icon={faAngleDown}
-                    style={{
-                      marginLeft: "10px",
-                      transition: "transform 0.3s ease",
-                      transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
-                      color: "#fff",
-                    }}
-                  />
-                </span>
-              }
-              className={`nav-hover-effect ${isOpen || isCategoryActive ? "active-link" : ""}`}
-              id="basic-nav-dropdown"
-              onToggle={(open) => setIsOpen(open)}
-            >
-            {/*}  <div style={{ width: "240px" }}>
-  {loading ? (
-    <NavDropdown.Item disabled>Loading...</NavDropdown.Item>
-  ) : error ? (
-    <NavDropdown.Item disabled>{error}</NavDropdown.Item>
-  ) : categories.length === 0 ? (
-    <NavDropdown.Item disabled>No categories available</NavDropdown.Item>
-  ) : (
-    categories
-      .filter((category) => category.name.toLowerCase() === "oils") // ✅ only Oils category
-      .map((category) => (
-        <NavDropdown.Item
-          key={category._id}
-          as={Link}
-          to={`/categories?category=${encodeURIComponent(
-            category.slug || toSlug(category.name)
-          )}`}
-          className="nav-hover-effect-categories"
-          style={{
-            color: "black",
-            fontSize: "18px",
-            letterSpacing: "1px",
-            fontWeight: "700",
-          }}
-        >
-          {category.name}
-        </NavDropdown.Item>
-      ))
-  )}
-</div>*/}
+    {/* Wishlist (mobile) */}
+    <Link to="/wishlist" aria-label="Wishlist" className="icon-box">
+      <img src={faHeart} alt="Wishlist" className="icon-img" loading="lazy" />
+    </Link>
 
-<div style={{ width: "240px" }}>
-  {loading ? (
-    <NavDropdown.Item disabled>Loading...</NavDropdown.Item>
-  ) : error ? (
-    <NavDropdown.Item disabled>{error}</NavDropdown.Item>
-  ) : categories.length === 0 ? (
-    <NavDropdown.Item disabled>No categories available</NavDropdown.Item>
-  ) : (
-    categories.map((category) => (
-      <NavDropdown.Item
-        key={category._id}
-        as={Link}
-        to={`/categories?category=${encodeURIComponent(
-          category.slug || toSlug(category.name)
-        )}`}
-        className="nav-hover-effect-categories"
-        style={{
-          color: "black",
-          fontSize: "18px",
-          letterSpacing: "1px",
-          fontWeight: "700",
-        }}
-      >
-        {category.name}
-      </NavDropdown.Item>
-    ))
-  )}
+    {/* Cart (mobile) */}
+    <Link to="/carts" className="cart-wrapper" aria-label="Cart">
+      <div className={`cart-icon ${animate ? "cart-bounce" : ""} icon-box`}>
+        <img src={Cart} alt="Cart" className="icon-img" loading="lazy" />
+        {itemCount > 0 && <span className="cart-count">{itemCount}</span>}
+      </div>
+    </Link>
+
+    {/* Account (mobile) */}
+    <Link to="/login" aria-label="Account" className="icon-box">
+      <img src={Account} alt="Account" className="icon-img" loading="lazy" />
+    </Link>
+  </div>
+
+  {/* RIGHT: hamburger (drawer toggle) */}
+  <Navbar.Toggle
+    aria-controls="main-offcanvas"
+    className="border-0 shadow-none"
+    onClick={() => setShowDrawer(true)}
+  />
 </div>
 
 
-            </NavDropdown>
-          </Nav>
+          {/* ===== Offcanvas drawer (mobile) + Desktop nav inside same body ===== */}
+          <Navbar.Offcanvas
+            id="main-offcanvas"
+            aria-labelledby="main-offcanvas-label"
+            placement="start"
+            className="mobile-offcanvas"
+            restoreFocus
+            scroll={false}
+            show={showDrawer}
+            onHide={() => setShowDrawer(false)}
+          >
+            <Offcanvas.Header closeButton></Offcanvas.Header>
 
-          {/* Right & Search */}
-          <div className="d-flex gap-3 text-white navbar-icons" ref={searchWrapRef}>
-            <div className="icon-box position-relative" onClick={handleSearchToggle} style={{ cursor: "pointer" }}>
-              <img src={loupe} alt="Search-Icon" className="icon-img" />
-            </div>
+            <Offcanvas.Body>
+              <Nav className="me-auto navbar-links align-items-center" style={{ gap: "24px" }}>
+                <NavLink
+                  to="/"
+                  className={({ isActive }) =>
+                    isActive ? "nav-hover-effect active-link" : "nav-hover-effect"
+                  }
+                  style={{ color: "#fff", letterSpacing: "1px", fontWeight: "700", fontSize: "22px" }}
+                >
+                  HOME
+                </NavLink>
 
-            {showSearch && (
-              <form onSubmit={handleSearchSubmit} className="d-flex align-items-center position-relative">
-                <input
-                  type="text"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search products or categories…"
-                  className="form-control"
-                  style={{ maxWidth: "260px" }}
-                  autoFocus
-                  onFocus={() => query && setShowSuggestions(true)}
-                />
+                <NavLink
+                  to="/best-seller"
+                  className={({ isActive }) =>
+                    isActive ? "nav-hover-effect active-link" : "nav-hover-effect"
+                  }
+                  style={{ color: "#fff", letterSpacing: "1px", fontWeight: "700", fontSize: "22px" }}
+                >
+                  BEST SELLER
+                </NavLink>
 
-                {/* Suggestions */}
-                {showSuggestions && (suggestions.products.length > 0 || suggestions.categories.length > 0) && (
-                  <div
-                    className="position-absolute bg-white rounded shadow"
-                    style={{
-                      top: "110%",
-                      left: 0,
-                      width: "360px",
-                      maxHeight: "380px",
-                      overflowY: "auto",
-                      zIndex: 1050,
-                      padding: "8px",
-                    }}
+                {/* Categories dropdown */}
+                <NavDropdown
+                  title={
+                    <span
+                      style={{
+                        color: "#fff",
+                        letterSpacing: "1px",
+                        fontWeight: "700",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        fontSize: "22px"
+                      }}
+                      className="nav-title"
+                    >
+                      CATEGORIES
+                      <FontAwesomeIcon
+                        icon={faAngleDown}
+                        style={{
+                          marginLeft: "10px",
+                          transition: "transform 0.3s ease",
+                          transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+                          color: "#fff",
+                        }}
+                      />
+                    </span>
+                  }
+                  className={`nav-hover-effect ${isOpen || isCategoryActive ? "active-link" : ""}`}
+                  id="basic-nav-dropdown"
+                  onToggle={(open) => setIsOpen(open)}
+                >
+                  <div style={{ width: "240px" }} className="nav-width">
+                    {loading ? (
+                      <NavDropdown.Item disabled>Loading...</NavDropdown.Item>
+                    ) : error ? (
+                      <NavDropdown.Item disabled>{error}</NavDropdown.Item>
+                    ) : categories.length === 0 ? (
+                      <NavDropdown.Item disabled>No categories available</NavDropdown.Item>
+                    ) : (
+                      categories.map((category) => (
+                        <NavDropdown.Item
+                          key={category._id}
+                          as={Link}
+                          to={`/categories?category=${encodeURIComponent(
+                            category.slug || toSlug(category.name)
+                          )}`}
+                          className="nav-hover-effect-categories"
+                          style={{
+                            color: "black",
+                            fontSize: "18px",
+                            letterSpacing: "1px",
+                            fontWeight: "700",
+                          }}
+                        >
+                          {category.name}
+                        </NavDropdown.Item>
+                      ))
+                    )}
+                  </div>
+                </NavDropdown>
+              </Nav>
+
+              {/* Desktop icons + search */}
+              <div
+                className="d-none d-md-flex gap-3 text-white navbar-icons ms-auto"
+                ref={searchWrapRef}
+              >
+                {/* Search (desktop) */}
+                <div className="icon-box position-relative" onClick={handleSearchToggle}>
+                  <img src={loupe} alt="Search" className="icon-img" loading="lazy" />
+                </div>
+
+                {showSearch && (
+                  <form
+                    onSubmit={handleSearchSubmit}
+                    className="d-flex align-items-center position-relative d-none d-md-flex"
                   >
-                    {isSearching && (
-                      <div className="px-2 py-1 text-muted" style={{ fontSize: 14 }}>
-                        Searching…
-                      </div>
-                    )}
+                    <input
+                      type="search"
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      placeholder="Search products or categories…"
+                      className="form-control"
+                      style={{ maxWidth: "260px" }}
+                      autoFocus
+                      onFocus={() => query && setShowSuggestions(true)}
+                      inputMode="search"
+                      aria-label="Search products or categories"
+                    />
 
-                    {suggestions.products.length > 0 && (
-                      <>
-                        <div className="px-2 pt-1 pb-2 text-secondary" style={{ fontSize: 12, fontWeight: 700 }}>
-                          PRODUCTS
-                        </div>
-                        {suggestions.products.map((p) => (
-                          <button
-                            key={p._id}
-                            type="button"
-                            className="dropdown-item d-flex align-items-center"
-                            onClick={() => {
-                              setShowSuggestions(false);
-                              navigate(p.link);
-                            }}
-                          >
-                            <img
-                              src={p.imageUrl}
-                              alt={p.name}
-                              style={{ width: 36, height: 36, objectFit: "cover", borderRadius: 4, marginRight: 8 }}
-                            />
-                            <div className="d-flex flex-column">
-                              <span style={{ fontSize: 14, fontWeight: 600, color:"#000" }}>{p.name}</span>
-                              {p.categoryName && (
-                                <span className="text-muted" style={{ fontSize: 12 }}>
-                                  {p.categoryName}
-                                </span>
-                              )}
+                    {/* Suggestions (desktop dropdown) */}
+                    {showSuggestions &&
+                      (suggestions.products.length > 0 || suggestions.categories.length > 0) && (
+                        <div
+                          className="position-absolute bg-white rounded shadow desktop-suggest"
+                          style={{
+                            top: "110%",
+                            left: 0,
+                            width: "360px",
+                            maxHeight: "380px",
+                            overflowY: "auto",
+                            zIndex: 1050,
+                            padding: "8px",
+                          }}
+                        >
+                          {isSearching && (
+                            <div className="px-2 py-1 text-muted" style={{ fontSize: 14 }}>
+                              Searching…
                             </div>
-                          </button>
-                        ))}
-                        <div className="dropdown-divider" />
-                      </>
-                    )}
+                          )}
 
-                    {suggestions.categories.length > 0 && (
-                      <>
-                        <div className="px-2 pt-1 pb-2 text-secondary" style={{ fontSize: 12, fontWeight: 700 }}>
-                          CATEGORIES
+                          {suggestions.products.length > 0 && (
+                            <>
+                              <div
+                                className="px-2 pt-1 pb-2 text-secondary"
+                                style={{ fontSize: 12, fontWeight: 700 }}
+                              >
+                                PRODUCTS
+                              </div>
+                              {suggestions.products.map((p) => (
+                                <button
+                                  key={p._id}
+                                  type="button"
+                                  className="dropdown-item d-flex align-items-center"
+                                  onClick={() => {
+                                    setShowSuggestions(false);
+                                    navigate(p.link);
+                                  }}
+                                >
+                                  <img
+                                    src={p.imageUrl}
+                                    alt={p.name}
+                                    loading="lazy"
+                                    style={{
+                                      width: 36,
+                                      height: 36,
+                                      objectFit: "cover",
+                                      borderRadius: 4,
+                                      marginRight: 8,
+                                    }}
+                                  />
+                                  <div className="d-flex flex-column">
+                                    <span style={{ fontSize: 14, fontWeight: 600, color: "#000" }}>
+                                      {p.name}
+                                    </span>
+                                    {p.categoryName && (
+                                      <span className="text-muted" style={{ fontSize: 12 }}>
+                                        {p.categoryName}
+                                      </span>
+                                    )}
+                                  </div>
+                                </button>
+                              ))}
+                              <div className="dropdown-divider" />
+                            </>
+                          )}
+
+                          {suggestions.categories.length > 0 && (
+                            <>
+                              <div
+                                className="px-2 pt-1 pb-2 text-secondary"
+                                style={{ fontSize: 12, fontWeight: 700 }}
+                              >
+                                CATEGORIES
+                              </div>
+                              {suggestions.categories
+                                .filter((c) => c.name.toLowerCase() === "oils")
+                                .map((c) => (
+                                  <button
+                                    key={c._id}
+                                    type="button"
+                                    className="dropdown-item"
+                                    onClick={() => {
+                                        setShowSuggestions(false);
+                                        navigate(
+                                          `/categories?category=${encodeURIComponent(
+                                            c.slug || c.name.toLowerCase().replace(/\s+/g, "-")
+                                          )}`
+                                        );
+                                      }}
+                                  >
+                                    {c.name}
+                                  </button>
+                                ))}
+                            </>
+                          )}
+
+                          <div className="mt-2">
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-outline-primary w-100"
+                              onClick={() => {
+                                setShowSuggestions(false);
+                                navigate(`/search?q=${encodeURIComponent(query.trim())}`);
+                              }}
+                            >
+                              View all results for “{query.trim()}”
+                            </button>
+                          </div>
                         </div>
-                       {suggestions.categories
-  .filter((c) => c.name.toLowerCase() === "oils") 
-  .map((c) => (
-    <button
-      key={c._id}
-      type="button"
-      className="dropdown-item"
-      onClick={() => {
-        setShowSuggestions(false);
-        navigate(
-          `/categories?category=${encodeURIComponent(
-            c.slug || c.name.toLowerCase().replace(/\s+/g, "-")
-          )}`
-        );
-      }}
-    >
-      {c.name}
-    </button>
-))}
-                      </>
-                    )}
+                      )}
+                  </form>
+                )}
 
-                    <div className="mt-2">
+                <div className="icon-box">
+                  <Link to="/wishlist" aria-label="Wishlist">
+                    <img src={faHeart} alt="" className="icon-img" loading="lazy" />
+                  </Link>
+                </div>
+
+                <Link to="/carts" className="cart-wrapper" aria-label="Cart">
+                  <div className={`cart-icon ${animate ? "cart-bounce" : ""} icon-box`}>
+                      <img src={Cart} alt="" className="icon-img" loading="lazy" />
+                      {itemCount > 0 && <span className="cart-count">{itemCount}</span>}
+                    </div>
+                </Link>
+
+                <div className="icon-box">
+                  <Link to="/login" aria-label="Account">
+                    <img src={Account} alt="" className="icon-img" loading="lazy" />
+                  </Link>
+                </div>
+              </div>
+            </Offcanvas.Body>
+          </Navbar.Offcanvas>
+        </Container>
+      </Navbar>
+
+      {/* Mobile full-width search bar & sticky suggestions */}
+      {showSearch && (
+        <div className="mobile-search-wrap d-md-none">
+          <form onSubmit={handleSearchSubmit} className="mobile-search-form">
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search products or categories…"
+              className="mobile-search-input"
+              autoFocus
+              inputMode="search"
+              aria-label="Search products or categories"
+            />
+            <button type="submit" className="mobile-search-submit">Search</button>
+          </form>
+
+          {(showSuggestions &&
+            (suggestions.products.length > 0 || suggestions.categories.length > 0)) && (
+            <div className="mobile-suggest">
+              {isSearching && <div className="px-2 py-2 text-muted small">Searching…</div>}
+
+              {suggestions.products.length > 0 && (
+                <>
+                  <div className="suggest-head">PRODUCTS</div>
+                  {suggestions.products.map((p) => (
+                    <button
+                      key={p._id}
+                      type="button"
+                      className="suggest-item"
+                      onClick={() => {
+                        setShowSuggestions(false);
+                        setShowSearch(false);
+                        navigate(p.link);
+                      }}
+                    >
+                      <img src={p.imageUrl} alt={p.name} loading="lazy" className="suggest-thumb" />
+                      <div className="suggest-text">
+                        <span className="name">{p.name}</span>
+                        {p.categoryName && <span className="cat">{p.categoryName}</span>}
+                      </div>
+                    </button>
+                  ))}
+                </>
+              )}
+
+              {suggestions.categories.length > 0 && (
+                <>
+                  <div className="suggest-head">CATEGORIES</div>
+                  {suggestions.categories
+                    .filter((c) => c.name.toLowerCase() === "oils")
+                    .map((c) => (
                       <button
+                        key={c._id}
                         type="button"
-                        className="btn btn-sm btn-outline-primary w-100"
+                        className="suggest-row"
                         onClick={() => {
                           setShowSuggestions(false);
-                          navigate(`/search?q=${encodeURIComponent(query.trim())}`);
+                          setShowSearch(false);
+                          navigate(
+                            `/categories?category=${encodeURIComponent(
+                              c.slug || c.name.toLowerCase().replace(/\s+/g, "-")
+                            )}`
+                          );
                         }}
                       >
-                        View all results for “{query.trim()}”
+                        {c.name}
                       </button>
-                    </div>
-                  </div>
-                )}
-              </form>
-            )}
+                    ))}
+                </>
+              )}
 
-            {/* Icons */}
-            <div className="icon-box">
-              <Link to="/wishlist">
-                <img src={faHeart} alt="Wishlist-Icon" className="icon-img" />
-              </Link>
+              <button
+                type="button"
+                className="btn btn-outline-primary w-100 mt-2"
+                onClick={() => {
+                  setShowSuggestions(false);
+                  setShowSearch(false);
+                  navigate(`/search?q=${encodeURIComponent(query.trim())}`);
+                }}
+              >
+                View all results for “{query.trim()}”
+              </button>
             </div>
-
-            <Link to="/carts" className="cart-wrapper">
-              <div className={`cart-icon ${animate ? "cart-bounce" : ""} icon-box`}>
-                <img src={Cart} alt="cart-icon" className="icon-img" />
-                {itemCount > 0 && <span className="cart-count">{itemCount}</span>}
-              </div>
-            </Link>
-
-            <div className="icon-box">
-              <Link to="/login">
-                <img src={Account} alt="Account-Icon" className="icon-img" />
-              </Link>
-            </div>
-          </div>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+          )}
+        </div>
+      )}
+    </>
   );
 }

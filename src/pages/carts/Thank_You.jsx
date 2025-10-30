@@ -449,7 +449,7 @@ export default function ThankYou() {
                 letterSpacing: "2px",
                 margin: "10% 0 0 0",
                 color: "#002209",
-              }}
+              }}className="thankhead"
             >
               THANK YOU!
             </h1>

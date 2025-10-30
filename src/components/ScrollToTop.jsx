@@ -1,72 +1,45 @@
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+import "./ScrollToTop.css"
 
-const ScrollToTop = () => {
+const ScrollToTop = ({ threshold = 300 }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const ticking = useRef(false);
 
   useEffect(() => {
-    const toggleVisibility = () => {
-      if (window.scrollY > 300) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
+    const onScroll = () => {
+      if (ticking.current) return;
+      ticking.current = true;
+      requestAnimationFrame(() => {
+        setIsVisible(window.scrollY > threshold);
+        ticking.current = false;
+      });
     };
 
-    window.addEventListener("scroll", toggleVisibility);
-    return () => window.removeEventListener("scroll", toggleVisibility);
-  }, []);
+    // run once on mount
+    onScroll();
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [threshold]);
 
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    try {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch {
+      window.scrollTo(0, 0);
+    }
   };
 
   return (
-    <>
-      <div>
-        {isVisible && (
-       <button
-       onClick={scrollToTop}
-       className="scrolltop"
-       style={{
-         position: "fixed",
-         bottom: "70px",
-         right: "20px",
-         width: "50px",
-         height: "50px",
-         fontSize: "20px",
-         fontWeight: "bold",
-         background: "#D3B353",
-         color: "#002209",
-         border: "1px solid #002209",
-         borderRadius: "10%",
-         cursor: "pointer",
-         display: "flex",
-         alignItems: "center",
-         justifyContent: "center",
-         transition: "background 0.3s, color 0.3s, box-shadow 0.3s",
-         boxShadow: "2px 2px 0px #002209",
-         marginBottom: "10px",
-         zIndex: "99999",
-       }}
-       onMouseOver={(e) => {
-         e.target.style.background = "#D3B353";
-         e.target.style.color = "#002209";
-       }}
-       onMouseOut={(e) => {
-         e.target.style.background = "#002209";
-         e.target.style.color = "#D3B353";
-         e.target.style.boxShadow = "2px 2px 0px #D3B353";
-       }}
-     >
-       ↑
-     </button>
-     
-        )}
-      </div>
-    </>
+    <button
+      type="button"
+      aria-label="Scroll to top"
+      title="Scroll to top"
+      onClick={scrollToTop}
+      className={`scrolltop-btn ${isVisible ? "is-visible" : ""}`}
+    >
+      ↑
+    </button>
   );
 };
 

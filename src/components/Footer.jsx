@@ -179,12 +179,6 @@
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { Container, Row, Col } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faLocationDot,
-  faEnvelope,
-  faPhone,
-} from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import logo from "/media/MysuruOilsLogo.png";
 import location from "/media/location.png";
@@ -195,190 +189,126 @@ import instagram from "/media/instagram.png";
 
 export default function Footer() {
   return (
-    <div
-      style={{
-        padding: "40px 10px",
-        color: "#fff",
-        backgroundColor: "#002209",
-      }}
-    >
-      <Container>
-        {/* Subscription Input */}
-       <InputGroup
-          className="mb-5 footer-subscribe-input"
-          style={{ maxWidth: "1100px", margin: "auto", borderRadius: "8px" }}
-        >
-          <Form.Control
-            placeholder="Enter Your Email"
-            style={{
-              borderRadius: "0",
-              fontSize: "16px",
-              color: "#002209",
-              fontWeight: "bold",
-              padding: "12px 20px",
-              fontFamily:"montserrat"
-            }}
-            className="me-2 search-input input-account-forms"
-          />
-          <InputGroup.Text
-            className="footer-subscribe-button"
-            style={{
-              borderRadius: "0",
-              fontWeight: "bold",
-              color: "#002209",
-              backgroundColor: "#D3B353",
-              height: "48px",
-              cursor: "pointer",
-              fontSize: "16px",
-              padding: "0 24px",
-              letterSpacing: "1px",
-              fontFamily:"montserrat"
-            }}
-          >
-            SUBSCRIBE
-          </InputGroup.Text>
-        </InputGroup>
-
-        <div
-          style={{
-            
-            display: "flex",
-            justifyContent: "space-between",
-            gap: "20px",
-            fontWeight: "normal",
-            // flexWrap: "wrap",
-          }}
-        >
-          <div>
-            <img src={logo} style={{ width: "150px", marginBottom: "10px" }} />
-            {/* <p style={{ fontSize: "14px", marginTop: "10px" }}>
-              Mysuru Oils - Premium Oil Store
-            </p> */}
-         </div>
-
-          <Row style={{ width: "100%", margin: "0px 10px " }}>
-            <Col xs={12} md={3} style={{ fontSize: "14px", fontWeight: "400" }}>
-              <p style={{ fontSize: "18px", fontWeight: "600" , fontFamily:"montserrat"}}>ABOUT</p>
-              <ul 
-                style={{
-                  listStyle: "none",
-                  
-                  paddingLeft: "0",
-                }}
-              >
-                <li className="mb-1">
-                  <Link to="/" className="linkstyle">
-                    About Us
-                  </Link>
-                </li>
-                <li className="mb-1">
-                  <Link to="/account" className="linkstyle">
-                    Account
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/contact" className="linkstyle">
-                    Contact Us
-                  </Link>
-                </li>
-              </ul>
-            </Col>
-
-            <Col xs={12} md={3} style={{ fontSize: "14px", fontWeight: "400" }}>
-              <p style={{ fontSize: "18px", fontWeight: "600" }}>Support</p>
-              <ul
-                style={{
-                  textDecoration: "none",
-                  listStyle: "none",
-                  paddingLeft: "0",
-                }}
-              >
-                <li className="mb-1">
-                  {" "}
-                  <Link to="/create_account" className="linkstyle">
-                    Sign Up
-                  </Link>
-                </li>
-                <li>
-                  {" "}
-                  
-                </li>
-              </ul>
-            </Col>
-
-            <Col xs={12} md={3} style={{ fontSize: "14px", fontWeight: "400" }}>
-              <p style={{ fontSize: "18px", fontWeight: "600" , fontFamily:"montserrat"}}>Social</p>
-              <div className="d-flex align-items-center justify-content-start gap-3">
-              <Link to="https://www.instagram.com/themysoreoils?igsh=MWJpbW5uNTdqMmV0dg%3D%3D&utm_source=qr" target="_blank"
-  rel="noopener noreferrer" style={{textDecoration:"none", color:"inherit"}}>
-               <img src={instagram} style={{width:"35px"}}/>
-                </Link>
-                
-                 <img src={communicate} style={{width:'30px'}}/>
-                </div>
-              
-            </Col>
-
-            <Col xs={12} md={3} style={{ fontSize: "14px", fontWeight: "400" }}>
-              <p style={{ fontSize: "18px", fontWeight: "600", fontFamily:"montserrat" }}>Help</p>
-              <ul className="linkstyle"
-                style={{
-                  textDecoration: "none",
-                  listStyle: "none",
-                  paddingLeft: "0",
-                }}
-              >
-                <Link to="/terms-conditions" style={{color:"inherit", textDecoration:"none"}}>
-                <li className="mb-1">Terms of Service</li>
-                </Link>
-                <Link to="/privacy" style={{color:"inherit", textDecoration:"none"}}>
-                <li className="mb-1">Privacy Policy</li>
-                </Link>
-                <Link to="/shipping-policy" style={{color:"inherit", textDecoration:"none"}}>
-                <li className="mb-1">Shipping Policy</li>
-                </Link>
-                <Link to="/refund-policy" style={{color:"inherit", textDecoration:"none"}}>
-                <li>Return and Refund Policy</li>
-                </Link>
-              </ul>
-            </Col>
-          </Row>
-
-          <div>
-             <Link to="https://g.co/kgs/ugbtFCm" target="_blank" rel="noopener noreferrer" style={{textDecoration:"none", color:"inherit"}}>
-            <div
-              className="d-flex align-items-start gap-3 linkstyle"
-              style={{ marginBottom: "4px" }}
+    <footer style={{ backgroundColor: "#002209", color: "#fff" }}>
+      <Container className="py-4 py-md-5">
+        {/* Subscribe */}
+       {/*} <div className="d-flex flex-column align-items-center">
+          <InputGroup className="footer-subscribe w-md-75 w-lg-75 mb-4">
+            <Form.Control
+              placeholder="Enter Your Email"
+              aria-label="Enter your email to subscribe"
+              className="footer-input"
+            />
+            <InputGroup.Text
+              as="button"
+              role="button"
+              className="footer-btn"
+              onClick={() => {}}
             >
-             
-              <img src={location} style={{ width: "20px" }} />
-              <p style={{ fontSize: "14px" }}>
-                #1881/3A, Wesely Road, Mysore, Karnataka 570001
-                </p>
-            </div>
+              SUBSCRIBE
+            </InputGroup.Text>
+          </InputGroup>
+        </div>*/}
+
+        {/* Main grid */}
+        
+        <Row className="gy-4 gy-md-5 align-items-start">
+          {/* Brand */}
+          <Col xs={12} md={3} className="order-0 text-center text-md-start">
+            <img
+              src={logo}
+              alt="The Mysore Oils"
+              className="mb-2"
+              style={{ width: 180, height: "auto", objectFit:"cover" }}
+            />
+              <Col xs={6} md={2} className="order-5">
+            <div className="d-grid gap-3 gap-md-2 mt-2 mt-md-0">
+              <Link
+                to="https://g.co/kgs/ugbtFCm"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-link d-flex align-items-start gap-2"
+              >
+                <img src={location} alt="" width={22} height={22} />
+                <span className="footer-text">
+                  #1881/3A, Wesely Road, Mysore, Karnataka 570001
+                </span>
               </Link>
 
-            <div
-              className="d-flex align-items-start gap-3 linkstyle"
-              style={{ marginBottom: "4px" }}
-            >
-              <img src={mail} style={{ width: "20px" }} />
-              <p style={{ fontSize: "14px" }}>
+              <div className="d-flex align-items-start gap-2">
+                <img src={mail} alt="" width={22} height={22} />
                 <a
                   href="mailto:themysuruoils@gmail.com"
-                  style={{ color: "inherit", textDecoration: "none" }}
-                >support@themysoreoils.com
+                  className="footer-link footer-text"
+                >
+                  support@themysoreoils.com
                 </a>
-              </p>
+              </div>
+
+              <div className="d-flex align-items-start gap-2">
+                <img src={call} alt="" width={22} height={22} />
+                <a href="tel:7899830366" className="footer-link footer-text">
+                  7899830366
+                </a>
+              </div>
             </div>
-            <div className="d-flex align-items-start gap-3 linkstyle">
-              <img src={call} style={{ width: "20px" }} />
-              <p style={{ fontSize: "14px" }}>7899830366</p>
+          </Col>
+          </Col>
+
+          {/* Contact */}
+          
+          {/* About */}
+          <Col xs={6} md={2} className="order-1">
+            <p className="footer-hd">ABOUT</p>
+            <ul className="footer-list">
+              <li><Link to="/" className="footer-link">About Us</Link></li>
+              <li><Link to="/account" className="footer-link">Account</Link></li>
+              <li><Link to="/contact" className="footer-link">Contact Us</Link></li>
+            </ul>
+          </Col>
+
+          {/* Help */}
+          <Col xs={6} md={3} className="order-2">
+            <p className="footer-hd">HELP</p>
+            <ul className="footer-list">
+              <li><Link to="/terms-conditions" className="footer-link">Terms of Service</Link></li>
+              <li><Link to="/privacy" className="footer-link">Privacy Policy</Link></li>
+              <li><Link to="/shipping-policy" className="footer-link">Shipping Policy</Link></li>
+              <li><Link to="/refund-policy" className="footer-link">Return and Refund Policy</Link></li>
+            </ul>
+          </Col>
+
+          {/* Social */}
+          <Col xs={6} md={2} className="order-3">
+            <p className="footer-hd">SOCIAL</p>
+            <div className="d-flex align-items-center gap-3">
+              <Link
+                to="https://www.instagram.com/themysoreoils?igsh=MWJpbW5uNTdqMmV0dg%3D%3D&utm_source=qr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-link d-inline-flex align-items-center"
+                aria-label="Instagram"
+              >
+                <img src={instagram} alt="Instagram" width={34} height={34} />
+              </Link>
+              <img src={communicate} alt="" width={30} height={30} />
             </div>
-          </div>
-        </div>
+          </Col>
+
+          {/* Support */}
+          <Col xs={6} md={2} className="order-4">
+            <p className="footer-hd">SUPPORT</p>
+            <ul className="footer-list">
+              <li><Link to="/create_account" className="footer-link">Sign Up</Link></li>
+            </ul>
+          </Col>
+
+        
+
+
+          
+        </Row>
       </Container>
-    </div>
+    </footer>
   );
 }
-

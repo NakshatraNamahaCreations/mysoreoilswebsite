@@ -728,7 +728,7 @@ export default function Best_Seller() {
 
           {/* GRID */}
           <div style={{ backgroundColor: "#fff", padding: "20px", color: "#002209" }}>
-            <Container className="mt-4">
+            <Container className="mt-4 best-head">
               <h1
                 style={{
                   textAlign: "center",
@@ -877,6 +877,7 @@ export default function Best_Seller() {
                                   margin: 0,
                                   whiteSpace: "nowrap",
                                 }}
+                                className="discount-amt"
                               >
                                 Rs {hasDiscount ? item.discountedPrice : item.originalPrice}
                               </p>

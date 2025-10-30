@@ -1,12 +1,13 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 export default function FooterOne() {
   return (
     <footer style={{ backgroundColor: "#f9f9f9", padding: "40px 0", fontFamily: "Poppins", fontSize: "14px", color: "#333" }}>
       <Container>
         <Row>
-          <Col md={4}>
+          <Col md={3}>
             <h5>Shop By Category</h5>
             <ul style={{ listStyle: "none", padding: 0 }}>
               <li>Oils | Cold Pressed Oils | Coconut | Groundnut | Sunflower | Safflower | Sesame </li>
@@ -37,7 +38,7 @@ export default function FooterOne() {
             </div>
           </Col>
 
-          <Col md={4}>
+          <Col md={3}>
             <h5>Shop By Occasion</h5>
             <ul style={{ listStyle: "none", padding: 0 }}>
               <li>Festive Gifting Hampers</li>
@@ -50,10 +51,14 @@ export default function FooterOne() {
               <li>Traditional Cooking Specials</li>
             </ul>
 
-            <h5 className="mt-4">Top Collections</h5>
+           
+          </Col>
+
+          <Col md={3}>
+           <h5 >Top Collections</h5>
             <ul style={{ listStyle: "none", padding: 0 }}>
               <li>Cold Pressed Oil Essentials</li>
-             {/*} <li>Millet Superfood Basket</li>
+              <li>Millet Superfood Basket</li>
               <li>Premium Dry Fruit Combos</li>
               <li>Vegan & Jaggery Ice Creams</li>
               <li>Handpicked Gifting Hampers</li>
@@ -61,34 +66,35 @@ export default function FooterOne() {
               <li>Clay & Cast Iron Cookware</li>
               <li>Seasonal Fruit Delight Baskets</li>
               <li>Herbal Beauty Care Essentials</li>
-              <li>Healthy Snack Box Collections</li>*/}
+              <li>Healthy Snack Box Collections</li>
             </ul>
+            
+
+            
           </Col>
 
-          <Col md={4}>
-            <h5>About</h5>
+          <Col md={3}>
+          <h5>About</h5>
             <ul style={{ listStyle: "none", padding: 0 }}>
-              <li>About Us</li>
+              <Link to="/login"><li>Sign Up</li></Link>
+              
               
             </ul>
 
             <h5 className="mt-4">Help</h5>
             <ul style={{ listStyle: "none", padding: 0 }}>
-              <li>Track Order</li>
-              <li>Shipping & Returns</li>
-              <li>Exchange Policy</li>
-              <li>FAQs</li>
-              <li>Find a Store</li>
-              <li>Site Map</li>
+              <Link to="/terms-conditions"><li>Terms of Services</li></Link>
+              <Link to="/privacy"><li>Privacy Policy</li></Link>
+              <Link to="/shipping-policy"><li>Shipping Policy</li></Link>
+              <Link to="/refund-policy"><li>Return and Refund Policy</li></Link>
+              
             </ul>
-
-            
           </Col>
         </Row>
 
         <Row className="pt-4 mt-4 border-top">
           <Col md={12} className="text-center">
-            <p>Terms & Conditions | Privacy Policy | &copy; 2025 Mysore Oils. All Rights Reserved.</p>
+            <p> &copy; 2025 Mysore Oils. All Rights Reserved.</p>
           </Col>
         </Row>
       </Container>

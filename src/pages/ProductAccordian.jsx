@@ -107,13 +107,12 @@ function BasicExample({ onCategorySelect, currentCategory }) {
   return (
     <>
     <div
-      style={{
-        maxHeight: "700px",
-        // overflowY:'hidden',
-        overflowY: "auto",
-        paddingRight: "10px",
-      }}className="accordian-slider-wrapper"
-    >
+  style={{
+    paddingRight: "10px",
+    overflow: "visible",
+  }}
+  className="accordian-slider-wrapper"
+>
       <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key)}>
         {loading ? (
           <Accordion.Item eventKey="loading">

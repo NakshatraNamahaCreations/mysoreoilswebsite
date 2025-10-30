@@ -1202,24 +1202,57 @@ export default function Your_Carts() {
     if (user) setIsLoggedIn(true);
   }, []);
 
-  // If you support a local wishlist, make sure you keep variantId too
+  /** Add from Wishlist
+   * Only add items that:
+   *  - have a truthy image
+   *  - have quantity > 0 (use wishlist quantity, not default 1)
+   *  - are not already in cart for the same (id, variantId)
+   */
   const handleAddFromWishlist = () => {
     const wishlistItems = JSON.parse(localStorage.getItem("wishlist")) || [];
-    if (wishlistItems.length === 0) {
+    if (!wishlistItems.length) {
       alert("Your Wishlist is empty.");
       return;
     }
 
+    let added = 0;
+    let skippedNoQty = 0;
+    let skippedNoImage = 0;
+    let skippedDup = 0;
+
     wishlistItems.forEach((item) => {
-      const isAlreadyInCart = (cartItems || []).some(
+      const qty = toNum(item.quantity);
+      const hasQty = qty > 0;
+      const hasImage = !!item.image;
+
+      if (!hasQty) {
+        skippedNoQty++;
+        return;
+      }
+      if (!hasImage) {
+        skippedNoImage++;
+        return;
+      }
+
+      const exists = (cartItems || []).some(
         (ci) => ci.id === item.id && (ci.variantId ?? "") === (item.variantId ?? "")
       );
-      if (!isAlreadyInCart) {
-        dispatch(addToCart({ ...item, quantity: 1 }));
+      if (exists) {
+        skippedDup++;
+        return;
       }
+
+      dispatch(addToCart({ ...item, quantity: qty }));
+      added++;
     });
 
-    alert("Wishlist items added to Cart!");
+    const parts = [];
+    if (added) parts.push(`✅ Added: ${added}`);
+    if (skippedNoQty) parts.push(`⏸️ Skipped (no quantity): ${skippedNoQty}`);
+    if (skippedNoImage) parts.push(`🖼️ Skipped (no image): ${skippedNoImage}`);
+    if (skippedDup) parts.push(`♻️ Skipped (already in cart): ${skippedDup}`);
+
+    alert(parts.length ? parts.join(" | ") : "Nothing eligible to add from Wishlist.");
   };
 
   return (
@@ -1287,19 +1320,19 @@ export default function Your_Carts() {
                         />
                       </Col>
 
-                      <Col xs={8}>
+                      <Col xs={8} className="cartsectionright">
                         <h5 className="fw-semibold" style={{ fontFamily: "Poppins" }}>
                           {item.name}
                         </h5>
 
                         {item.weight && item.unit && (
-                          <div className="text-muted" style={{ fontSize: 12 }}>
+                          <div className="text-muted" style={{ fontSize: 12, fontFamily:'poppins' }}>
                             {item.weight} {item.unit}
                           </div>
                         )}
 
                         {hasDiscount && (
-                          <div className="text-muted text-decoration-line-through mt-1">
+                          <div className="text-muted text-decoration-line-through mt-1" style={{fontFamily:"poppins"}}>
                             ₹{lineOriginalTotal(item).toFixed(2)}
                           </div>
                         )}
@@ -1313,7 +1346,7 @@ export default function Your_Carts() {
                               dispatch(
                                 updateQuantity({
                                   id: item.id,
-                                  variantId: item.variantId, // <<< key the line by variant
+                                  variantId: item.variantId,
                                   quantity: Math.max(1, toNum(item.quantity) - 1),
                                 })
                               )
@@ -1334,7 +1367,7 @@ export default function Your_Carts() {
                               dispatch(
                                 updateQuantity({
                                   id: item.id,
-                                  variantId: item.variantId, // <<< key the line by variant
+                                  variantId: item.variantId,
                                   quantity: toNum(item.quantity) + 1,
                                 })
                               )
@@ -1345,7 +1378,7 @@ export default function Your_Carts() {
                         </div>
 
                         {/* Selling total x qty */}
-                        <div className="fw-bold text-success">
+                        <div className="fw-bold text-success" style={{fontFamily:"poppins"}}>
                           ₹{lineSellingTotal(item).toFixed(2)}
                         </div>
 
@@ -1364,7 +1397,7 @@ export default function Your_Carts() {
                               dispatch(
                                 removeFromCart({
                                   id: item.id,
-                                  variantId: item.variantId, // <<< key the line by variant
+                                  variantId: item.variantId,
                                 })
                               )
                             }
@@ -1380,7 +1413,7 @@ export default function Your_Carts() {
 
               <Button
                 variant="outline-dark"
-                className="mt-3"
+                className="mt-3 mb-3"
                 onClick={handleAddFromWishlist}
                 style={{ fontFamily: "Poppins" }}
               >
@@ -1407,12 +1440,6 @@ export default function Your_Carts() {
                     ₹{subtotal.toFixed(0)}
                   </span>
                 </div>
-
-                {/* If you want to show total savings later, uncomment:
-                <div className="d-flex justify-content-between mb-2 text-success">
-                  <span style={{ fontFamily: "Poppins" }}>Product Discount</span>
-                  <span style={{ fontFamily: "Poppins" }}>₹{discount.toFixed(0)}</span>
-                </div> */}
 
                 <div className="d-flex justify-content-between mb-2">
                   <span style={{ fontFamily: "Poppins" }}>Shipping</span>

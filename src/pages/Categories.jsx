@@ -612,6 +612,7 @@ export default function Categories() {
                         fontWeight: "700",
                         marginBottom: "50px",
                         fontFamily: "montserrat",
+                        marginTop: "20px"
                       }}
                     >
                       You are viewing: {selectedCategory}

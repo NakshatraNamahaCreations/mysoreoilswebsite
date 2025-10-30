@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react";
 import Navbar_Menu from "../../components/Navbar_Menu";
-import { Container, InputGroup, Form } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import Footer from "../../components/Footer";
 import ScrollToTop from "../../components/ScrollToTop";
+// ⬇️ add this CSS file
+// import "./PrivacyPolicy.mobile.css";
 
 export default function PrivacyPolicy() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      setIsVisible(true);
-    }, 100);
-
+    const timeout = setTimeout(() => setIsVisible(true), 100);
     return () => clearTimeout(timeout);
   }, []);
 
@@ -22,170 +21,99 @@ export default function PrivacyPolicy() {
   return (
     <>
       <div
-        className="page-content"
+        className="page-content policy-page"
         style={{
           opacity: isVisible ? 1 : 0,
           transition: "opacity 0.5s ease-in-out",
         }}
       >
-        {/* NAVBAR MENU */}
-         <Navbar_Menu /> 
+        <Navbar_Menu />
 
-          {/* SEARCH */}
-          {/*<Container className="mt-3">
-            <InputGroup
-              className="mb-5 footer-subscribe-input"
-              style={{
-                maxWidth: "750px",
-                margin: "auto",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Form.Control
-                placeholder="Search our products..."
-                style={{
-                  borderRadius: "0px",
-                  fontSize: "16px",
-                  color: "#002209",
-                  fontWeight: "500",
-                }}
-                className="me-2 search-input input-account-forms"
-              />
-
-              <div
-                className="search-button-slider"
-                style={{
-                  padding: "5px 24px",
-                  textAlign: "center",
-
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                SEARCH
-              </div>
-            </InputGroup>
-          </Container>*/}
-
-        {/* PRIVACY POLICY */}
-        <div style={{ backgroundColor: "white", padding:'5% 0' }}>
+        <div className="policy-wrap" style={{ backgroundColor: "white", padding: "5% 0" }}>
           <Container>
-            <div
-              style={{
-                margin: "0% 10% 0% 10%",
-                
-              }}
-            >
+            <div className="policy-inner" style={{ margin: "0% 10% 0% 10%" }}>
               <h1
+                className="policy-title"
                 style={{
                   lineHeight: "1.5",
                   letterSpacing: "1px",
                   fontSize: "50px",
                   maxWidth: "100%",
-                  fontWeight: "800",     
+                  fontWeight: "800",
                   textAlign: "center",
                   marginBottom: "5%",
                   color: "#002209",
-                  fontFamily:"montserrat"
+                  fontFamily: "montserrat",
                 }}
               >
                 PRIVACY POLICY
               </h1>
 
-              <div className="div-p-ul">
-                <p style={{ textAlign: "right" , fontFamily:"poppins", fontWeight:"700"}}>
+              <div className="policy-body div-p-ul">
+                <p
+                  className="policy-date"
+                  style={{ textAlign: "right", fontFamily: "poppins", fontWeight: "700" }}
+                >
                   Effective Date:{" "}
                   <span
                     style={{
                       fontSize: "16px",
                       marginRight: "5px",
-                      fontWeight:'700',
-                      fontFamily:"poppins"
+                      fontWeight: "700",
+                      fontFamily: "poppins",
                     }}
                   >
                     14-08-2025
                   </span>
                 </p>
-                <p className="para fw-bold" style={{fontSize:"18px"}}>
+
+                <p className="para fw-bold policy-intro" style={{ fontSize: "18px" }}>
                   The Mysore Oils respects your privacy and is committed to protecting it.
                 </p>
-                <p className="para fw-bold mt-4">
-                 Information We Collect
-                </p>
-                <ul className="para">
-                  <li>
-                    Name, email, phone number, billing/shipping address.
 
-                  </li>
-                  <li>
-                   Payment details (processed securely via third-party gateways).
-                  </li>
-                  <li>
-                    Website usage data via cookies.
-                  </li>
-                
+                <p className="para fw-bold mt-4">Information We Collect</p>
+                <ul className="para policy-list">
+                  <li>Name, email, phone number, billing/shipping address.</li>
+                  <li>Payment details (processed securely via third-party gateways).</li>
+                  <li>Website usage data via cookies.</li>
                 </ul>
 
-                <p className="para fw-bold mt-4">
-                 How We Use Your Information
-                </p>
-                <ul className="para">
+                <p className="para fw-bold mt-4">How We Use Your Information</p>
+                <ul className="para policy-list">
                   <li>To process and deliver your order.</li>
                   <li>To communicate order updates, promotions, and offers.</li>
-                  <li>
-                    To improve our website and services.
-                  </li>
-                 
+                  <li>To improve our website and services.</li>
                 </ul>
 
-                <p className="para fw-bold mt-4">
-                 Data Security
-                </p>
-                <ul className="para">
-                  <li>
-                    We use industry-standard SSL encryption to protect your information.
-                  </li>
-                  <li>
-                   Payment details are never stored on our servers.
+                <p className="para fw-bold mt-4">Data Security</p>
+                <ul className="para policy-list">
+                  <li>We use industry-standard SSL encryption to protect your information.</li>
+                  <li>Payment details are never stored on our servers.</li>
+                </ul>
 
-                  </li>
-                  </ul>
-                      
-                     
-                    
-                  
-                <p className="para fw-bold mt-4">
-                 Sharing of Information
-                </p>
-                 <ul className="para">
+                <p className="para fw-bold mt-4">Sharing of Information</p>
+                <ul className="para policy-list">
+                  <li>We do not sell or rent your personal data.</li>
                   <li>
-                   We do not sell or rent your personal data.
+                    We may share with trusted third-party service providers (e.g., courier
+                    companies, payment processors).
                   </li>
-                  <li>
-                We may share with trusted third-party service providers (e.g., courier companies, payment processors).
+                </ul>
 
-                  </li>
-                  </ul>
-
-                  <p className="para fw-bold mt-4">Cookies</p>
-                   <ul className="para">
+                <p className="para fw-bold mt-4">Cookies</p>
+                <ul className="para policy-list">
                   <li>
-                Our site uses cookies to enhance user experience and track website performance.
+                    Our site uses cookies to enhance user experience and track website
+                    performance.
                   </li>
-                
-                  </ul>
+                </ul>
               </div>
             </div>
           </Container>
         </div>
 
         <ScrollToTop />
-
-        {/* FOOTER */}
-         <Footer /> 
+        <Footer />
       </div>
     </>
   );

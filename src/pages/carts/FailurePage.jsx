@@ -106,7 +106,7 @@ export default function PaymentFailed() {
                 margin: "10% 0 0 0",
                 color: BRAND.danger,
                 textTransform: "uppercase",
-              }}
+              }}className="failurehead"
             >
               Payment Failed
             </h1>

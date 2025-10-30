@@ -31,6 +31,10 @@
   font-style: italic;
 } */
 
+body{
+  overflow: hidden;
+}
+
 @font-face {
   font-family: "Madina";
   src: url("/fonts/Madina.otf") format("opentype");
@@ -57,6 +61,7 @@ html,
   font-optical-sizing: auto;
   font-weight: normal;
   font-style: normal;
+  
 } 
 
 
@@ -93,6 +98,13 @@ html,
   align-items: center;
 }
 
+@media (max-width: 768px) {
+  .icon-box {
+    width: 40px !important;
+    height: 40px !important;
+  }
+}
+
 .icon-box:hover {
   background-color: #d3b353;
   border: 2px solid #d3b353;
@@ -103,60 +115,182 @@ html,
   margin-top: 20px;
 }
 
+
+
+.navbar-toggler-icon {
+    display: inline-block;
+    width: 1.5em;
+    height: 1.5em;
+    vertical-align: middle;
+    background-image: var(--bs-navbar-toggler-icon-bg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+    color: #fff;
+}
+
+/* White icon */
+.navbar .navbar-toggler-icon {
+  --bs-navbar-toggler-icon-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23FFFFFF' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+  
+}
+
 .reviews-wrapper {
   position: relative;
   background-color: #d3b353;
-  /* padding: 20px 0px; */
-  height: 500px;
-  /* font-family: kapraneue, sans-serif; */
+  padding: 56px 10px 64px;       /* space for header & dots */
   overflow: hidden;
   max-width: 1349px;
-  margin: auto;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
-/* Review Card */
+/* Header */
+.reviews-header {
+  position: relative;
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+.reviews-title {
+  font-size: clamp(22px, 4vw, 45px);
+  letter-spacing: 1px;
+  color: #002209;
+  font-weight: 800;
+  font-family: "Montserrat", sans-serif;
+  margin: 0;
+}
+
+/* Quotes */
+.quote {
+  position: absolute;
+  top: 0;
+  width: 30px;
+  height: auto;
+}
+.quote-left { left: 140px; }
+.quote-right { right: 140px; }
+
+/* Slides padding to avoid edge clipping */
+.slide-pad {
+  padding: 0 6px;
+  box-sizing: border-box;
+}
+
+/* Card container */
 .review-card-container {
   display: flex;
   justify-content: center;
-  padding: 20px;
-  align-items: center;
+  align-items: stretch;
+  padding: 10px;
 }
 
+/* Card with background frame */
 .review-card {
   text-align: center;
-  padding: 20px;
   width: 100%;
-  max-width: 720px;
+  max-width: 720px;               /* desktop width cap */
   margin: 10px;
-  height: 250px;
   background-image: url("/media/TestimonialCard.png");
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
+
+  /* Let content define height; guarantee room for text on mobile */
+  min-height: 220px;
+  padding: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  /* subtle lift */
+  box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+  border-radius: 12px;            /* in case bg has transparency */
+  background-color: rgba(255,255,255,0.35); /* fallback under PNG */
 }
 
 .review-card-inner {
   width: 100%;
-  padding: 20px;
+  max-width: 640px;
+  padding: 6px;
+  box-sizing: border-box;
 }
 
-.review-card-inner h5 {
-  /* margin-bottom: 40px; */
-  font-size: 16px;
-  /* letter-spacing: 1px; */
+/* Text */
+.review-text {
+  font-size: clamp(14px, 1.8vw, 16px);
   color: #002209;
-  /* font-family: "Montserrat", sans-serif; */
+  margin: 0 0 14px 0;
+  line-height: 1.5;
+  font-family: "Montserrat", sans-serif;
 }
 
-.review-card-inner h2 {
-  font-size: 24px;
-  font-weight: bold;
+.review-footer {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+}
+
+.review-author {
+  font-size: clamp(18px, 2.2vw, 24px);
+  font-weight: 800;
   letter-spacing: 1px;
   color: #002209;
-  /* font-family: "Montserrat", sans-serif; */
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+}
+
+.stars {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* ---------- Responsive tweaks ---------- */
+
+/* Large tablets & below */
+@media (max-width: 1200px) {
+  .quote-left { left: 80px; }
+  .quote-right { right: 80px; }
+}
+
+/* Tablets */
+@media (max-width: 992px) {
+  .reviews-wrapper {
+    padding: 48px 10px 56px;
+  }
+  .review-card {
+    max-width: 560px;
+    min-height: 220px;
+    padding: 18px;
+  }
+  .quote-left { left: 48px; }
+  .quote-right { right: 48px; }
+}
+
+/* Phones */
+@media (max-width: 576px) {
+  .reviews-wrapper {
+    padding: 40px 8px 48px;
+  }
+  .reviews-header {
+    margin-bottom: 18px;
+  }
+  .quote {
+    width: 18px;                 /* smaller quotes */
+  }
+  .quote-left { left: -10px; top: -14px; }
+  .quote-right { right: -10px; top: -14px; }
+
+  .review-card-container { padding: 6px; }
+  .review-card {
+    max-width: 96%;
+    margin: 6px auto;
+    min-height: 240px;           /* extra room for multi-line text */
+    padding: 16px;
+    background-size: 100% auto;  /* frame fits narrow screens */
+  }
+  .slide-pad { padding: 0 2px; }
 }
 
 .stars {
@@ -171,6 +305,7 @@ html,
   height: 16px;
 }
 
+/* --- Existing desktop styles (keep as-is) --- */
 .feature-container {
   position: relative;
   width: 100%;
@@ -188,38 +323,100 @@ html,
   background-color: #fff;
 }
 
-/* Positioning each card based on image */
-.card-top-left {
-  top: 0;
-  left: 10%;
+/* Absolute positions for desktop */
+.card-top-left { top: 0; left: 10%; }
+.card-top-right { top: 0; right: 10%; }
+.card-center { top: 0%; left: 40%; }
+.card-bottom-center { top: 58%; left: 40%; }
+.card-bottom-left { bottom: 0; left: 10%; }
+.card-bottom-right { bottom: 0; right: 10%; }
+
+/* --- Tablet: switch to 2 columns and disable absolute positioning --- */
+@media (max-width: 992px) {
+  .feature-container {
+    /* let height grow with content and use a grid */
+    position: relative;      /* keep, but not required */
+    height: auto;            /* important */
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    padding: 8px;
+  }
+
+  .feature-card {
+    position: static !important;  /* remove absolute */
+    width: 100%;
+    height: auto;
+    padding: 16px 14px;
+    border-radius: 16px;
+    box-shadow: 0 3px 14px rgba(0,0,0,0.06);
+    transform: none !important;
+    margin: 0 !important;
+  }
+
+  /* Icons & text sizing */
+  .feature-card .card-img-top {
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+    margin: 8px auto 0;
+    display: block;
+  }
+
+  /* override inline sizes from JSX */
+  .feature-card .card-title {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+    font-size: clamp(14px, 1.8vw, 16px) !important;
+    color: #2D2D2D;
+    margin-top: 8px;
+    margin-bottom: 6px;
+    line-height: 1.25;
+  }
+  .feature-card .card-text {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    font-size: clamp(12px, 1.6vw, 14px) !important;
+    color: #2D2D2D;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* Keep the smaller icon for 'Traceable & Transparent' */
+  .feature-card.card-center .card-img-top {
+    width: 30px;
+    height: 30px;
+  }
 }
 
-.card-top-right {
-  top: 0;
-  right: 10%;
+/* --- Mobile: single column, larger tap targets --- */
+@media (max-width: 576px) {
+  .feature-container {
+    grid-template-columns: 1fr;  /* single column */
+    gap: 14px;
+    padding: 8px 12px;
+  }
+
+  .feature-card {
+    padding: 14px 14px 16px;
+    border-radius: 14px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+  }
+
+  .feature-card .card-img-top {
+    width: 46px;
+    height: 46px;
+    margin-top: 6px;
+  }
+
+  .feature-card .card-title {
+    font-size: clamp(14px, 4.5vw, 16px) !important;
+  }
+  .feature-card .card-text {
+    font-size: clamp(12px, 4vw, 14px) !important;
+  }
 }
 
-.card-center {
-  top: 0%;
-  left: 40%;
-  
-}
-
-.card-bottom-center {
-  top: 58%;
-  left: 40%;
-  
-}
-
-.card-bottom-left {
-  bottom: 0;
-  left: 10%;
-}
-
-.card-bottom-right {
-  bottom: 0;
-  right: 10%;
-}
 
 .dropdown-toggle::after {
   display: none !important;
@@ -237,7 +434,16 @@ html,
 .navbar, .header {
   overflow: visible !important;
   position: relative;
+  padding: 50px;
 }
+
+@media (max-width: 768px) {
+  .navbar{
+    padding: 15px !important;
+  }
+}
+
+
 
 .nav-hover-effect {
   position: relative;
@@ -593,16 +799,45 @@ html,
   align-items: center;
   margin-bottom: 10px;
 }
+.arrow-buttons {
+  display: flex;
+  justify-content: flex-end; /* keep to right side */
+  align-items: center;
+  gap: 6px; /* spacing between buttons */
+  margin-top: 10px;
+}
 
+/* your existing button style */
 .arrow-buttons button {
   color: #000;
   border: none;
   font-size: 1.5rem;
   padding: 5px 12px;
   cursor: pointer;
-  margin-left: 5px;
   border-radius: 5px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease;
 }
+
+/* Add touch feedback */
+.arrow-buttons button:active {
+  transform: scale(0.96);
+}
+
+/* mobile view adjustments */
+@media (max-width: 599px) {
+  .arrow-buttons {
+    position: relative;
+    justify-content: center; /* center both buttons on mobile */
+    margin-top: 12px;
+  }
+  .arrow-buttons button {
+    font-size: 1.8rem;
+    padding: 0px 10px;
+  }
+}
+
 
 .category-slider {
   display: flex;
@@ -711,6 +946,12 @@ font-weight: bold;
   text-align: center;
 }
 
+@media (max-width: 768px) {
+  .product-card{
+   box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.13) !important;
+  }
+}
+
 .product-card img {
   width: 220px;
   height: 180px;
@@ -807,30 +1048,90 @@ font-weight: bold;
   padding: 10px;
 }
 
+/* === Mobile: uniform card sizing === */
 @media (max-width: 768px) {
+  .accordion-slider-wrapper {
+    overflow-x: auto;              /* keep horizontal scroll if needed */
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Row of equal-height cards */
   .accordion-slider-wrapper > .accordion {
     display: flex;
     flex-direction: row;
     gap: 12px;
     min-width: max-content;
+    align-items: stretch;          /* <- stretch children to equal height */
+  }
+
+  /* Set uniform size via CSS variables (tweak as needed) */
+  :root {
+    --slide-w: 260px;
+    --slide-h: 340px;
+    --head-h: 64px;                /* header band height */
   }
 
   .accordion-slide-card {
-    min-width: 250px;
-    flex: 0 0 auto;
+    flex: 0 0 var(--slide-w);
+    width: var(--slide-w);
+    height: var(--slide-h);        /* <- same height for all */
+    min-width: var(--slide-w);
     border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     background: #fff;
-  }
+    box-shadow: 0 2px 6px rgba(0,0,0,.1);
 
-  .accordion-slide-card .accordion-body {
-    font-size: 13px;
-  }
-
-  .accordion-slide-card .accordion-header {
+    display: flex;                 /* column layout to fill height */
     flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Header gets a fixed band height so all cards align */
+  .accordion-slide-card .accordion-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--head-h);
+    padding: 10px 12px;
+    gap: 8px;
+    /* if you want stacked title/subtitle on mobile: */
+    flex-direction: column;        /* keep if you need it; else remove */
+    text-align: left;
+  }
+
+  /* Body fills remaining height */
+  .accordion-slide-card .accordion-body {
+    flex: 1;                       /* <- takes all remaining space */
+    padding: 12px;
+    font-size: 13px;
+    overflow: hidden;              /* avoid overflow jumpiness */
+  }
+
+  /* Optional: clamp long text so heights stay consistent */
+  .accordion-slide-card .clamp-3 {
+    display: -webkit-box;
+
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Optional: consistent media block inside cards */
+  .accordion-slide-card .media {
+    width: 100%;
+    height: 140px;                 /* fixed media area for uniformity */
+    border-radius: 8px 8px 0 0;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .accordion-slide-card .media > img,
+  .accordion-slide-card .media > picture,
+  .accordion-slide-card .media > video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;             /* keeps visual consistency */
+    display: block;
   }
 }
+
 
 .para{
   font-family: 'poppins';
@@ -841,4 +1142,1203 @@ font-weight: bold;
 a {
     color: #000;
     text-decoration: none;
+}
+
+
+/* Typography */
+.footer-hd {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  margin-bottom: 8px;
+  font-size: clamp(15px, 1.6vw, 18px);
+}
+
+.footer-text {
+  font-size: clamp(13px, 1.5vw, 14px);
+  line-height: 1.5;
+}
+
+.footer-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.footer-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer-link:hover,
+.footer-link:focus {
+  text-decoration: underline;
+}
+
+/* Subscribe */
+.footer-subscribe .form-control.footer-input {
+  border-radius: 8px 0 0 8px;
+  border: none;
+  padding: 12px 16px;
+  font-weight: 600;
+  color: #002209;
+}
+
+.footer-subscribe .footer-btn {
+  border-radius: 0 8px 8px 0;
+  border: none;
+  background-color: #D3B353;
+  color: #002209;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  padding: 0 18px;
+  cursor: pointer;
+}
+
+/* Make the input group wrap nicely on small screens */
+@media (max-width: 576px) {
+  .footer-subscribe {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+  }
+  .footer-subscribe .form-control.footer-input {
+    border-radius: 8px;
+    width: fit-content;
+    padding: 10px 10px;
+    font-family: 'poppins';
+  }
+  .footer-subscribe .footer-btn {
+    border-radius: 8px;
+    height: 44px;
+    font-family: 'poppins';
+  }
+}
+
+/* Spacing + touch targets */
+footer a,
+footer button,
+footer .footer-link {
+  -webkit-tap-highlight-color: transparent;
+  font-family: 'poppins';
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .footer-list { gap: 8px; }
+}
+
+
+/* Make the big margin gentler on phones */
+@media (max-width: 576px) {
+  .about-wrap {
+    margin-top: 32px !important;
+  }
+}
+
+/* Responsive image sizing */
+.about-img {
+  width: 100%;
+  height: 400px;          /* desktop height */
+  object-fit: cover;
+  display: block;
+  border-radius: 6px;
+}
+
+/* Shorter image height on mobile so they fit nicely side-by-side */
+@media (max-width: 576px) {
+  .about-img {
+    height: 250px;
+    margin-top: 80px;
+  }
+}
+
+/* Typography */
+.about-title {
+  text-align: center;
+  font-weight: 800;
+  letter-spacing: 1px;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(28px, 4.2vw, 45px);
+  margin-bottom: 12px;
+  color: #000;
+}
+
+.about-text {
+  font-size: clamp(14px, 2.2vw, 16px);
+  letter-spacing: 0.5px;
+  line-height: 1.7;
+  font-weight: 500;
+  text-align: center;
+  font-family: "Montserrat", sans-serif;
+  margin: 0 auto;
+  max-width: 60ch; /* keeps paragraph measure comfortable on desktop */
+}
+
+
+/* Mobile-first responsive fixes without touching logic */
+
+/* 1) Left sticky column: disable sticky + full-height on small screens */
+@media (max-width: 767.98px) {
+  .pd-leftSticky {
+    position: static !important;
+    top: auto !important;
+    height: auto !important;
+    padding: 22px !important;
+    gap: 12px !important;
+    margin: 15px !important;
+    border-radius: 20px !important;
+    box-shadow: 0 -6px 18px rgba(0,0,0,0.08);
+  }
+
+  /* 2) Main image: reduce height, preserve aspect */
+  .pd-mainImage {
+    max-height: 58vh !important;
+    width: 100% !important;
+    object-fit: contain !important;
+  }
+
+  /* 3) Thumbnails: horizontal scroll row with larger touch targets */
+
+/* ✅ Scrollable thumbnail strip */
+.pd-thumbStrip {
+  display: flex;
+  justify-content: flex-start !important; /* override any center class */
+  gap: 12px !important;
+  flex-wrap: nowrap !important;
+
+  width: 100%;                 /* <-- was max-content; this enables overflow */
+  min-width: 0;                /* important inside flex/grid parents */
+
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  padding: 8px 0;
+
+  -webkit-overflow-scrolling: touch; /* iOS momentum */
+  scroll-behavior: smooth;           /* smooth horizontal scroll */
+  scroll-snap-type: x mandatory;     /* snap on stop */
+  scroll-padding: 10px;
+
+  touch-action: pan-x;               /* allow horizontal drag */
+  overscroll-behavior-x: contain;
+  overscroll-behavior-inline: contain;
+
+  /* Optional fade hint */
+  mask-image: linear-gradient(to right, transparent 0, black 32px, black calc(100% - 32px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0, black 32px, black calc(100% - 32px), transparent 100%);
+}
+
+/* Thumbnails */
+.pd-thumbStrip .img-thumbnail {
+  width: 120px !important;
+  height: 134px !important;
+  flex: 0 0 auto;                    /* fixed-size items create overflow */
+  scroll-snap-align: start;
+  border-radius: 10px;
+  object-fit: contain;
+  cursor: pointer;
+  transition: transform 0.3s ease, border 0.3s ease;
+  border: none !important;
+  box-shadow: 0 -6px 18px rgba(0,0,0,0.08) !important;
+}
+
+/* Scrollbar styling */
+.pd-thumbStrip::-webkit-scrollbar { height: 8px; }
+.pd-thumbStrip::-webkit-scrollbar-track { background: transparent; }
+.pd-thumbStrip::-webkit-scrollbar-thumb { background: #b7c0c7; border-radius: 8px; }
+.pd-thumbStrip::-webkit-scrollbar-thumb:hover { background: #8fa3b1; }
+.pd-thumbStrip { scrollbar-width: thin; scrollbar-color: #b7c0c7 transparent; }
+
+/* Make sure parents don't block overflow */
+.pd-leftSticky,
+.pd-leftSticky > *,
+.col-md-6 {
+  min-width: 0;
+  overflow: visible;
+}
+
+/* Optional: disable sticky on small screens if it interferes with gestures */
+@media (max-width: 991.98px) {
+  .pd-leftSticky {
+    position: static !important;
+    height: auto !important;
+  }
+}
+
+/* Desktop hover polish */
+@media (hover: hover) {
+  .pd-thumbStrip .img-thumbnail:hover {
+    transform: scale(1.05);
+    border-color: #007c5a !important;
+  }
+}
+
+
+
+/* Make sure parent doesn’t block scroll */
+.pd-leftSticky,
+.pd-leftSticky > *,
+.col-md-6 {
+  min-width: 0;
+  overflow: visible;
+}
+
+
+  /* 7) Sticky CTA bar: make fixed at bottom for constant access */
+  .pd-stickyCtas {
+    position: fixed !important;
+    left: 0;
+    right: 0;
+    bottom: 0 !important;
+    padding: 10px 12px !important;
+    gap: 10px !important;
+    box-shadow: 0 -6px 18px rgba(0,0,0,0.08);
+  }
+  .pd-stickyCtas .btn {
+    height: 46px;
+    font-weight: 600;
+  }
+
+  /* Avoid content hidden behind fixed bar */
+  .pd-rightPane {
+    padding-bottom: 84px !important;
+    padding: 10px !important;
+  }
+
+  @media (max-width: 768px) {
+     .pd-rightPane {
+      padding-bottom: 0px !important;
+     }
+
+     .badge{
+      font-family: 'poppins' !important;
+     }
+
+     .badge span{
+      padding: 10px 15px !important;
+     }
+  }
+
+  /* 8) Table: allow horizontal scroll + tighter text sizes */
+  .pd-infoTable {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .pd-infoTable table, .pd-infoTable tbody, .pd-infoTable tr, .pd-infoTable td {
+    font-size: 14px !important;
+    white-space: nowrap;
+  }
+
+  /* 9) "You may also like" spacing: remove negative margins */
+  .pd-alsoLikeWrap {
+    margin-top: -60px !important;
+  }
+  .pd-alsoLikeWrap h5 {
+    margin-left: 30px !important;
+  }
+}
+
+/* Tablet polish */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .pd-leftSticky {
+    top: 10px !important;
+    height: calc(100vh - 10px) !important;
+    padding: 16px !important;
+  }
+  .pd-mainImage {
+    max-height: 60vh !important;
+  }
+  .pd-rightPane {
+    padding: 24px !important;
+  }
+  .pd-stickyCtas {
+    gap: 12px !important;
+  }
+}
+
+
+/* ===== Mobile: horizontal accordion ===== */
+@media (max-width: 767.98px) {
+  /* make wrapper horizontally scrollable */
+  .accordian-slider-wrapper {
+    max-height: none !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 30px;
+
+  }
+
+  /* lay items in a single row */
+  .accordian-slider-wrapper .accordion {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 12px;
+    width: max-content;            /* grow to fit children, enable overflow */
+    min-width: 100%;
+  }
+
+  /* each accordion item becomes a card-like tile */
+  .accordian-slider-wrapper .accordion-item {
+    flex: 0 0 auto;
+    width: 160px;                  /* adjust to taste */
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+  }
+
+  /* turn the header into a compact vertical tile */
+  .accordian-slider-wrapper .accordion-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    background: #fff !important;
+    box-shadow: none !important;
+    border: none;
+  }
+
+  /* remove default chevron */
+  .accordian-slider-wrapper .accordion-button::after {
+    display: none !important;
+  }
+
+  /* avoid “expanded” background state on mobile */
+  .accordian-slider-wrapper .accordion-button:not(.collapsed) {
+    background: #fff !important;
+    color: inherit !important;
+  }
+
+  /* hide collapsible body on mobile (we’re using tiles that navigate) */
+  .accordian-slider-wrapper .accordion-collapse {
+    display: none !important;
+  }
+
+  /* polish scrollbars (optional) */
+  .accordian-slider-wrapper::-webkit-scrollbar { height: 8px; }
+  .accordian-slider-wrapper::-webkit-scrollbar-thumb {
+    background: #c7d1d9; border-radius: 8px;
+  }
+  .accordian-slider-wrapper { scrollbar-width: thin; scrollbar-color: #c7d1d9 transparent; }
+}
+
+/* ===== Desktop & tablet: keep default vertical behavior ===== */
+@media (min-width: 768px) {
+  .accordian-slider-wrapper {
+    max-height: 700px;   /* your original */
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 10px;
+  }
+}
+
+
+/* Base tweaks */
+.nav-checkout-bar {
+  position: relative;
+  z-index: 100;
+}
+
+.nav-checkout-inner {
+  gap: 16px;
+}
+
+/* ---------- Mobile (≤ 768px) ---------- */
+@media (max-width: 767.98px) {
+  /* Stack layout: logo on top, steps scrollable in middle, secure on right or next line */
+  .nav-checkout-inner {
+    flex-wrap: wrap;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 10px;
+  }
+
+  /* Logo: remove negative margin, scale down */
+  .nav-logo img {
+    margin-left: 0 !important;
+    height: 48px !important;
+  }
+
+  /* Steps: make horizontally scrollable with snap */
+  .nav-steps {
+    order: 3; /* place steps under logo & secure if needed */
+    width: 100%;
+    display: flex !important;
+    justify-content: center;
+    gap: 8px !important;
+
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    scroll-snap-type: x proximity;
+    padding: 6px 4px;
+    mask-image: linear-gradient(to right, transparent 0, black 20px, black calc(100% - 20px), transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0, black 20px, black calc(100% - 20px), transparent 100%);
+  }
+
+  .nav-steps::-webkit-scrollbar { height: 6px; }
+  .nav-steps::-webkit-scrollbar-thumb { background: rgba(255,255,255,.35); border-radius: 8px; }
+  .nav-steps { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.35) transparent; }
+
+  /* Make each item snap neatly */
+  .nav-step-icon,
+  .nav-step-text,
+  .nav-step-btn,
+  .nav-step-sep {
+    scroll-snap-align: center;
+    flex: 0 0 auto;
+  }
+
+  /* Tighter text & icons for mobile */
+  .nav-step-text { font-size: 12px !important; }
+  .nav-step-sep { color: rgba(255,255,255,0.6) !important; }
+
+  /* Buttons: increase tap area */
+  .nav-step-btn {
+    padding: 6px 8px !important;
+    border-radius: 8px;
+  }
+  .nav-step-btn:active {
+    background: rgba(255,255,255,0.08);
+  }
+
+  /* Secure badge: move to the right top; hide text on very small phones */
+  .nav-secure {
+    order: 2;
+    margin-left: auto;
+    gap: 6px;
+  }
+  .nav-secure-text {
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  /* On very narrow widths, hide the text and keep the shield icon */
+  @media (max-width: 360px) {
+    .nav-secure-text { display: none; }
+  }
+}
+
+/* ---------- Tablet (768–991px) ---------- */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .nav-logo img { height: 60px !important; margin-left: 0 !important; }
+  .nav-steps { gap: 10px !important; }
+}
+
+/* ---------- Desktop (≥ 992px): keep your original look ---------- */
+@media (min-width: 992px) {
+  .nav-checkout-inner { flex-wrap: nowrap; }
+}
+
+/* Base polish (safe everywhere) */
+.profile-title { margin-bottom: 24px !important; }
+.profile-sidebar-inner { position: relative; }
+
+/* ---------- Mobile (≤ 768px) ---------- */
+@media (max-width: 767.98px) {
+  /* Page spacing */
+  .profile-page { padding-top: 8px !important; }
+
+  /* Grid: stack sidebar above content */
+  .profile-grid {
+    display: block;
+  }
+
+  /* Sidebar becomes horizontal pill nav */
+  .profile-sidebar {
+    border: 0 !important;
+    margin-bottom: 12px;
+  }
+  .profile-sidebar-inner {
+    border-right: 0 !important;
+    padding-right: 0 !important;
+
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    padding: 6px 2px;
+    mask-image: linear-gradient(to right, transparent 0, black 16px, black calc(100% - 16px), transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0, black 16px, black calc(100% - 16px), transparent 100%);
+  }
+  .profile-sidebar-inner::-webkit-scrollbar { height: 6px; }
+  .profile-sidebar-inner::-webkit-scrollbar-thumb { background: #e5e5e5; border-radius: 8px; }
+  .profile-nav-item {
+    scroll-snap-align: center;
+    flex: 0 0 auto;
+    padding: 10px 12px !important;
+    border: 1px solid #e8e8e8;
+    border-radius: 999px;
+    font-size: 13px !important;
+    white-space: nowrap;
+    background: #fff;
+  }
+
+  /* Content spacing */
+  .profile-content { padding-top: 8px; }
+  .profile-title { font-size: 20px; margin-bottom: 16px !important; }
+
+  /* Form: stack label above input */
+  .profile-row { margin-bottom: 16px !important; }
+  .profile-label {
+    width: 100% !important;
+    margin-bottom: 6px;
+    font-size: 13px !important;
+  }
+  .profile-field { width: 100% !important; }
+  .profile-input {
+    font-size: 14px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* Actions: sticky bottom button for easy reach */
+  .profile-actions {
+    position: sticky;
+    bottom: 8px;
+    padding-top: 8px;
+    background: linear-gradient(to top, #ffffff 70%, rgba(255,255,255,0));
+  }
+  .profile-save-btn {
+    width: 100%;
+    padding: 12px 16px !important;
+    font-size: 15px !important;
+    border-radius: 10px;
+  }
+
+  /* Breadcrumb tweaks */
+  .profile-breadcrumb {
+    padding-top: 8px;
+  }
+  .profile-breadcrumb .breadcrumb {
+    margin: 0 0 8px 0 !important;
+    font-size: 12px;
+  }
+}
+
+/* ---------- Tablet (768–991px) ---------- */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .profile-sidebar-inner { padding-right: 8px; }
+  .profile-label { font-size: 14px; }
+  .profile-input { font-size: 15px; }
+}
+
+/* ---------- Desktop (≥ 992px) ---------- */
+/* Keep your original look; only small QoL tweaks if needed */
+@media (min-width: 992px) {
+  .profile-sidebar-inner { border-right: 1px solid #ddd; padding-right: 10px; }
+}
+
+
+/* -------- Base gentle polish -------- */
+.policy-page {
+  background-color: #fff;
+}
+
+.policy-body .para {
+  line-height: 1.7;
+}
+
+/* Make lists breathe a bit */
+.policy-list {
+  padding-left: 1.1rem;
+  margin-bottom: 0.75rem;
+}
+.policy-list li + li {
+  margin-top: 6px;
+}
+
+/* -------- Mobile (≤ 768px) -------- */
+@media (max-width: 767.98px) {
+  /* Reduce global side padding and inner margins */
+  .policy-wrap {
+    padding: 20px 0 !important;
+  }
+  .policy-inner {
+    margin: 0 !important;           /* remove 10% side margins on mobile */
+    padding: 0 16px !important;     /* use container padding instead */
+  }
+
+  /* Title: smaller, tighter spacing */
+  .policy-title {
+    font-size: 28px !important;
+    line-height: 1.25 !important;
+    letter-spacing: 0.2px !important;
+    margin-bottom: 16px !important;
+    padding: 0 6px;
+    word-break: break-word;
+  }
+
+  /* Effective date: align left and shrink font */
+  .policy-date {
+    text-align: left !important;
+    font-size: 12px !important;
+    margin-bottom: 8px !important;
+  }
+  .policy-date span {
+    font-size: 12px !important;
+    margin-right: 0 !important;
+  }
+
+  /* Paragraph/body text */
+  .policy-body .para,
+  .policy-body .para.fw-bold {
+    font-size: 14.5px !important;
+  }
+  .policy-body .fw-bold {
+    margin-top: 16px !important;
+  }
+
+  /* Lists */
+  .policy-list {
+    padding-left: 18px !important;
+    font-size: 14.5px !important;
+  }
+
+  /* Improve tap comfort with a bit more spacing at bottom */
+  .policy-page {
+    padding-bottom: 12px;
+  }
+}
+
+/* -------- Tablet (768–991px) -------- */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .policy-inner {
+    margin: 0 4% !important;
+  }
+  .policy-title {
+    font-size: 38px !important;
+    margin-bottom: 28px !important;
+  }
+  .policy-body .para,
+  .policy-list {
+    font-size: 16px !important;
+  }
+}
+
+/* Base polish */
+.refund-body .para { line-height: 1.7; }
+.refund-list { padding-left: 1.1rem; margin-bottom: 0.75rem; }
+.refund-list li + li { margin-top: 6px; }
+
+/* -------- Mobile (≤ 768px) -------- */
+@media (max-width: 767.98px) {
+  .refund-wrap { padding: 20px 0 !important; }
+
+  /* remove side margins; use safe container padding */
+  .refund-inner {
+    margin: 0 !important;
+    padding: 0 16px !important;
+  }
+
+  .refund-title {
+    font-size: 28px !important;
+    line-height: 1.25 !important;
+    letter-spacing: 0.2px !important;
+    margin-bottom: 16px !important;
+    padding: 0 6px;
+    word-break: break-word;
+  }
+
+  .refund-intro { font-size: 14.5px !important; }
+
+  .refund-head {           /* section subheads like Returns, Refunds, etc. */
+    font-size: 15px !important;
+    margin-top: 16px !important;
+    margin-bottom: 6px !important;
+  }
+
+  .refund-body .para { font-size: 14.5px !important; }
+
+  .refund-list {
+    padding-left: 18px !important;
+    font-size: 14.5px !important;
+  }
+
+  .refund-page { padding-bottom: 12px; }
+}
+
+/* -------- Tablet (768–991px) -------- */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .refund-inner { margin: 0 4% !important; }
+  .refund-title { font-size: 38px !important; margin-bottom: 28px !important; }
+  .refund-body .para, .refund-list { font-size: 16px !important; }
+}
+
+
+/* Base polish */
+.terms-body .para { line-height: 1.7; }
+.terms-list { padding-left: 1.1rem; margin-bottom: 0.75rem; }
+.terms-list li + li { margin-top: 6px; }
+
+/* -------- Mobile (≤ 768px) -------- */
+@media (max-width: 767.98px) {
+  .terms-wrap { padding: 20px 0 !important; }
+
+  /* Remove big side margins; use safe padding */
+  .terms-inner {
+    margin: 0 !important;
+    padding: 0 16px !important;
+  }
+
+  .terms-title {
+    font-size: 26px !important;
+    line-height: 1.25 !important;
+    letter-spacing: 0.2px !important;
+    margin-bottom: 16px !important;
+    padding: 0 6px;
+    word-break: break-word;
+  }
+
+  .terms-intro { font-size: 14.5px !important; }
+
+  .terms-head {
+    font-size: 15px !important;
+    margin-top: 16px !important;
+    margin-bottom: 6px !important;
+  }
+
+  .terms-body .para { font-size: 14.5px !important; }
+
+  .terms-list {
+    padding-left: 18px !important;
+    font-size: 14.5px !important;
+  }
+
+  .terms-page { padding-bottom: 12px; }
+}
+
+/* -------- Tablet (768–991px) -------- */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .terms-inner { margin: 0 4% !important; }
+  .terms-title { font-size: 38px !important; margin-bottom: 28px !important; }
+  .terms-body .para, .terms-list { font-size: 16px !important; }
+}
+
+/* Base polish */
+.shipping-body .para { line-height: 1.7; }
+.shipping-list { padding-left: 1.1rem; margin-bottom: 0.75rem; }
+.shipping-list li + li { margin-top: 6px; }
+
+/* ---------- Mobile (≤ 768px) ---------- */
+@media (max-width: 767.98px) {
+  .shipping-wrap { padding: 20px 0 !important; }
+
+  /* Remove large side margins; use safe padding */
+  .shipping-inner {
+    margin: 0 !important;
+    padding: 0 16px !important;
+  }
+
+  .shipping-title {
+    font-size: 28px !important;
+    line-height: 1.25 !important;
+    letter-spacing: 0.2px !important;
+    margin-bottom: 16px !important;
+    padding: 0 6px;
+    word-break: break-word;
+  }
+
+  /* Date line: align left on small screens */
+  .shipping-updated {
+    text-align: left !important;
+    margin-bottom: 12px !important;
+    font-size: 12px !important;
+  }
+  .shipping-updated span { font-size: 12px !important; }
+
+  .shipping-intro { font-size: 14.5px !important; }
+
+  .shipping-head {
+    font-size: 15px !important;
+    margin-top: 16px !important;
+    margin-bottom: 6px !important;
+  }
+
+  .shipping-body .para { font-size: 14.5px !important; }
+
+  .shipping-list {
+    padding-left: 18px !important;
+    font-size: 14.5px !important;
+  }
+
+  .shipping-page { padding-bottom: 12px; }
+}
+
+/* ---------- Tablet (768–991px) ---------- */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .shipping-inner { margin: 0 4% !important; }
+  .shipping-title { font-size: 38px !important; margin-bottom: 28px !important; }
+  .shipping-body .para, .shipping-list { font-size: 16px !important; }
+}
+
+/* Base icon/tap targets */
+.icon-btn,
+.icon-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px !important;   /* bigger tap targets */
+  min-height: 40px !important;
+  border-radius: 15px;
+  border: none;
+}
+.icon-img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+/* Cart badge */
+.cart-wrapper { position: relative; }
+.cart-count {
+  position: absolute;
+  right: -6px;
+  top: -6px;
+  background: #ff3b30;
+  color: #fff;
+  font-size: 12px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+/* Offcanvas backdrop tweaks on mobile */
+.mobile-offcanvas .offcanvas-body {
+  background: #015b19; /* matches your banner tone if desired */
+}
+.mobile-offcanvas .nav-hover-effect,
+.mobile-offcanvas .dropdown-menu {
+  color: #fff;
+  font-family: poppins;
+}
+
+/* Mobile search */
+.mobile-search-wrap {
+  position: sticky;
+  top: 56px; /* sits just below the Navbar */
+  z-index: 1049;
+  background: #015b19;
+  padding: 10px 12px 6px 12px;
+}
+.mobile-search-form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+}
+.mobile-search-input {
+  width: 100%;
+  height: 44px;
+  border: none;
+  border-radius: 8px;
+  padding: 0 12px;
+  font-family: 'poppins';
+}
+.mobile-search-submit {
+  height: 44px;
+  border: none;
+  border-radius: 8px;
+  padding: 0 14px;
+  background: #ffffff;
+  color: #007c5a;
+  font-weight: 700;
+  font-family: 'poppins';
+}
+
+/* Sticky suggestion panel on mobile */
+.mobile-suggest {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  max-height: calc(100dvh - 140px);
+  overflow: auto;
+  border-radius: 10px;
+  margin-top: 8px;
+  padding: 8px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+.suggest-head {
+  font-size: 12px;
+  font-weight: 800;
+  color: #666;
+  padding: 8px 6px 6px;
+}
+.suggest-item {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 8px;
+  width: 100%;
+  padding: 8px;
+  border: none;
+  background: transparent;
+  text-align: left;
+}
+.suggest-item:active { background: #f5f7fb; }
+.suggest-thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+.suggest-text .name {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+  line-height: 1.1;
+}
+.suggest-text .cat {
+  display: block;
+  font-size: 12px;
+  color: #777;
+}
+
+/* Category simple rows on mobile */
+.suggest-row {
+  width: 100%;
+  padding: 10px 8px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-weight: 600;
+  color: #015b19;
+}
+
+/* Desktop suggestion dropdown minor tweak */
+@media (min-width: 768px) {
+  .desktop-suggest {
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+}
+
+.nav-hover-effect.active-link::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 40px;
+    opacity: 1;
+    top: 0px;
+    z-index: 1;
+    border-bottom: 2px solid #015b19;
+}
+
+/* for mobile responsiveness */
+@media (max-width: 768px) {
+  .product-title {
+    font-size: 20px !important; /* smaller heading on mobile */
+    font-weight: 800 !important;
+  }
+
+  .product-price {
+    font-size: 17px !important;
+    font-weight: 800 !important;
+    
+  }
+
+  .product-card-slider {
+    background-color: #fff !important;
+  }
+
+  .product-image-slider {
+    background-color: #fff !important;
+  }
+
+  .mobile-font {
+    font-size: 25px !important;
+  }
+
+  .bgcolor h1{
+    font-size: 25px !important;
+  }
+
+  .choose-us h1{
+    font-size: 25px !important;
+  }
+}
+
+/* Default styles (desktop) remain same */
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .navbar-links {
+    justify-content: flex-start !important; /* Move links to left */
+    align-items: flex-start !important;
+    flex-direction: column; /* Stack links vertically in offcanvas */
+    gap: 12px !important;
+    padding-left: 10px;
+  }
+
+  .navbar-links a,
+  .navbar-links .nav-link,
+  .navbar-links .dropdown-toggle {
+    font-size: 16px !important;  /* Smaller text */
+    font-weight: 600 !important;
+    letter-spacing: 0.5px;
+    text-align: left;
+  }
+
+  .navbar-links .dropdown-menu {
+    width: 100% !important;
+    background-color: #fff !important;
+    border: none;
+  }
+
+  .navbar-links .dropdown-item {
+    font-size: 14px !important;
+    font-weight: 600;
+  }
+
+  .nav-title{
+    font-size: 16px !important;
+    font-weight: 600px !important;
+  }
+
+  .nav-width{
+    width: 100% !important;
+  }
+
+  .best-head h1 {
+    font-size: 35px !important;
+    font-family: 'montserrat';
+  }
+
+  .discount-amt{
+    font-size: 22px !important;
+    font-family: "poppins";
+  }
+}
+
+.feature-strip::-webkit-scrollbar {
+  display: none; /* Hide scrollbar on Chrome/Safari */
+}
+
+.feature-icon {
+  width: 8%;
+  height: auto;
+  object-fit: contain;
+  flex: 0 0 auto; /* ✅ Prevent shrinking */
+}
+
+/* 📱 Mobile optimization */
+@media (max-width: 768px) {
+  .feature-strip {
+    justify-content: flex-start !important;
+    gap: 16px;
+    padding: 8px 12px;
+    height: 90px;
+  }
+
+  /* Each icon with unique dimensions */
+  .feature-icon:nth-child(1) {
+    width: 18vw;   /* Quality Assured */
+    max-width: 80px;
+    min-width: 65px;
+    height: auto;
+  }
+
+  .feature-icon:nth-child(2) {
+    width: 16vw;   /* Chemical Free */
+    max-width: 75px;
+    min-width: 60px;
+    height: auto;
+  }
+
+  .feature-icon:nth-child(3) {
+    width: 17vw;   /* Plant Based */
+    max-width: 80px;
+    min-width: 60px;
+    height: auto;
+  }
+
+  .feature-icon:nth-child(4) {
+    width: 19vw;   /* Low Cholesterol */
+    max-width: 90px;
+    min-width: 90px;
+    height: auto;
+  }
+
+  .feature-icon:nth-child(5) {
+    width: 20vw;   /* Weight Management */
+    max-width: 95px;
+    min-width: 100px;
+    height: auto;
+  }
+
+  .feature-icon:nth-child(6) {
+    width: 18vw;   /* Pure and Natural */
+    max-width: 85px;
+    min-width: 100px;
+    height: auto;
+  }
+}
+
+
+
+/* Hide scrollbar (WebKit) */
+.feature-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.feature-icon {
+  width: 8%;
+  height: auto;
+  object-fit: contain;
+  flex: 0 0 auto; /* don't shrink */
+}
+
+/* Mobile sizing */
+@media (max-width: 768px) {
+  .feature-strip {
+    justify-content: flex-start !important;
+    gap: 16px;
+    padding: 8px 12px;
+    height: 90px;
+  }
+  .feature-icon {
+    width: 18vw !important;   /* responsive to screen width */
+    min-width: 65px;
+    max-width: 90px;
+  }
+}
+
+
+/* Show 2 cards at the start on mobile without redesigning */
+@media (max-width: 768px) {
+  .category-slider {
+    gap: 1px;           /* keep spacing modest */
+    padding: 8px 7px;    /* shave side padding so 2 fit */
+  }
+  .category-card {
+    flex: 0 0 calc(50% - 6px);  /* exactly two cards in viewport */
+    width: 150px !important;
+    height: 180px !important;
+  }
+
+  .browse-header h2{
+    font-size: 25px !important;
+  }
+
+  .cartsectionright{
+    padding-left: 40px;
+  }
+
+  .failurehead{
+    font-size: 30px !important;
+  }
+
+  .thankhead{
+    font-size: 45px !important;
+  }
 }

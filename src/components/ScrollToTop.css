@@ -1,0 +1,68 @@
+.scrolltop-btn {
+  position: fixed;
+  z-index: 99999;
+  width: 36px;
+  height: 36px;
+  border-radius: 5px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+
+  background: #d3b353;
+  color: #002209;
+  border: 1px solid #002209;
+
+  /* Shadow + safe-area aware position */
+  box-shadow: 2px 2px 0px #002209;
+  right: max(16px, calc(env(safe-area-inset-right) + 16px));
+  bottom: max(16px, calc(env(safe-area-inset-bottom) + 16px));
+
+  /* Hidden by default (no layout shift) */
+  opacity: 0;
+  transform: translateY(16px);
+  pointer-events: none;
+
+  transition:
+    opacity 200ms ease-out,
+    transform 200ms ease-out,
+    box-shadow 200ms ease-out,
+    background 200ms ease-out,
+    color 200ms ease-out;
+}
+
+/* Show state */
+.scrolltop-btn.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Larger on tablets/desktop */
+@media (min-width: 768px) {
+  .scrolltop-btn {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+/* Hover only on devices that support it */
+@media (hover: hover) {
+  .scrolltop-btn:hover {
+    background: #002209;
+    color: #d3b353;
+    border-color: #d3b353;
+    box-shadow: 2px 2px 0px #d3b353;
+  }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .scrolltop-btn {
+    transition: none;
+  }
+}
