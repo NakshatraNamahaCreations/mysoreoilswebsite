@@ -87,6 +87,7 @@ const BrowserSlider = () => {
             letterSpacing: ".5px",
             fontWeight: 800,
             marginBottom: "12px",
+            fontFamily:"montserrat"
           }}
         >
           Browse by Category

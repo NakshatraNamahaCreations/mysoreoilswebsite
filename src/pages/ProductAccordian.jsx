@@ -52,12 +52,12 @@ function BasicExample({ onCategorySelect, currentCategory }) {
 //  };
 
   const imageStyles = {
-    "Millets":{width:"120px", height:"80px", objectFit:"cover", right:"20%"},
+    "Millets":{width:"120px", height:"80px", objectFit:"cover", right:"15%"},
   "SpicePowders": { width: "100px", height: "80px", objectFit: "contain ", right:"15%"},
   "Cosmetics": { width: "65px", height: "80px", objectFit: "contain" },
   "Oils": { width: "70px", height: "100px", objectFit: "contain" },
-  "Utensils": { width: "100px", height: "100px", objectFit: "contain", right:"7%" },
-  "Snacks":{width:"100px", height:"70px", objectFit:"cover", right:"15%"},
+  "Utensils": { width: "100px", height: "100px", objectFit: "contain", right:"4%" },
+  "Snacks":{width:"100px", height:"70px", objectFit:"cover", right:"10%"},
   "Ice Cream":{width:"60px", height:"60px", objectFit:"cover"},
   "Fruits":{width:"70px", height:"60px", objectFit:"contain"},
   "Vegetables":{width:"70px", height:"60px", objectFit:"contain"},
@@ -109,7 +109,7 @@ function BasicExample({ onCategorySelect, currentCategory }) {
     <div
   style={{
     paddingRight: "10px",
-    overflow: "visible",
+    overflowY: "visible",
   }}
   className="accordian-slider-wrapper"
 >

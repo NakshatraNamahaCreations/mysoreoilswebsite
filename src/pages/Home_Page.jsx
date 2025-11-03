@@ -124,9 +124,11 @@ export default function Home_Page() {
                     justifyContent: "center",
                     gap: "20px",
                     padding: "10px",
-                  }}
+                  }} className="bannerhead"
                 >
-                  <img
+                  <h1 style={{color:"#fff", fontWeight:"900"}}>Cold Pressed Oils & Groceries for Healthy Living</h1>
+                  <p style={{fontSize: "20px"}}> Pure, Healthy, Organic. From nature to your kitchen</p>
+                {/*}  <img
                     src={MysuruOilsLogo}
                     alt="Logo"
                     style={{
@@ -137,9 +139,9 @@ export default function Home_Page() {
                       position: "relative",
                       zIndex: 99,
                     }}
-                  />
+                  />*/}
 
-                  <img
+                 {/*} <img
                     src={purehealthy}
                     alt="Pure-Health"
                     style={{
@@ -160,7 +162,7 @@ export default function Home_Page() {
                     }}
                   />
                 </div>
-                <div className="banner">
+                <div>
                   {/* NAVBAR MENU */}
                   {/* <Navbar_Menu /> */}
 
@@ -204,9 +206,7 @@ export default function Home_Page() {
               </div>
             </InputGroup>
           </Container>*/}
-                  <div>
-                    <BrowserSlider />
-                  </div>
+                
                 </div>
               </Col>
 
@@ -285,6 +285,10 @@ export default function Home_Page() {
         </div>
       </div>
 
+        <div>
+                    <BrowserSlider />
+                  </div>
+
       <div
         style={{
           backgroundColor: "#ffff",
@@ -292,7 +296,7 @@ export default function Home_Page() {
           color: "#002209",
         }}
       >
-        <Container className="about-wrap" style={{ marginTop: "15%" }}>
+        <Container className="about-wrap" style={{ marginTop: "5%" }}>
           <Row className="g-3 g-md-4 align-items-stretch">
             <Col xs={6} md={3}>
               <img

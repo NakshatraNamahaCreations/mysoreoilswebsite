@@ -689,6 +689,7 @@ export default function Categories() {
                                       margin: 0,
                                       fontWeight: "700",
                                       whiteSpace: "nowrap",
+                                      fontFamily:'poppins'
                                     }}
                                   >
                                     Rs {item.originalPrice}
@@ -702,10 +703,12 @@ export default function Categories() {
                                     fontWeight: "700",
                                     margin: 0,
                                     whiteSpace: "nowrap",
+                                    fontFamily:"poppins"
                                   }}
                                 >
                                   Rs {item.discountPrice}
                                 </p>
+                                {item.category === "Dry Fruits" && <p style={{fontFamily:"poppins", fontSize:"14px", fontWeight:"500"}}>(100gms)</p>}
                               </div>
 
                               {/* Optional % OFF badge */}
