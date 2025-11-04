@@ -1180,11 +1180,13 @@ a {
   letter-spacing: 0.3px;
   margin-bottom: 8px;
   font-size: clamp(15px, 1.6vw, 18px);
+  text-align: left;
 }
 
 .footer-text {
   font-size: clamp(13px, 1.5vw, 14px);
   line-height: 1.5;
+  text-align: left;
 }
 
 .footer-list {

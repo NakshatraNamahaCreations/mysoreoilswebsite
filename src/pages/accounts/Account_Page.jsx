@@ -403,7 +403,7 @@ const [showLogoutModal, setShowLogoutModal] = useState(false);
           )}
 
           {/* Dashboard Sections */}
-          <Row className="g-4">
+          <Row className="g-4" style={{padding: "0 20px"}}>
             {dashboardSections.map((section, index) => (
               <Col md={4} sm={6} xs={12} key={index}>
                 <Card

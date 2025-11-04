@@ -1,8 +1,8 @@
 .scrolltop-btn {
   position: fixed;
   z-index: 99999;
-  width: 36px;
-  height: 36px;
+  width: 26px;
+  height: 26px;
   border-radius: 5px;
 
   display: flex;
@@ -45,8 +45,8 @@
 /* Larger on tablets/desktop */
 @media (min-width: 768px) {
   .scrolltop-btn {
-    width: 64px;
-    height: 64px;
+    width: 40px;
+    height: 40px;
   }
 }
 

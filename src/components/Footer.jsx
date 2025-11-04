@@ -187,126 +187,168 @@ import call from "/media/call.png";
 import communicate from "/media/communicate.png";
 import instagram from "/media/instagram.png";
 
+function SocialBlock() {
+  return (
+    <>
+      <p className="footer-hd">SOCIAL</p>
+      <div className="d-flex align-items-center gap-3">
+        <Link
+          to="https://www.instagram.com/themysoreoils?igsh=MWJpbW5uNTdqMmV0dg%3D%3D&utm_source=qr"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="footer-link d-inline-flex align-items-center"
+          aria-label="Instagram"
+        >
+          <img src={instagram} alt="Instagram" width={34} height={34} />
+        </Link>
+        <img src={communicate} alt="" width={30} height={30} />
+      </div>
+    </>
+  );
+}
+
+function ContactBlock() {
+  return (
+    <>
+      <p className="footer-hd">CONTACT US</p>
+      <div className="d-grid gap-3 gap-md-2 mt-2 mt-md-0">
+        <Link
+          to="https://g.co/kgs/ugbtFCm"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="footer-link d-flex align-items-start gap-2"
+        >
+          <img src={location} alt="" width={22} height={22} />
+          <span className="footer-text">
+            No 203, Maalige Arcade, 100ft road, Chikkegowdanpalya, Banashankari 6th Stage , Bangalore 62
+          </span>
+        </Link>
+
+        <div className="d-flex align-items-start gap-2">
+          <img src={mail} alt="" width={22} height={22} />
+          <a
+            href="mailto:themysuruoils@gmail.com"
+            className="footer-link footer-text"
+          >
+            support@themysoreoils.com
+          </a>
+        </div>
+
+        <div className="d-flex align-items-start gap-2">
+          <img src={call} alt="" width={22} height={22} />
+          <a href="tel:63629 02455" className="footer-link footer-text">
+            63629 02455
+          </a>
+        </div>
+      </div>
+    </>
+  );
+}
+
 export default function Footer() {
   return (
     <footer style={{ backgroundColor: "#002209", color: "#fff" }}>
       <Container className="py-4 py-md-5">
-        {/* Subscribe */}
-       {/*} <div className="d-flex flex-column align-items-center">
-          <InputGroup className="footer-subscribe w-md-75 w-lg-75 mb-4">
-            <Form.Control
-              placeholder="Enter Your Email"
-              aria-label="Enter your email to subscribe"
-              className="footer-input"
-            />
-            <InputGroup.Text
-              as="button"
-              role="button"
-              className="footer-btn"
-              onClick={() => {}}
-            >
-              SUBSCRIBE
-            </InputGroup.Text>
-          </InputGroup>
-        </div>*/}
-
         {/* Main grid */}
-        
         <Row className="gy-4 gy-md-5 align-items-start">
-          {/* Brand */}
+          {/* Brand + social (desktop) + contact (mobile) */}
           <Col xs={12} md={3} className="order-0 text-center text-md-start">
             <img
               src={logo}
               alt="The Mysore Oils"
               className="mb-2"
-              style={{ width: 180, height: "auto", objectFit:"cover" }}
+              style={{ width: 180, height: "auto", objectFit: "cover" }}
             />
-              <Col xs={6} md={2} className="order-5">
-            <div className="d-grid gap-3 gap-md-2 mt-2 mt-md-0">
-              <Link
-                to="https://g.co/kgs/ugbtFCm"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="footer-link d-flex align-items-start gap-2"
-              >
-                <img src={location} alt="" width={22} height={22} />
-                <span className="footer-text">
-                  #1881/3A, Wesely Road, Mysore, Karnataka 570001
-                </span>
-              </Link>
 
-              <div className="d-flex align-items-start gap-2">
-                <img src={mail} alt="" width={22} height={22} />
-                <a
-                  href="mailto:themysuruoils@gmail.com"
-                  className="footer-link footer-text"
-                >
-                  support@themysoreoils.com
-                </a>
-              </div>
+            {/* MOBILE: Contact Us under logo */}
+            <div className="d-block d-md-none mt-3">
+              <ContactBlock />
+            </div>
 
-              <div className="d-flex align-items-start gap-2">
-                <img src={call} alt="" width={22} height={22} />
-                <a href="tel:7899830366" className="footer-link footer-text">
-                  7899830366
-                </a>
-              </div>
+            {/* DESKTOP: Social under logo */}
+            <div className="d-none d-md-block mt-3">
+              <SocialBlock />
             </div>
           </Col>
-          </Col>
 
-          {/* Contact */}
-          
-          {/* About */}
+          {/* ABOUT */}
           <Col xs={6} md={2} className="order-1">
             <p className="footer-hd">ABOUT</p>
             <ul className="footer-list">
-              <li><Link to="/" className="footer-link">About Us</Link></li>
-              <li><Link to="/account" className="footer-link">Account</Link></li>
-              <li><Link to="/contact" className="footer-link">Contact Us</Link></li>
+              <li>
+                <Link to="/" className="footer-link">
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link to="/account" className="footer-link">
+                  Account
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" className="footer-link">
+                  Contact Us
+                </Link>
+              </li>
             </ul>
           </Col>
 
-          {/* Help */}
-          <Col xs={6} md={3} className="order-2">
+          {/* HELP */}
+          <Col xs={6} md={2} className="order-2">
             <p className="footer-hd">HELP</p>
             <ul className="footer-list">
-              <li><Link to="/terms-conditions" className="footer-link">Terms of Service</Link></li>
-              <li><Link to="/privacy" className="footer-link">Privacy Policy</Link></li>
-              <li><Link to="/shipping-policy" className="footer-link">Shipping Policy</Link></li>
-              <li><Link to="/refund-policy" className="footer-link">Return and Refund Policy</Link></li>
+              <li>
+                <Link to="/terms-conditions" className="footer-link">
+                  Terms of Service
+                </Link>
+              </li>
+              <li>
+                <Link to="/privacy" className="footer-link">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link to="/shipping-policy" className="footer-link">
+                  Shipping Policy
+                </Link>
+              </li>
+              <li>
+                <Link to="/refund-policy" className="footer-link">
+                  Return and Refund Policy
+                </Link>
+              </li>
             </ul>
           </Col>
 
-          {/* Social */}
-          <Col xs={6} md={2} className="order-3">
-            <p className="footer-hd">SOCIAL</p>
-            <div className="d-flex align-items-center gap-3">
-              <Link
-                to="https://www.instagram.com/themysoreoils?igsh=MWJpbW5uNTdqMmV0dg%3D%3D&utm_source=qr"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="footer-link d-inline-flex align-items-center"
-                aria-label="Instagram"
-              >
-                <img src={instagram} alt="Instagram" width={34} height={34} />
-              </Link>
-              <img src={communicate} alt="" width={30} height={30} />
-            </div>
+          {/* CONTACT US (DESKTOP ONLY – original position) */}
+          <Col
+            xs={6}
+            md={3}
+            className="order-3 d-none d-md-block"
+          >
+            <ContactBlock />
           </Col>
 
-          {/* Support */}
+          {/* SUPPORT */}
           <Col xs={6} md={2} className="order-4">
             <p className="footer-hd">SUPPORT</p>
             <ul className="footer-list">
-              <li><Link to="/create_account" className="footer-link">Sign Up</Link></li>
+              <li>
+                <Link to="/create_account" className="footer-link">
+                  Sign Up
+                </Link>
+              </li>
             </ul>
           </Col>
 
-        
-
-
-          
+          {/* SOCIAL (MOBILE ONLY – in place of Contact Us col) */}
+          <Col
+            xs={6}
+            md={2}
+            className="order-3 d-block d-md-none"
+          >
+            <SocialBlock />
+          </Col>
         </Row>
       </Container>
     </footer>

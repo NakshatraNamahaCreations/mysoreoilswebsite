@@ -25,9 +25,9 @@ export default function FooterOne() {
 
             <h5 className="mt-4">Contact Us</h5>
             <p>
-              Call: <a href="tel:+91740680003" style={{textDecoration:"none", color:"inherit"}}>+91-7899830366</a><br/>
+              Call: <a href="tel:+9163629 02455" style={{textDecoration:"none", color:"inherit"}}>+91-63629 02455</a><br/>
               Email: <a href="mailto:support@yourwebsite.com" style={{textDecoration:"none", color:"inherit"}}>support@themysoreoils.com</a><br/>
-              WhatsApp: <a href="https://wa.me/91740680003" style={{textDecoration:"none", color:"inherit"}}>+91-7899830366</a><br/>
+              WhatsApp: <a href="https://wa.me/63629 02455" style={{textDecoration:"none", color:"inherit"}}>+91-63629 02455</a><br/>
               Monday – Saturday (10 AM - 7 PM)
             </p>
             <div className="d-flex gap-3 mt-3">

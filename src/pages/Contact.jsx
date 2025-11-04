@@ -8,6 +8,7 @@ import { Form, Button } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import ScrollToTop from "../components/ScrollToTop";
 import Navbar_Menu from "../components/Navbar_Menu";
+import Footer from "../components/Footer"
 
 /* ---------------- Validation ---------------- */
 const schema = yup.object().shape({
@@ -133,7 +134,7 @@ export default function Contact() {
                       rel="noopener noreferrer"
                       style={{ color: "#002209", textDecoration: "none" }}
                     >
-                      #1881/3A, WESLEY ROAD, MYSORE, KARNATAKA 570001
+                      No 203, Maalige Arcade, 100ft road, Chikkegowdanpalya, Banashankari 6th Stage , Bangalore 62
                     </a>
                   </p>
                 </div>
@@ -168,8 +169,8 @@ export default function Contact() {
                       marginBottom: 0,
                     }}
                   >
-                    <a href="tel:7899830366" style={{ color: "#002209", textDecoration: "none" }}>
-                      7899830366
+                    <a href="tel:63629 02455" style={{ color: "#002209", textDecoration: "none" }}>
+                      63629 02455
                     </a>
                   </p>
                 </div>
@@ -382,6 +383,7 @@ export default function Contact() {
         </div>
 
         <ScrollToTop />
+        <Footer/>
       </div>
     </>
   );

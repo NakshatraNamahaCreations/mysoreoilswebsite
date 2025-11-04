@@ -44,7 +44,7 @@ async function loadProductIndex() {
 
   // Fetch fresh
   const res = await axios.get(PRODUCTS_URL);
-  const items = Array.isArray(res.data) ? res.data : (res.data?.items || []);
+  const items = Array.isArray(res.data) ? res.data : res.data?.items || [];
 
   const index = items.map((p) => {
     const displayName = String(p.productName || p.name || p.title || "").trim();
@@ -76,7 +76,7 @@ export default function Navbar_Menu() {
   // Offcanvas (mobile)
   const [showDrawer, setShowDrawer] = useState(false);
 
-  // Search (desktop + optional mobile overlay)
+  // Search (desktop + mobile)
   const [showSearch, setShowSearch] = useState(false);
   const [query, setQuery] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -134,9 +134,11 @@ export default function Navbar_Menu() {
     };
   }, []);
 
-  // Close drawer on route change
+  // Close drawer & search on route change
   useEffect(() => {
     setShowDrawer(false);
+    setShowSearch(false);
+    setShowSuggestions(false);
   }, [location.pathname]);
 
   // Click-outside closes suggestions (desktop)
@@ -149,7 +151,7 @@ export default function Navbar_Menu() {
     return () => document.removeEventListener("mousedown", onClickOutside);
   }, []);
 
-  // Debounced suggestions
+  // Debounced suggestions (shared for desktop + mobile)
   useEffect(() => {
     if (!query.trim()) {
       setSuggestions({ products: [], categories: [] });
@@ -197,7 +199,7 @@ export default function Navbar_Menu() {
   const handleSearchToggle = () => {
     setShowSearch((prev) => !prev);
     setShowSuggestions(false);
-    setTimeout(() => setShowSuggestions(true), 200);
+    // Desktop suggestions will open on input focus; on mobile we'll open after typing
   };
 
   const handleSearchSubmit = (e) => {
@@ -215,7 +217,17 @@ export default function Navbar_Menu() {
         <Container fluid className="px-3">
           {/* ===== MOBILE HEADER ROW (< md) ===== */}
           <div className="d-flex d-md-none w-100 align-items-center justify-content-between">
-            {/* LEFT: search + wishlist + cart + account */}
+            {/* LEFT: Logo */}
+            <Link to="/" className="d-inline-flex align-items-center">
+              <img
+                src="/media/MysuruOilsLogo.png"
+                alt="Mysuru Oils"
+                style={{ height: 50, objectFit: "contain", marginRight: "10px" }}
+                loading="lazy"
+              />
+            </Link>
+
+            {/* RIGHT: search + wishlist + cart + account + hamburger */}
             <div className="d-flex align-items-center gap-2">
               <button
                 aria-label="Open search"
@@ -240,14 +252,14 @@ export default function Navbar_Menu() {
               <Link to="/login" aria-label="Account" className="icon-box">
                 <img src={Account} alt="Account" className="icon-img" loading="lazy" />
               </Link>
-            </div>
 
-            {/* RIGHT: hamburger */}
-            <Navbar.Toggle
-              aria-controls="main-offcanvas"
-              className="border-0 shadow-none"
-              onClick={() => setShowDrawer(true)}
-            />
+              {/* Hamburger */}
+              <Navbar.Toggle
+                aria-controls="main-offcanvas"
+                className="border-0 shadow-none"
+                onClick={() => setShowDrawer(true)}
+              />
+            </div>
           </div>
 
           {/* ===== DESKTOP BAR (>= md) ===== */}
@@ -265,14 +277,18 @@ export default function Navbar_Menu() {
             <Nav className="align-items-center" style={{ gap: 24 }}>
               <NavLink
                 to="/"
-                className={({ isActive }) => (isActive ? "nav-hover-effect active-link" : "nav-hover-effect")}
+                className={({ isActive }) =>
+                  isActive ? "nav-hover-effect active-link" : "nav-hover-effect"
+                }
               >
                 HOME
               </NavLink>
 
               <NavLink
                 to="/best-seller"
-                className={({ isActive }) => (isActive ? "nav-hover-effect active-link" : "nav-hover-effect")}
+                className={({ isActive }) =>
+                  isActive ? "nav-hover-effect active-link" : "nav-hover-effect"
+                }
               >
                 BEST SELLER
               </NavLink>
@@ -280,7 +296,10 @@ export default function Navbar_Menu() {
               {/* Categories dropdown */}
               <NavDropdown
                 title={
-                  <span className="nav-title" style={{ fontFamily: "poppins", color: "#fff", fontWeight: 700, fontSize: 20 }}>
+                  <span
+                    className="nav-title"
+                    style={{ fontFamily: "poppins", color: "#fff", fontWeight: 700, fontSize: 20 }}
+                  >
                     CATEGORIES
                     <FontAwesomeIcon icon={faAngleDown} className={`ms-2 ${isOpen ? "rotate-180" : ""}`} />
                   </span>
@@ -295,12 +314,15 @@ export default function Navbar_Menu() {
                   {!loading && !error && categories.length === 0 && (
                     <NavDropdown.Item disabled>No categories available</NavDropdown.Item>
                   )}
-                  {!loading && !error &&
+                  {!loading &&
+                    !error &&
                     categories.map((category) => (
                       <NavDropdown.Item
                         key={category._id}
                         as={Link}
-                        to={`/categories?category=${encodeURIComponent(category.slug || toSlug(category.name))}`}
+                        to={`/categories?category=${encodeURIComponent(
+                          category.slug || toSlug(category.name)
+                        )}`}
                       >
                         {category.name}
                       </NavDropdown.Item>
@@ -333,7 +355,7 @@ export default function Navbar_Menu() {
                     aria-label="Search products or categories"
                   />
 
-                  {/* Suggestions dropdown */}
+                  {/* Suggestions dropdown (desktop) */}
                   {showSuggestions &&
                     (suggestions.products.length > 0 || suggestions.categories.length > 0) && (
                       <div
@@ -369,6 +391,7 @@ export default function Navbar_Menu() {
                                 className="dropdown-item d-flex align-items-center"
                                 onClick={() => {
                                   setShowSuggestions(false);
+                                  setShowSearch(false);
                                   navigate(p.link);
                                 }}
                               >
@@ -408,26 +431,27 @@ export default function Navbar_Menu() {
                             >
                               CATEGORIES
                             </div>
-                            {suggestions.categories
-                              // Filter example; keep or remove per your needs
-                              // .filter((c) => c.name.toLowerCase() === "oils")
-                              .map((c) => (
-                                <button
-                                  key={c._id}
-                                  type="button"
-                                  className="dropdown-item"
-                                  onClick={() => {
-                                    setShowSuggestions(false);
-                                    navigate(
-                                      `/categories?category=${encodeURIComponent(
-                                        c.slug || String(c.name || "").toLowerCase().replace(/\s+/g, "-")
-                                      )}`
-                                    );
-                                  }}
-                                >
-                                  {c.name}
-                                </button>
-                              ))}
+                            {suggestions.categories.map((c) => (
+                              <button
+                                key={c._id}
+                                type="button"
+                                className="dropdown-item"
+                                onClick={() => {
+                                  setShowSuggestions(false);
+                                  setShowSearch(false);
+                                  navigate(
+                                    `/categories?category=${encodeURIComponent(
+                                      c.slug ||
+                                        String(c.name || "")
+                                          .toLowerCase()
+                                          .replace(/\s+/g, "-")
+                                    )}`
+                                  );
+                                }}
+                              >
+                                {c.name}
+                              </button>
+                            ))}
                           </>
                         )}
 
@@ -436,7 +460,9 @@ export default function Navbar_Menu() {
                             type="button"
                             className="btn btn-sm btn-outline-primary w-100"
                             onClick={() => {
+                              if (!query.trim()) return;
                               setShowSuggestions(false);
+                              setShowSearch(false);
                               navigate(`/search?q=${encodeURIComponent(query.trim())}`);
                             }}
                           >
@@ -476,11 +502,9 @@ export default function Navbar_Menu() {
             show={showDrawer}
             onHide={() => setShowDrawer(false)}
           >
-            {/* Header: logo left, close button right */}
+            {/* Header: close button only / optional title */}
             <Offcanvas.Header className="mo-header" closeButton>
-              <Link to="/" className="mo-logo" onClick={() => setShowDrawer(false)}>
-                <img src="/media/MysuruOilsLogo.png" alt="Mysuru Oils" />
-              </Link>
+              <Offcanvas.Title id="main-offcanvas-label">Menu</Offcanvas.Title>
             </Offcanvas.Header>
 
             {/* Body: left-aligned, stacked menu */}
@@ -521,11 +545,15 @@ export default function Navbar_Menu() {
                       {!loading && !error && categories.length === 0 && (
                         <div className="mo-muted">No categories available</div>
                       )}
-                      {!loading && !error &&
+                      {!loading &&
+                        !error &&
                         categories.map((category) => (
                           <Link
                             key={category._id}
-                            to={`/categories?category=${encodeURIComponent(category.slug || String(category.name || "").toLowerCase().replace(/\s+/g, "-"))}`}
+                            to={`/categories?category=${encodeURIComponent(
+                              category.slug ||
+                                String(category.name || "").toLowerCase().replace(/\s+/g, "-")
+                            )}`}
                             className="mo-acc-link"
                             onClick={() => setShowDrawer(false)}
                           >
@@ -541,10 +569,157 @@ export default function Navbar_Menu() {
         </Container>
       </Navbar>
 
-      {/* Optional: mobile search overlay placeholder (plug your mobile search here) */}
+      {/* Mobile search bar + suggestions (same logic as desktop) */}
       {showSearch && (
-        <div className="d-md-none" style={{ background: "#0b1220", color: "#fff", padding: 12 }}>
-          <div style={{ opacity: 0.8, fontSize: 13 }}>Search UI placeholder (mobile)</div>
+        <div
+          className="d-md-none"
+          style={{
+            background: "#0b1220",
+            color: "#fff",
+            padding: "10px 12px",
+            borderTop: "1px solid rgba(255,255,255,0.15)",
+          }}
+        >
+          <form
+            onSubmit={handleSearchSubmit}
+            className="d-flex align-items-center gap-2"
+          >
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search products or categories…"
+              className="form-control"
+              autoFocus
+              inputMode="search"
+              aria-label="Search products or categories"
+              onFocus={() => query && setShowSuggestions(true)}
+            />
+            <button
+              type="submit"
+              className="btn btn-light btn-sm"
+              style={{ whiteSpace: "nowrap" }}
+            >
+              Search
+            </button>
+          </form>
+
+          {showSuggestions &&
+            (suggestions.products.length > 0 || suggestions.categories.length > 0) && (
+              <div
+                className="mt-2 rounded"
+                style={{
+                  background: "#fff",
+                  color: "#000",
+                  maxHeight: 320,
+                  overflowY: "auto",
+                  padding: 8,
+                }}
+              >
+                {isSearching && (
+                  <div className="px-2 py-1 text-muted" style={{ fontSize: 14 }}>
+                    Searching…
+                  </div>
+                )}
+
+                {/* Product suggestions (mobile) */}
+                {suggestions.products.length > 0 && (
+                  <>
+                    <div
+                      className="px-2 pt-1 pb-2 text-secondary"
+                      style={{ fontSize: 12, fontWeight: 700 }}
+                    >
+                      PRODUCTS
+                    </div>
+                    {suggestions.products.map((p) => (
+                      <button
+                        key={p._id}
+                        type="button"
+                        className="dropdown-item d-flex align-items-center"
+                        onClick={() => {
+                          setShowSuggestions(false);
+                          setShowSearch(false);
+                          navigate(p.link);
+                        }}
+                      >
+                        <img
+                          src={p.imageUrl}
+                          alt={p.name}
+                          loading="lazy"
+                          style={{
+                            width: 36,
+                            height: 36,
+                            objectFit: "cover",
+                            borderRadius: 4,
+                            marginRight: 8,
+                          }}
+                        />
+                        <div className="d-flex flex-column">
+                          <span style={{ fontSize: 14, fontWeight: 600, color: "#000" }}>
+                            {p.name}
+                          </span>
+                          {p.categoryName && (
+                            <span className="text-muted" style={{ fontSize: 12 }}>
+                              {p.categoryName}
+                            </span>
+                          )}
+                        </div>
+                      </button>
+                    ))}
+                    <div className="dropdown-divider" />
+                  </>
+                )}
+
+                {/* Category suggestions (mobile) */}
+                {suggestions.categories.length > 0 && (
+                  <>
+                    <div
+                      className="px-2 pt-1 pb-2 text-secondary"
+                      style={{ fontSize: 12, fontWeight: 700 }}
+                    >
+                      CATEGORIES
+                    </div>
+                    {suggestions.categories.map((c) => (
+                      <button
+                        key={c._id}
+                        type="button"
+                        className="dropdown-item"
+                        onClick={() => {
+                          setShowSuggestions(false);
+                          setShowSearch(false);
+                          navigate(
+                            `/categories?category=${encodeURIComponent(
+                              c.slug ||
+                                String(c.name || "")
+                                  .toLowerCase()
+                                  .replace(/\s+/g, "-")
+                            )}`
+                          );
+                        }}
+                      >
+                        {c.name}
+                      </button>
+                    ))}
+                  </>
+                )}
+
+                {/* View all results (mobile) */}
+                <div className="mt-2">
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-outline-primary w-100"
+                    onClick={() => {
+                      if (!query.trim()) return;
+                      setShowSuggestions(false);
+                      setShowSearch(false);
+                      navigate(`/search?q=${encodeURIComponent(query.trim())}`);
+                    }}
+                  >
+                    View all results for “{query.trim()}”
+                  </button>
+                </div>
+              </div>
+            )}
         </div>
       )}
     </>
