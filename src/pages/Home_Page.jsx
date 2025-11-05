@@ -126,7 +126,7 @@ export default function Home_Page() {
                     padding: "10px",
                   }} className="bannerhead"
                 >
-                  <h1 style={{color:"#fff", fontWeight:"900"}}>Cold Pressed Oils & Groceries for Healthy Living</h1>
+                  <h1 style={{color:"#fff", fontWeight:"900"}}>ColdPressed Oils & Groceries for Healthy Living</h1>
                   <p style={{fontSize: "20px"}}> Pure, Healthy, Organic. From nature to your kitchen</p>
                 {/*}  <img
                     src={MysuruOilsLogo}

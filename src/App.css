@@ -52,6 +52,22 @@ html,
   overflow-y: auto;
 }
 
+.logohead{
+  font-family: 'madina';
+  color: #d3b353;
+  font-size: 60px;
+  font-weight: 600;
+  letter-spacing: 3.5px;
+}
+
+.logoheading{
+  font-family: 'madina';
+  color: #d3b353;
+  font-size: 60px;
+  font-weight: 600;
+  font-size: 45px;
+}
+
 .banner {
   width: 100%;
   /*background-color: #015b19;*/
@@ -456,8 +472,8 @@ html,
 .navbar, .header {
   overflow: visible !important;
   position: relative;
-  padding: 50px;
-  background-color: #015b19;
+ padding: 0 50px;
+  background-color: #00330e;
 }
 
 @media (max-width: 768px) {
@@ -1587,11 +1603,7 @@ footer .footer-link {
     gap: 10px;
   }
 
-  /* Logo: remove negative margin, scale down */
-  .nav-logo img {
-    margin-left: 0 !important;
-    height: 48px !important;
-  }
+  
 
   /* Steps: make horizontally scrollable with snap */
   .nav-steps {

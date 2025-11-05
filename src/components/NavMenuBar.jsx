@@ -26,17 +26,13 @@ const NavbarMenu = () => {
 
   return (
     <>
-      <div className="nav-checkout-bar" style={{ backgroundColor: "#015b19", color: "white", padding: "10px 0" }}>
+      <div className="nav-checkout-bar" style={{ backgroundColor: "#00330e", color: "white", padding: " 0" }}>
         <Container className="d-flex justify-content-between align-items-center nav-checkout-inner">
           {/* Left — Logo */}
           <div className="d-flex align-items-center gap-3 nav-logo">
             <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-              <img
-                src="/media/MysuruOilsLogo.png"
-                alt="logo"
-                height="70"
-                style={{ marginLeft: "-70px" }}
-              />
+               <img src="/media/mysoillogo.png" alt="elephant logo" style={{height:100, objectFit:"contain"}}/>
+          <span className="logoheading">The Mysore oils</span>
             </Link>
           </div>
 

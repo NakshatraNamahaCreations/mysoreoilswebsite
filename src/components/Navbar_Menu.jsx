@@ -213,7 +213,7 @@ export default function Navbar_Menu() {
   /* ====== Render ====== */
   return (
     <>
-      <Navbar expand="md" className="navbar-sticky py-2" sticky="top">
+      <Navbar expand="md" className="navbar-sticky" sticky="top">
         <Container fluid className="px-3">
           {/* ===== MOBILE HEADER ROW (< md) ===== */}
           <div className="d-flex d-md-none w-100 align-items-center justify-content-between">
@@ -266,11 +266,14 @@ export default function Navbar_Menu() {
           <div className="d-none d-md-flex w-100 align-items-center justify-content-between gap-3">
             {/* Logo */}
             <Link to="/" className="d-inline-flex align-items-center">
-              <img
+            {/*}  <img
                 src="/media/MysuruOilsLogo.png"
                 alt="Mysuru Oils"
-                style={{ height: 65, objectFit: "contain" }}
-              />
+                style={{ height:95, objectFit: "contain" }}
+              />*/}
+              <img src="/media/mysoillogo.png" alt="elephant logo" style={{height:110, objectFit:"contain"}}/>
+          <span className="logohead">The Mysore oils</span>
+              
             </Link>
 
             {/* Links */}
@@ -489,6 +492,7 @@ export default function Navbar_Menu() {
                 <img src={Account} alt="" className="icon-img" />
               </Link>
             </div>
+                
           </div>
 
           {/* ===== OFFCANVAS DRAWER (MOBILE ONLY) ===== */}
