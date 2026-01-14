@@ -1468,7 +1468,7 @@ const grandTotal = round1(subtotal - discountAmount + gst + shipping);
 
                 <div className="d-flex justify-content-between fw-bold fs-5">
                   <span style={{ fontFamily: "Poppins" }}>Grand Total</span>
-                  <span>₹{grandTotal.toFixed(0)}</span>
+                  <span>₹{grandTotal.toFixed(1)}</span>
                 </div>
 
                 <Button
