@@ -545,17 +545,7 @@ const [phoneError, setPhoneError] = useState("");
                 style={{ fontFamily: "poppins" }}
               />
             </Form.Group>
-            {/* Uncomment if you need SMS Consent */}
-            {/* <Form.Group className="mb-3">
-              <Form.Check
-                type="checkbox"
-                label="I hereby authorize you to send notifications via SMS/messages/promotional/informational messages."
-                name="smsConsent"
-                checked={formData.smsConsent}
-                onChange={handleChange}
-                style={{ fontFamily: "poppins" }}
-              />
-            </Form.Group> */}
+           
             <div className="d-grid gap-2">
               <Button type="submit" style={{ backgroundColor: " #d3b353", border: "none", height: "45px", fontFamily: "poppins" }}>
                 Create an Account

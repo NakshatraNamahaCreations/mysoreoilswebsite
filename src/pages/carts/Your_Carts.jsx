@@ -1156,6 +1156,9 @@ export default function Your_Carts() {
   const cartItems = useSelector((state) => state.cart.cartItems);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+ const round1 = (num) => Math.round(num * 10) / 10;
+
+
 
   // Helpers
   const toNum = (v) => {
@@ -1183,18 +1186,23 @@ export default function Your_Carts() {
   const lineSellingTotal = (item) => unitSellingPrice(item) * lineQty(item);
   const lineOriginalTotal = (item) => unitMrp(item) * lineQty(item);
 
-  const subtotal = (cartItems ?? []).reduce((sum, item) => sum + lineSellingTotal(item), 0);
-  const discount = Math.max(
-    0,
-    (cartItems ?? []).reduce(
-      (sum, item) => sum + (lineOriginalTotal(item) - lineSellingTotal(item)),
-      0
-    )
-  );
+  const subtotal = cartItems.reduce(
+  (sum, item) => sum + lineSellingTotal(item),
+  0
+);
 
-  const gst = 0;
-  const shipping = 0;
-  const grandTotal = subtotal + shipping + gst;
+const discountPercent = 10;
+
+// ✅ same logic as checkout
+const discountAmount = round1((subtotal * discountPercent) / 100);
+
+const shipping = 0;
+const gst = 0;
+
+const grandTotal = round1(subtotal - discountAmount + gst + shipping);
+
+
+
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
@@ -1449,6 +1457,11 @@ export default function Your_Carts() {
                 <div className="d-flex justify-content-between mb-2">
                   <span style={{ fontFamily: "Poppins" }}>GST</span>
                   <span style={{ fontFamily: "Poppins" }}>₹{gst.toFixed(0)}</span>
+                </div>
+
+                 <div className="d-flex justify-content-between mb-2">
+                  <span style={{ fontFamily: "Poppins" }}>Discount(10%)</span>
+                  <span style={{ fontFamily: "Poppins" }}>₹{discountAmount.toFixed(1)}</span>
                 </div>
 
                 <hr />

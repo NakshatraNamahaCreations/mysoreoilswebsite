@@ -731,9 +731,11 @@ export default function Checkout() {
 
   const apiItems = cartToApiItems(cartItems);
   const subtotal = apiItems.reduce((sum, it) => sum + toNum(it.price) * toNum(it.quantity), 0);
+  const discountPercent = 10; // 10%
+const discountAmount = (subtotal * discountPercent) / 100;
   const shipping = 0;
   const gst = 0;
-  const total = subtotal + shipping + gst;
+  const total = subtotal - discountAmount + gst + shipping;
 
   const getAddrId = (a) => a?._id || a?.id;
 
@@ -928,8 +930,10 @@ const handlePayNow = async () => {
     // Calculate the total amount
     const computedSubtotal = items.reduce((sum, it) => sum + it.price * it.quantity, 0);
     const shippingFee = 0;
+    const discountPercent = 10;
+    const discountAmount = (computedSubtotal * discountPercent) / 100;
     const taxAmount = computedSubtotal * 0;
-    const grandTotal = computedSubtotal + shippingFee + taxAmount;
+    const grandTotal = computedSubtotal + shippingFee + taxAmount - discountAmount;
 
     // Initiate the payment
     const paymentResponse = await axios.post(
@@ -1396,6 +1400,10 @@ const orderId = paymentResponse.data.phonepeResponse?.orderId;
                 <div className="d-flex justify-content-between">
                   <span>GST:</span>
                   <span>₹{gst.toLocaleString("en-IN")}</span>
+                </div>
+                 <div className="d-flex justify-content-between">
+                  <span>Discount(10%):</span>
+                  <span>₹{discountAmount.toLocaleString("en-IN")}</span>
                 </div>
                 <div className="d-flex justify-content-between fw-bold mt-2">
                   <span>Total:</span>
