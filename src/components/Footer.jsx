@@ -193,7 +193,7 @@ function SocialBlock() {
       <p className="footer-hd">SOCIAL</p>
       <div className="d-flex align-items-center gap-3">
         <Link
-          to="https://www.instagram.com/themysoreoils?igsh=MWJpbW5uNTdqMmV0dg%3D%3D&utm_source=qr"
+          to="https://www.instagram.com/mysoreoils/"
           target="_blank"
           rel="noopener noreferrer"
           className="footer-link d-inline-flex align-items-center"
@@ -201,7 +201,9 @@ function SocialBlock() {
         >
           <img src={instagram} alt="Instagram" width={34} height={34} />
         </Link>
+        <Link to="https://www.facebook.com/themysoreoils" target="_blank" rel="noopener noreferrer" className="footer-link d-inline-flex align-items-center" aria-label="facebook">
         <img src={communicate} alt="" width={30} height={30} />
+        </Link>
       </div>
     </>
   );
