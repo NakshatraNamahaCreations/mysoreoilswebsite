@@ -410,6 +410,8 @@ const fetchBanners = async () => {
       <span className="about-tag">Our Heritage</span>
       <h1 className="about-title">About The Mysore Oils</h1>
 
+      <p className="about-text">Our company draws inspiration from two great visionaries, Nalwadi Krishnaraja Wodeyar and Sir M. Visvesvaraya from the land of Mysore, who dedicated their lives to serving people with the highest standards of excellence. Their commitment to quality and public welfare continues to guide us in everything we do.</p>
+
       <p className="about-text">
         Welcome to <strong>The Mysore Oils</strong>, where tradition meets
         uncompromised quality. Inspired by the visionary leadership of
