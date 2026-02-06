@@ -44,26 +44,26 @@ export default function Home_Page() {
  
 
 
-//  const defaultSlides = [
-//   {
-//     title: "ColdPressed Oils & Groceries",
-//     subtitle: "for Healthy Living",
-//     desc: "Pure, Healthy, Organic. From nature to your kitchen",
-//     bg: "/media/mysoilbg.jpeg",
-//     titleColor: "#ffffff",
-//     subtitleColor: "#FFD600",
-//     descColor: "#f1f1f1",
-//   },
-//   {
-//     title: "Traditional Cold-Pressed Oils",
-//     subtitle: "for Everyday Wellness",
-//     desc: "Unrefined oils crafted using time-tested methods",
-//     bg: "/media/mysoilbg1.jpeg",
-//     titleColor: "#004914",
-//     subtitleColor: "#7A1F2B",
-//     descColor: "#004914",
-//   },
-// ];
+ const defaultSlides = [
+  {
+    title: "ColdPressed Oils & Groceries",
+    subtitle: "for Healthy Living",
+    desc: "Pure, Healthy, Organic. From nature to your kitchen",
+    bg: "/media/mysoilbg.jpeg",
+    titleColor: "#ffffff",
+    subtitleColor: "#FFD600",
+    descColor: "#f1f1f1",
+  },
+  {
+    title: "Traditional Cold-Pressed Oils",
+    subtitle: "for Everyday Wellness",
+    desc: "Unrefined oils crafted using time-tested methods",
+    bg: "/media/mysoilbg1.jpeg",
+    titleColor: "#004914",
+    subtitleColor: "#7A1F2B",
+    descColor: "#004914",
+  },
+];
 
 
 
@@ -101,8 +101,8 @@ const fetchBanners = async () => {
   } catch (err) {
     console.log(err);
 
-    // fallback if API fails
-    // setHeroSlides(defaultSlides);
+    //fallback if API fails
+    setHeroSlides(defaultSlides);
   }
 };
 
