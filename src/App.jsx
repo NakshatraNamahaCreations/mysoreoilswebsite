@@ -60,6 +60,8 @@ import ProfileDetails from "./pages/accounts/Profile-details";
 import SearchResults from "./components/SearchResults";
 import ResetPassword from "./pages/accounts/ResetPassword";
 import PaymentFailed from "./pages/carts/FailurePage";
+import WhatsAppButton from "./components/WhatsAppBtn";
+import Home from "./pages/Home";
 
 
 
@@ -69,11 +71,12 @@ function App() {
     <>
       <Router>
         <BackToTop/>
+        <WhatsAppButton/>
         <ScrollToTop/>
         <Routes>
           <Route path="/" element={<Home_Page />} />
           <Route path="/best-seller" element={<Best_Seller />} />
-          <Route path="/categories" element={<Categories />} />
+          <Route path="/shop" element={<Categories />} />
           <Route path="/product-page/:id" element={<Product_Page/>} />
           <Route path="/thankyou" element={<Thank_You />} />
           <Route path="/contact" element={<Contact />} />
@@ -104,7 +107,7 @@ function App() {
           
        {/*<Route path="/oilcategory" element={<OilCategory/>}/>*/}
         <Route path="/oil-products/:productName" element={<ProductDetails />} />
-      <Route path="/categories/:categoryName" element={<CategoryPage />} />
+      <Route path="/shop/:categoryName" element={<CategoryPage />} />
       <Route path="/reset-password/:token" element={<ResetPassword/>}/>
       <Route path="/payment-failed" element={<PaymentFailed/>}/>
  
@@ -125,7 +128,7 @@ function App() {
 
 
 
-<Route path="/categories" element={<Categories/>}/>
+<Route path="/shop" element={<Categories/>}/>
           <Route path="/Millets/BarnyardMillet" element={<BarnyardMillet/>}/>
           <Route path="/Millets/FoxtailMillet" element={<FoxtailMillet/>}/>
           <Route path="/IceCream/alphonso-mango" element={<AlphonsoMango/>}/>

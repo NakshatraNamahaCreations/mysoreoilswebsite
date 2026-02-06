@@ -229,7 +229,7 @@ function ContactBlock() {
         <div className="d-flex align-items-start gap-2">
           <img src={mail} alt="" width={22} height={22} />
           <a
-            href="mailto:themysuruoils@gmail.com"
+            href="mailto:support@themysoreoils.com"
             className="footer-link footer-text"
           >
             support@themysoreoils.com

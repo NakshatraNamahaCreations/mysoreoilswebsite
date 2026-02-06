@@ -147,7 +147,7 @@ export default function Wishlists() {
                 <Button
                   variant="dark"
                   style={{ padding: "10px 30px", fontFamily: "Poppins", marginTop: "20px" }}
-                  onClick={() => navigate("/categories")}
+                  onClick={() => navigate("/shop")}
                 >
                   Shop Now
                 </Button>

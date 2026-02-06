@@ -72,6 +72,8 @@ export default function Navbar_Menu() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [cartToast, setCartToast] = useState(null);
+
 
   // Offcanvas (mobile)
   const [showDrawer, setShowDrawer] = useState(false);
@@ -102,8 +104,29 @@ export default function Navbar_Menu() {
   }, [cartItems]);
 
   const isCategoryActive =
-    location.pathname.startsWith("/categories") ||
+    location.pathname.startsWith("/shop") ||
     location.pathname.startsWith("/spicescategories");
+
+    const prevCountRef = useRef(0);
+
+useEffect(() => {
+  const totalQty = cartItems.reduce((s, i) => s + (i.quantity || 0), 0);
+
+  // Detect ADD (not remove)
+  if (totalQty > prevCountRef.current) {
+    const lastItem = cartItems[cartItems.length - 1];
+
+    setCartToast({
+      name: lastItem.name,
+      image: lastItem.image,
+    });
+
+    setTimeout(() => setCartToast(null), 1500);
+  }
+
+  prevCountRef.current = totalQty;
+}, [cartItems]);
+
 
   /* ====== Effects ====== */
   // Fetch categories
@@ -271,7 +294,7 @@ export default function Navbar_Menu() {
                 alt="Mysuru Oils"
                 style={{ height:95, objectFit: "contain" }}
               />*/}
-              <img src="/media/mysoillogo.png" alt="elephant logo" style={{height:110, objectFit:"contain"}}/>
+              <img src="/media/mysoillogo.png" alt="elephant logo" style={{height:80, objectFit:"contain"}}/>
           <span className="logohead">The Mysore oils</span>
               
             </Link>
@@ -287,23 +310,15 @@ export default function Navbar_Menu() {
                 HOME
               </NavLink>
 
-              <NavLink
-                to="/best-seller"
-                className={({ isActive }) =>
-                  isActive ? "nav-hover-effect active-link" : "nav-hover-effect"
-                }
-              >
-                BEST SELLER
-              </NavLink>
 
               {/* Categories dropdown */}
               <NavDropdown
                 title={
                   <span
                     className="nav-title"
-                    style={{ fontFamily: "poppins", color: "#fff", fontWeight: 700, fontSize: 20 }}
+                    style={{ fontFamily: "poppins", color: "#004914", fontWeight: 700, fontSize: 16, letterSpacing:"1px" }}
                   >
-                    CATEGORIES
+                    SHOP
                     <FontAwesomeIcon icon={faAngleDown} className={`ms-2 ${isOpen ? "rotate-180" : ""}`} />
                   </span>
                 }
@@ -323,7 +338,7 @@ export default function Navbar_Menu() {
                       <NavDropdown.Item
                         key={category._id}
                         as={Link}
-                        to={`/categories?category=${encodeURIComponent(
+                        to={`/shop?category=${encodeURIComponent(
                           category.slug || toSlug(category.name)
                         )}`}
                       >
@@ -332,6 +347,15 @@ export default function Navbar_Menu() {
                     ))}
                 </div>
               </NavDropdown>
+
+              <NavLink
+                to="/contact"
+                className={({ isActive }) =>
+                  isActive ? "nav-hover-effect active-link" : "nav-hover-effect"
+                }
+              >
+                CONTACT US
+              </NavLink>
             </Nav>
 
             {/* Right icons + desktop search */}
@@ -443,7 +467,7 @@ export default function Navbar_Menu() {
                                   setShowSuggestions(false);
                                   setShowSearch(false);
                                   navigate(
-                                    `/categories?category=${encodeURIComponent(
+                                    `/shop?category=${encodeURIComponent(
                                       c.slug ||
                                         String(c.name || "")
                                           .toLowerCase()
@@ -554,7 +578,7 @@ export default function Navbar_Menu() {
                         categories.map((category) => (
                           <Link
                             key={category._id}
-                            to={`/categories?category=${encodeURIComponent(
+                            to={`/shop?category=${encodeURIComponent(
                               category.slug ||
                                 String(category.name || "").toLowerCase().replace(/\s+/g, "-")
                             )}`}
@@ -692,7 +716,7 @@ export default function Navbar_Menu() {
                           setShowSuggestions(false);
                           setShowSearch(false);
                           navigate(
-                            `/categories?category=${encodeURIComponent(
+                            `/shop?category=${encodeURIComponent(
                               c.slug ||
                                 String(c.name || "")
                                   .toLowerCase()
@@ -726,6 +750,21 @@ export default function Navbar_Menu() {
             )}
         </div>
       )}
+
+      {cartToast && (
+  <div className="nav-cart-toast">
+    <img
+      src={cartToast.image}
+      alt={cartToast.name}
+      className="nav-cart-toast-img"
+    />
+    <div className="nav-cart-toast-text">
+      <strong>Added to cart</strong>
+      <span>{cartToast.name}</span>
+    </div>
+  </div>
+)}
+
     </>
   );
 }

@@ -31,9 +31,82 @@ import UnfilteredPurity from "/media/UnfilteredPurity.png";
 import { width } from "@fortawesome/free-solid-svg-icons/fa0";
 import BrowserSlider from "./BrowserSlider";
 import Footer from "../components/Footer";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, EffectFade } from "swiper/modules";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import "swiper/css";
+import "swiper/css/effect-fade";
+
 
 export default function Home_Page() {
+
+ 
+
+
+//  const defaultSlides = [
+//   {
+//     title: "ColdPressed Oils & Groceries",
+//     subtitle: "for Healthy Living",
+//     desc: "Pure, Healthy, Organic. From nature to your kitchen",
+//     bg: "/media/mysoilbg.jpeg",
+//     titleColor: "#ffffff",
+//     subtitleColor: "#FFD600",
+//     descColor: "#f1f1f1",
+//   },
+//   {
+//     title: "Traditional Cold-Pressed Oils",
+//     subtitle: "for Everyday Wellness",
+//     desc: "Unrefined oils crafted using time-tested methods",
+//     bg: "/media/mysoilbg1.jpeg",
+//     titleColor: "#004914",
+//     subtitleColor: "#7A1F2B",
+//     descColor: "#004914",
+//   },
+// ];
+
+
+
   const [isVisible, setIsVisible] = useState(false);
+   const [heroSlides, setHeroSlides] = useState([]);
+
+useEffect(() => {
+  fetchBanners();
+}, []);
+
+const fetchBanners = async () => {
+  try {
+    const res = await axios.get(
+      "https://api.themysoreoils.com/api/banners"
+    );
+
+    const activeBanners = res.data.filter(b => b.status);
+
+    if (activeBanners.length === 0) {
+      setHeroSlides(defaultSlides);
+      return;
+    }
+
+    const slides = activeBanners.map((banner) => ({
+      title: banner.title,
+      subtitle: "",
+      desc: "",
+      bg: `${"https://api.themysoreoils.com"}${banner.image}`,
+      titleColor: "#ffffff",
+      subtitleColor: "#FFD600",
+      descColor: "#f1f1f1",
+    }));
+
+    setHeroSlides(slides);
+  } catch (err) {
+    console.log(err);
+
+    // fallback if API fails
+    // setHeroSlides(defaultSlides);
+  }
+};
+
+
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -110,129 +183,58 @@ export default function Home_Page() {
         }}
       >
         {/* BANNER */}
-        <div className="banner">
-          <Container
-            style={{ padding: "5% 0", position: "relative", bottom: "50px" }}
-          >
+       <div className="banner-slider">
+  <Swiper
+    modules={[Autoplay, EffectFade]}
+    effect="fade"
+    autoplay={{
+      delay: 4500,
+      disableOnInteraction: false,
+    }}
+    loop
+    speed={1200}
+  >
+    {heroSlides.map((slide, index) => (
+      <SwiperSlide key={index}>
+        <div
+          className="banner-slide"
+          style={{
+            backgroundImage: `url(${slide.bg})`,
+          }}
+        >
+          <Container>
             <Row>
               <Col sm={12}>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "20px",
-                    padding: "10px",
-                  }} className="bannerhead"
-                >
-                  <h1 style={{color:"#fff", fontWeight:"900"}}>ColdPressed Oils & Groceries for Healthy Living</h1>
-                  <p style={{fontSize: "20px"}}> Pure, Healthy, Organic. From nature to your kitchen</p>
-                {/*}  <img
-                    src={MysuruOilsLogo}
-                    alt="Logo"
-                    style={{
-                      width: "100%",
-                      maxWidth: "400px",
-                      height: "auto",
-                      objectFit: "cover",
-                      position: "relative",
-                      zIndex: 99,
-                    }}
-                  />*/}
+  <div className="banner-content">
+    <h1 style={{ color: slide.titleColor }}>
+      {slide.title}
+      <br />
+      <span style={{ color: slide.subtitleColor }}>
+        {slide.subtitle}
+      </span>
+    </h1>
 
-                 {/*} <img
-                    src={purehealthy}
-                    alt="Pure-Health"
-                    style={{
-                      width: "80%",
-                      maxWidth: "400px",
-                      height: "auto",
-                      objectFit: "cover",
-                    }}
-                  />
-                  <img
-                    src={naturecontent}
-                    alt="Nature Content"
-                    style={{
-                      width: "40%",
-                      maxWidth: "300px",
-                      height: "auto",
-                      objectFit: "cover",
-                    }}
-                  />
-                </div>
-                <div>
-                  {/* NAVBAR MENU */}
-                  {/* <Navbar_Menu /> */}
+    <p style={{ color: slide.descColor }}>
+      {slide.desc}
+    </p>
+  </div>
+</Col>
 
-                  {/* SEARCH */}
-                  {/*}  <Container className="mt-3 ">
-            <InputGroup
-              className="mb-5 footer-subscribe-input"
-              style={{
-                maxWidth: "750px",
-                margin: "auto",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Form.Control
-                placeholder="Search our products..."
-                style={{
-                  borderRadius: "5px",
-                  fontSize: "16px",
-                  color: "#002209",
-                  fontWeight: "500",
-                  
-                }}
-                className="me-2 search-input input-account-forms"
-              />
-
-              <div
-                className="search-button-slider"
-                style={{
-                  padding: "5px 24px",
-                  textAlign: "center",
-                  cursor:"pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  
-                }}
-              >
-                SEARCH
-              </div>
-            </InputGroup>
-          </Container>*/}
-                
-                </div>
-              </Col>
-
-              {/*<Col sm={6}>
-                <div>
-                  <img
-                    src={oilproducts}
-                    alt="Mysore Oils Products"
-                    style={{
-                      width: "100%",
-                      height: "auto",
-                      objectFit: "cover",
-                    }}
-                  />
-                </div>
-              </Col>*/}
             </Row>
           </Container>
         </div>
+      </SwiperSlide>
+    ))}
+  </Swiper>
+</div>
+
 
         <div style={{ position: "relative", width: "100%" }}>
           <div
             ref={stripRef}
             className="feature-strip"
             style={{
-              backgroundColor: "#D3B353",
+              // backgroundColor: "#D3B353",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-around",
@@ -243,6 +245,8 @@ export default function Home_Page() {
               overflowX: "auto", // horizontal scroll
               whiteSpace: "nowrap", // prevent wrapping
               scrollbarWidth: "none", // Firefox hide
+              borderBottom:"2px solid #d3b353",
+              marginTop: "10px"
             }}
           >
             <img
@@ -286,120 +290,17 @@ export default function Home_Page() {
       </div>
 
         <div>
-                    <BrowserSlider />
-                  </div>
+                    {/* <BrowserSlider /> */}
 
-      <div
-        style={{
-          backgroundColor: "#ffff",
-          padding: "20px",
-          color: "#002209",
-        }}
-      >
-        <Container className="about-wrap" style={{ marginTop: "5%" }}>
-          <Row className="g-3 g-md-4 align-items-stretch">
-            <Col xs={6} md={3}>
-              <img
-                src="/media/Krishnaraja-Wodeyar.jpg"
-                alt="wodeyar"
-                className="about-img"
-              />
-            </Col>
-
-            <Col xs={6} md={3}>
-              <img
-                src="/media/vishveshvaraiah.jpg"
-                alt="vishveshvaraiah"
-                className="about-img"
-              />
-            </Col>
-
-            <Col xs={12} md={6}>
-              <h1 className="about-title">ABOUT US</h1>
-              <p className="about-text">
-                "Welcome to The Mysore Oils, where tradition meets quality.
-                Inspired by the visionary leaders of our land, Nalwadi
-                Krishnaraja Wodeyar and Sir M. Visvesvaraya, we're dedicated to
-                bringing you the finest cold-pressed oils.
-                <br />
-                <br />
-                Our story begins with a passion for preserving the heritage of
-                Mysore and a commitment to promoting healthy living. We believe
-                in the power of traditional methods and high-quality ingredients
-                to create products that nourish both body and soul.
-                <br />
-                <br />
-                At The Mysore Oils, we're driven by a legacy of excellence and a
-                promise to deliver the purest oils, extracted using time-tested
-                cold-pressing techniques. Our goal is to share the richness of
-                our land's heritage with you, while promoting wellness and
-                sustainability.
-                <br />
-                <br />
-                Join us in our journey to revive the traditional ways of oil
-                extraction, while embracing modern quality standards. Experience
-                the taste and goodness of Mysore's legacy in every drop of our
-                cold-pressed oils."
-              </p>
-            </Col>
-          </Row>
-        </Container>
-
-        {/* SHOP NOW*/}
-
-        <div
-          style={{
-            textAlign: "center",
-          }}
-        >
-          <div style={{ paddingTop: "4%" }}>
-            <h1
-              style={{
-                fontSize: "45px",
-                letterSpacing: "1px",
-                fontWeight: "800",
-                marginBottom: "3%",
-                fontFamily: "montserrat",
-              }}
-              className="mobile-font"
-            >
-              SHOP NOW
-            </h1>
-            <div style={{ marginBottom: "0px" }}>
-              <Products_Sliders />
-            </div>
-            <Button
-              onClick={() => navigate(item.link)}
-              variant="none"
-              className="view-button-slider mb-5"
-              style={{
-                fontWeight: "600",
-                border: "none",
-                borderRadius: "0",
-                fontSize: "20px",
-                padding: "6px 8px",
-                letterSpacing: "0.3px",
-                width: "fit-content",
-                alignItems: "center",
-                display: "block",
-                fontFamily: "montserrat",
-                marginInline: "auto",
-              }}
-            >
-              View All Products
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* QUALITY ASSURANCE */}
-      <Container fluid className=" bgcolor" style={{ padding: "20px" }}>
+                      {/* QUALITY ASSURANCE */}
+      <Container fluid  style={{ padding: "20px", marginTop:"60px"}}>
         <h1
           style={{
             textAlign: "center",
-            fontSize: "50px",
+            fontSize: "40px",
             letterSpacing: "1px",
             fontWeight: "800",
+            fontFamily: "poppins"
           }}
         >
           QUALITY ASSURANCE
@@ -455,9 +356,9 @@ export default function Home_Page() {
                 />
                 <h3
                   style={{
-                    letterSpacing: "1px",
+                    letterSpacing: "0.5px",
                     fontSize: "14px",
-                    fontWeight: "600",
+                    fontWeight: "800",
                     fontFamily: "Montserrat, sans-serif",
                   }}
                 >
@@ -466,7 +367,7 @@ export default function Home_Page() {
                 <p
                   style={{
                     fontSize: "12px",
-                    fontWeight: "200",
+                    fontWeight: "500",
                     fontFamily: "Montserrat, sans-serif",
                   }}
                 >
@@ -477,30 +378,116 @@ export default function Home_Page() {
           ))}
         </Row>
       </Container>
+                  </div>
 
-      {/* CHOOSE US */}
       <div
         style={{
           backgroundColor: "#ffff",
-          padding: "5% 0",
+          padding: "20px 0",
           color: "#002209",
         }}
-        className="choose-us"
       >
-        <h1
+       <Container className="about-section">
+  <Row className="align-items-center gy-4">
+    {/* Left – Heritage Images */}
+    <Col xs={12} md={5}>
+      <div className="about-image-grid">
+        <img
+          src="/media/Krishnaraja-Wodeyar.jpg"
+          alt="Nalwadi Krishnaraja Wodeyar"
+          className="about-img"
+        />
+        <img
+          src="/media/vishveshvaraiah.jpg"
+          alt="Sir M. Visvesvaraya"
+          className="about-img"
+        />
+      </div>
+    </Col>
+
+    {/* Right – Content */}
+    <Col xs={12} md={7}>
+      <span className="about-tag">Our Heritage</span>
+      <h1 className="about-title">About The Mysore Oils</h1>
+
+      <p className="about-text">
+        Welcome to <strong>The Mysore Oils</strong>, where tradition meets
+        uncompromised quality. Inspired by the visionary leadership of
+        <strong> Nalwadi Krishnaraja Wodeyar</strong> and
+        <strong> Sir M. Visvesvaraya</strong>, we are devoted to preserving the
+        authentic heritage of cold-pressed oil extraction.
+      </p>
+
+      <p className="about-text">
+        Our journey is rooted in Mysore’s legacy — a land known for its wisdom,
+        craftsmanship, and respect for natural processes. We believe true
+        nourishment comes from time-tested methods, pure ingredients, and
+        ethical practices.
+      </p>
+
+      <p className="about-text">
+        At The Mysore Oils, every drop reflects our promise of purity, wellness,
+        and sustainability. Using traditional cold-pressing techniques blended
+        with modern quality standards, we bring you oils that nourish the body
+        and honour our land’s timeless traditions.
+      </p>
+
+      <p className="about-quote">
+        “Reviving tradition. Preserving purity. Promoting wellness.”
+      </p>
+    </Col>
+  </Row>
+</Container>
+
+
+        {/* SHOP NOW*/}
+
+        <div
           style={{
             textAlign: "center",
-            fontSize: "45px",
-            letterSpacing: "1px",
-            fontWeight: "800",
-            fontFamily: "montserrat",
           }}
         >
-          WHY CHOOSE US?
-        </h1>
+          <div style={{ padding: "4%", backgroundColor:"#f2fff6" }}>
+            <h1
+              style={{
+                fontSize: "45px",
+                letterSpacing: "1px",
+                fontWeight: "800",
+                marginBottom: "3%",
+                fontFamily: "montserrat",
+              }}
+              className="mobile-font"
+            >
+              SHOP NOW
+            </h1>
+            <div style={{ marginBottom: "0px" }}>
+              <Products_Sliders />
+            </div>
+           <Link to="/shop" className="view-all-btn">
+  View All Products →
+</Link>
 
-        <FeatureGrid />
+
+          </div>
+        </div>
       </div>
+
+    
+
+      {/* CHOOSE US */}
+     <div className="why-choose-section">
+  <Container>
+    <div className="why-header">
+      <h1>Why Choose Us</h1>
+      <p>
+        Crafted with care, rooted in tradition, and made for everyday wellness.
+      </p>
+    </div>
+
+    <FeatureGrid />
+  </Container>
+</div>
+
       <div
         style={{
           backgroundColor: "#f8f8f8",
@@ -539,6 +526,7 @@ export default function Home_Page() {
           style={{
             width: "100%",
             paddingInline: "5%",
+            marginTop:"-80px"
           }}
         />
       </div>

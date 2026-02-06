@@ -402,9 +402,14 @@ export default function Products_Sliders() {
 }
 
 import { Container, Button } from "react-bootstrap";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Autoplay } from "swiper/modules";
+import { useRef } from "react";
+
+
+import "swiper/css";
+import "swiper/css/navigation";
+
 import visiblestar from "/media/Star-visible.png";
 import hiddenstar from "/media/Star-hidden.png";
 import arrowLeft from "/media/Leftarrow.png";
@@ -412,6 +417,10 @@ import arrowRight from "/media/Rightarrow.png";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../redux/cartSlice";
+
+
 
 const API_BASE = "https://api.themysoreoils.com";
 
@@ -428,6 +437,9 @@ const fullImg = (path) => {
   if (p.startsWith("/media")) return p;
   return `${API_BASE}${p.startsWith("/") ? p : `/${p}`}`;
 };
+
+
+
 
 const toSlug = (name) => String(name || "").replace(/\s+/g, "");
 
@@ -568,12 +580,23 @@ const useIsMobile = () => {
   return isMobile;
 };
 
+
+
 export default function Products_Sliders() {
   const [isVisible, setIsVisible] = useState(false);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState(null);
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
+  const [toast, setToast] = useState({ show: false, name: "" });
+
+  const prevRef = useRef(null);
+const nextRef = useRef(null);
+
+
+ 
+ 
+ const dispatch = useDispatch();
 
   const isMobile = useIsMobile();
   const itemsPerSlide = isMobile ? 1 : 4;
@@ -632,17 +655,46 @@ export default function Products_Sliders() {
           : res.data?.products || [];
         const onlyOils = raw.filter(isOilProductStrict);
 
-        const formatted = onlyOils.map((p) => {
-          const { sale, mrp } = computeBestPrice(p);
-          return {
-            id: p._id,
-            name: p.name,
-            image: fullImg(p?.images?.[0]),
-            discountedPrice: sale ?? 0,
-            originalPrice: mrp ?? sale ?? 0,
-            link: `/oil-products/${toSlug(p.name)}`,
-          };
-        });
+        // const formatted = onlyOils.map((p) => {
+        //   const { sale, mrp } = computeBestPrice(p);
+        //   return {
+        //     id: p._id,
+        //     name: p.name,
+        //     image: fullImg(p?.images?.[0]),
+        //     discountedPrice: sale ?? 0,
+        //     originalPrice: mrp ?? sale ?? 0,
+        //     link: `/oil-products/${toSlug(p.name)}`,
+        //   };
+        // });
+
+//         const formatted = onlyOils.map((p) => {
+//   const { sale, mrp } = computeBestPrice(p);
+//   return {
+//     id: p._id,
+//     name: p.name,
+//     image: fullImg(p?.images?.[0]), // 👈 only one image
+//     discountedPrice: sale ?? 0,
+//     originalPrice: mrp ?? sale ?? 0,
+//     link: `/oil-products/${toSlug(p.name)}`,
+//   };
+// });
+
+const formatted = onlyOils.map((p) => {
+  const { sale, mrp } = computeBestPrice(p);
+  return {
+    id: p._id,
+    name: p.name,
+    images: [
+      fullImg(p?.images?.[0]),
+      fullImg(p?.images?.[1] || p?.images?.[0]), // fallback
+    ],
+    discountedPrice: sale ?? 0,
+    originalPrice: mrp ?? sale ?? 0,
+    link: `/oil-products/${toSlug(p.name)}`,
+  };
+});
+
+
 
         if (mounted) setProducts(formatted);
       } catch (e) {
@@ -658,6 +710,36 @@ export default function Products_Sliders() {
       mounted = false;
     };
   }, []);
+
+const handleAddToCart = (item) => {
+  dispatch(
+    addToCart({
+      id: item.id,
+      name: item.name,
+      variantId: "default",
+      quantity: 1,
+      discountedPrice: Number(item.discountedPrice || 0),
+      originalPrice: Number(item.originalPrice || item.discountedPrice || 0),
+      price: Number(item.discountedPrice || 0),
+      image: item.images?.[0],
+      weight: null,
+      unit: null,
+    })
+  );
+
+  // Show toast
+  setToast({ show: true, name: item.name });
+
+  // Redirect after short delay
+  setTimeout(() => {
+    setToast({ show: false, name: "" });
+    navigate("/carts"); // 👈 CHANGE PATH IF NEEDED
+  }, 1200);
+};
+
+
+
+
 
   // Chunk into groups per slide (responsive)
   const chunkedProducts = useMemo(() => {
@@ -702,35 +784,63 @@ export default function Products_Sliders() {
     </div>
   );
 
-  const settings = {
-    dots: false,
-    infinite: true,
-    speed: 450,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 4000,
-    swipeToSlide: true,
-    touchThreshold: 12,
-    pauseOnHover: true,
-    pauseOnFocus: true,
-    lazyLoad: "ondemand",
-    adaptiveHeight: true, // helps keep height tight on mobile
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
-    responsive: [
-      {
-        breakpoint: 768,
-        settings: {
-          arrows: true,
-          dots: false,
-          // Make sure edge paddings don't bloat mobile slides
-          centerMode: false,
-        },
-      },
-      { breakpoint: 992, settings: { arrows: true, dots: false } },
-    ],
-  };
+  // const settings = {
+  //   dots: false,
+  //   infinite: true,
+  //   speed: 450,
+  //   slidesToShow: 1,
+  //   slidesToScroll: 1,
+  //   autoplay: true,
+  //   autoplaySpeed: 4000,
+  //   swipeToSlide: true,
+  //   touchThreshold: 12,
+  //   pauseOnHover: true,
+  //   pauseOnFocus: true,
+  //   lazyLoad: "ondemand",
+  //   adaptiveHeight: true, 
+  //   nextArrow: <NextArrow />,
+  //   prevArrow: <PrevArrow />,
+  //   responsive: [
+  //     {
+  //       breakpoint: 768,
+  //       settings: {
+  //         arrows: true,
+  //         dots: false,
+  //         centerMode: false,
+  //       },
+  //     },
+  //     { breakpoint: 992, settings: { arrows: true, dots: false } },
+  //   ],
+  // };
+
+const settings = {
+  dots: false,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 4,
+  slidesToScroll: 1,
+  autoplay: true,
+  autoplaySpeed: 4000,
+  arrows: true,
+
+  accessibility: false, // ❗ disable slick focus handling
+  focusOnSelect: false, // ❗ prevent slide focus
+
+  swipeToSlide: true,
+  pauseOnHover: true,
+
+  nextArrow: <NextArrow />,
+  prevArrow: <PrevArrow />,
+
+  responsive: [
+    { breakpoint: 1200, settings: { slidesToShow: 3 } },
+    { breakpoint: 992, settings: { slidesToShow: 2 } },
+    { breakpoint: 768, settings: { slidesToShow: 1 } },
+  ],
+};
+
+
+
 
   return (
     <div
@@ -754,177 +864,134 @@ export default function Products_Sliders() {
         ) : products.length === 0 ? (
           <div className="text-center py-5">No oil products found.</div>
         ) : (
-          <Slider {...settings}>
-            {chunkedProducts.map((group, index) => (
-              <div key={index}>
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)",
-                    gap: isMobile ? "10px" : "24px",
-                    padding: isMobile ? "6px" : "10px",
-                    margin: isMobile ? "0 auto" : "0 5%",
-                    placeItems: "center",
-                    width: "100%",
-                  }}
-                >
-                  {group.map((item, idx) =>
-                    item ? (
-                      <div
-                        className="product-card-slider"
-                        key={`${item.id}-${idx}`}
-                        style={{
-                          borderRadius: "10px",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          background: "#fff",
-                          overflow: "hidden",
-                          width: "100%",
-                          maxWidth: isMobile ? `${MOBILE_MAX_CARD_W}px` : "420px",
-                          margin: "0 auto",
-                          gap: isMobile ? "10px" : "24px",
-                          backgroundColor: "#fdfaeb",
-                          flexDirection: isMobile ? "column" : "row",
-                          boxShadow: "0 0 8px 2px rgba(0,0,0,0.08)",
-                          padding: isMobile ? "6px" : "10px",
-                        }}
-                      >
-                        <img
-                          className="product-image-slider"
-                          src={item.image}
-                          alt={item.name}
-                          onError={(e) => {
-                            e.currentTarget.src = "/media/oil-coconut.jpeg";
-                          }}
-                          style={{
-                            width: isMobile ? "100%" : "50%",
-                            height: isMobile ? MOBILE_IMG_H : "100%",
-                            maxHeight: isMobile ? MOBILE_IMG_H : "240px",
-                            objectFit: "contain",
-                            margin: "0 auto",
-                            backgroundColor: "#e6ffed",
-                          }}
-                        />
+        <Swiper
+  modules={[Navigation, Autoplay]}
+  spaceBetween={20}
+  slidesPerView={4}
+  autoplay={{
+    delay: 4000,
+    disableOnInteraction: false,
+  }}
+  navigation={{
+    prevEl: prevRef.current,
+    nextEl: nextRef.current,
+  }}
+  onBeforeInit={(swiper) => {
+    swiper.params.navigation.prevEl = prevRef.current;
+    swiper.params.navigation.nextEl = nextRef.current;
+  }}
+  breakpoints={{
+    0: { slidesPerView: 1 },
+    768: { slidesPerView: 2 },
+    992: { slidesPerView: 3 },
+    1200: { slidesPerView: 4 },
+  }}
+>
 
-                        <div
-                          className="product-info-slider"
-                          style={{
-                            padding: isMobile ? "4px 6px" : "10px",
-                            color: "black",
-                            display: "flex",
-                            flexDirection: "column",
-                            width: "100%",
-                            textAlign: "left",
-                            marginTop: isMobile ? "4px" : "10px",
-                            backgroundColor: "#fdfaeb",
-                          }}
-                        >
-                          <div>
-                            <h6
-                              style={{
-                                fontSize: isMobile ? "16px" : "22px",
-                                fontWeight: 700,
-                                marginBottom: isMobile ? "4px" : "6px",
-                                color: "#00614A",
-                                fontFamily: "montserrat",
-                                lineHeight: 1.2,
-                              }}
-                            >
-                              {item.name}
-                            </h6>
 
-                            {/* Stars (smaller on mobile) */}
-                            <div
-                              style={{
-                                display: "flex",
-                                gap: "6px",
-                                margin: isMobile ? "4px 0" : "10px 0",
-                                justifyContent: "flex-start",
-                              }}
-                              className="product-stars-slider"
-                            >
-                              {[visiblestar, visiblestar, visiblestar, visiblestar, hiddenstar].map(
-                                (star, i) => (
-                                  <img
-                                    key={i}
-                                    src={star}
-                                    alt="star"
-                                    style={{ width: isMobile ? 12 : 14, height: isMobile ? 12 : 14 }}
-                                  />
-                                )
-                              )}
-                            </div>
+  {products.map((item) => (
+    <SwiperSlide key={item.id}>
+      <div className="oil-card">
 
-                            {/* Price row (compact on mobile) */}
-                            <div
-                              className="product-price-slider"
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                fontSize: isMobile ? "18px" : "30px",
-                                marginTop: isMobile ? "2px" : "6%",
-                                gap: "5px",
-                                fontWeight: 700,
-                                fontFamily: "montserrat",
-                                lineHeight: 1,
-                              }}
-                            >
-                              {toNum(item.originalPrice) >
-                                toNum(item.discountedPrice) && (
-                                <p
-                                  style={{
-                                    textDecoration: "line-through",
-                                    textDecorationColor: "red",
-                                    textDecorationThickness: "2px",
-                                    opacity: 0.5,
-                                    marginRight: "6px",
-                                    fontSize: isMobile ? "12px" : "20px",
-                                    letterSpacing: "0.5px",
-                                    color: "#00614A",
-                                    marginTop:'12px'
-                                  }}
-                                >
-                                  Rs {toNum(item.originalPrice)}
-                                </p>
-                              )}
-                              <p style={{ fontSize: isMobile ? "14px" : "20px", color: "#00614A", margin: 0 }}>
-                                Rs {toNum(item.discountedPrice)}
-                              </p>
-                            </div>
-                          </div>
+        {/* Badge */}
+        {/* <span className="oil-badge">New</span> */}
 
-                          <Button
-                            onClick={() => navigate(item.link)}
-                            variant="none"
-                            className="view-button-slider"
-                            style={{
-                              fontWeight: 600,
-                              border: "none",
-                              borderRadius: 0,
-                              fontSize: isMobile ? "12px" : "14px",
-                              padding: isMobile ? "4px 6px" : "6px 8px",
-                              letterSpacing: "0.3px",
-                              width: "fit-content",
-                              alignItems: "center",
-                              display: "block",
-                              fontFamily: "montserrat",
-                              marginTop: isMobile ? 6 : 0,
-                            }}
-                          >
-                            VIEW PRODUCT
-                          </Button>
-                        </div>
-                      </div>
-                    ) : (
-                      <div key={`pad-${idx}`} />
-                    )
-                  )}
-                </div>
-              </div>
-            ))}
-          </Slider>
+        {/* Image */}
+    <div className="oil-card-modern">
+
+  {/* Image */}
+  <div className="oil-media">
+    <img src={item.images[0]} alt={item.name} className="oil-img-main" />
+    <img src={item.images[1]} alt={item.name} className="oil-img-hover" />
+
+    <span className="oil-tag">New</span>
+
+    <button
+      className="oil-cart-fab"
+      onClick={(e) => {
+        e.stopPropagation();
+        handleAddToCart(item);
+      }}
+    >
+      +
+    </button>
+  </div>
+
+  {/* Floating content */}
+  <div className="oil-glass">
+    <h6>{item.name}</h6>
+
+    <div className="oil-price-row">
+      {item.originalPrice > item.discountedPrice && (
+        <span className="oil-old">₹{item.originalPrice}</span>
+      )}
+      <span className="oil-new">₹{item.discountedPrice}</span>
+    </div>
+
+    <button
+      className="oil-view-btn"
+      onClick={() => navigate(item.link)}
+    >
+      View Details →
+    </button>
+  </div>
+
+</div>
+
+
+        {/* Content */}
+        {/* <div className="oil-body">
+          <h6 className="oil-title">{item.name}</h6>
+
+          <div className="oil-price">
+            {item.originalPrice > item.discountedPrice && (
+              <span className="oil-mrp">₹{item.originalPrice}</span>
+            )}
+            <span className="oil-sale">₹{item.discountedPrice}</span>
+          </div>
+
+          <Button
+            variant="none"
+            className="oil-btn"
+            onClick={() => navigate(item.link)}
+          >
+            View Product →
+          </Button>
+        </div> */}
+      </div>
+    </SwiperSlide>
+  ))}
+</Swiper>
+
+
+
         )}
+
+        {toast.show && (
+  <div className="cart-toast">
+    <span>✓ Added to cart</span>
+  </div>
+)}
+
+<div className="custom-swiper-arrows">
+  <button
+    ref={prevRef}
+    className="custom-swiper-prev"
+    aria-label="Previous"
+  >
+    <img src={arrowLeft} alt="Previous" />
+  </button>
+
+  <button
+    ref={nextRef}
+    className="custom-swiper-next"
+    aria-label="Next"
+  >
+    <img src={arrowRight} alt="Next" />
+  </button>
+</div>
+
+
       </Container>
     </div>
   );

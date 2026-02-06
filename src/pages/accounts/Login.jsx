@@ -596,7 +596,7 @@ const [showPassword, setShowPassword] = useState(false);
       localStorage.setItem("user", JSON.stringify(userData));
 
       // ✅ Redirect to previous page or fallback
-      const redirectPath = localStorage.getItem("redirectAfterLogin") || "/categories";
+      const redirectPath = localStorage.getItem("redirectAfterLogin") || "/shop";
       localStorage.removeItem("redirectAfterLogin");
       navigate(redirectPath);
     } catch (error) {
@@ -736,7 +736,7 @@ const [showPassword, setShowPassword] = useState(false);
           </div>
         </Card>
       </Container>
-      <FooterOne />
+      
     </>
   );
 }

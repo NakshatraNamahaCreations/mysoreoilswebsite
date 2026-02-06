@@ -565,8 +565,6 @@ const [phoneError, setPhoneError] = useState("");
         <Modal.Body>Your account has been successfully created. Redirecting to login page...</Modal.Body>
       </Modal>
 
-      {/*footer section */}
-      <FooterOne/>
     </>
   );
 }

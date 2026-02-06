@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { useState ,useEffect} from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useRef } from "react";
+
 
 function BasicExample({ onCategorySelect, currentCategory }) {
   const [activeKey, setActiveKey] = useState(null);
@@ -10,6 +12,8 @@ function BasicExample({ onCategorySelect, currentCategory }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
       const navigate = useNavigate();
+      const categoryRefs = useRef({});
+
 
 
  {/*} const accordionItems = [
@@ -31,18 +35,18 @@ function BasicExample({ onCategorySelect, currentCategory }) {
   ];*/}
 
   const imageMappings = {
-    Oils: "/media/olive.png" ,
-    Millets: "/media/millet-crop.png",
+    Oils: "/media/oil-bottle-1.png" ,
+    Millets: "/media/millet-bag-1.png",
     SpicePowders:"/media/chilly-powder.png",
-    Cosmetics: "/media/cosmetic.png",
-    Utensils: "/media/clay-utensils.png",
-    Snacks: "/media/chakli.png",
-    IceCream: "/media/cream-ice.png",
-    Fruits: "/media/fresh-fruits.png",
-    Vegetables: "/media/veggy.png",
-    DryFruits :"/media/cashew-nut.png",
-    HomeEssentials:"/media/home-essentials.png",
-    GiftingSolutions: "/media/gift-solution.png"
+    Cosmetics: "/media/cosmetics-set-1.png",
+    Utensils: "/media/clay-pot-1.png",
+    Snacks: "/media/snacks-plate-1.png",
+    IceCream: "/media/icecream-scoop-1.png",
+    Fruits: "/media/fruits-1.png",
+    Vegetables: "/media/vegetables-1.png",
+    DryFruits :"/media/dry-fruits-1.png",
+    HomeEssentials:"/media/essentials-1.png",
+    GiftingSolutions: "/media/giftbox-1.png"
   }
 
   
@@ -98,10 +102,25 @@ function BasicExample({ onCategorySelect, currentCategory }) {
 
   const handleCategorySelect = (name) => {
   const slug = name.toLowerCase().replace(/\s+/g, "-");
-  navigate(`/categories?category=${slug}`);
+  navigate(`/shop?category=${slug}`);
 };
 
-  
+useEffect(() => {
+  if (!currentCategory || categories.length === 0) return;
+
+  // mobile only
+  if (window.innerWidth <= 768) {
+    const activeEl = categoryRefs.current[currentCategory.toLowerCase()];
+    if (activeEl) {
+      activeEl.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest",
+      });
+    }
+  }
+}, [currentCategory, categories]);
+
 
 
   return (
@@ -113,7 +132,7 @@ function BasicExample({ onCategorySelect, currentCategory }) {
   }}
   className="accordian-slider-wrapper"
 >
-      <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key)}>
+      {/* <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key)}>
         {loading ? (
           <Accordion.Item eventKey="loading">
             <Accordion.Header>Loading...</Accordion.Header>
@@ -178,11 +197,42 @@ function BasicExample({ onCategorySelect, currentCategory }) {
           dangerouslySetInnerHTML={{ __html: bodyContent[item.name] }}
         />
       )}*/}
-    </Accordion.Item>
+    {/* </Accordion.Item>
             );
           })
         )}
-      </Accordion>
+      </Accordion> */}
+      <div className="category-round-wrapper">
+  <div className="category-round-scroll">
+    {categories.map((item) => {
+      const normalizedTitle = item.name.replace(/[/-\s]/g, "");
+      const image =
+        imageMappings[normalizedTitle] || "/media/default.png";
+
+      const isActive =
+        currentCategory &&
+        item.name.toLowerCase() === currentCategory.toLowerCase();
+
+      return (
+       <div
+  key={item._id}
+  ref={(el) =>
+    (categoryRefs.current[item.name.toLowerCase()] = el)
+  }
+  className={`category-round-item ${isActive ? "active" : ""}`}
+  onClick={() => handleCategorySelect(item.name)}
+>
+
+          <div className="category-round-img">
+            <img src={image} alt={item.name} />
+          </div>
+          <span>{item.name}</span>
+        </div>
+      );
+    })}
+  </div>
+</div>
+
     </div>
     </>
   );

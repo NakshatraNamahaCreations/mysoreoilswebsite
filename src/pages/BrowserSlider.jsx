@@ -74,7 +74,7 @@ const BrowserSlider = () => {
 
   const handleCategorySelect = (name) => {
     const slug = name.toLowerCase().replace(/\s+/g, "-");
-    navigate(`/categories?category=${slug}`);
+    navigate(`/shop?category=${slug}`);
   };
 
   return (

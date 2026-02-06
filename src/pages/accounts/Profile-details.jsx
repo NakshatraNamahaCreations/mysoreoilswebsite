@@ -285,7 +285,7 @@ export default function ProfileDetails() {
         </Row>
       </Container>
 
-      <FooterOne />
+
     </>
   );
 }

@@ -8,6 +8,7 @@ import axios from "axios";
 import OilCategory from "./OilCategory";
 import { FaHeart, FaCheckCircle } from "react-icons/fa";
 import FooterOne from "../../components/FooterOne";
+import Footer from "../../components/Footer";
 
 /* =========================
    Helpers (image selection)
@@ -50,6 +51,328 @@ const getFirstVariantThumbSrc = (thumbnails, formattedProduct) => {
 
   return firstImage || "";
 };
+
+const normalizeCategory = (category = "") =>
+  category
+    .toLowerCase()
+    .replace(/[\s_-]+/g, "") // removes spaces, hyphens, underscores
+    .trim();
+
+
+const renderBenefitsList = (items = []) => (
+  <ul className="list-unstyled mb-0">
+    {items.map((item, index) => (
+      <li key={index} className="mb-2">
+        <FaCheckCircle color="green" className="me-2" />
+        {item}
+      </li>
+    ))}
+  </ul>
+);
+
+/* =========================
+   Category Table Config
+========================= */
+
+const CATEGORY_TABLE_CONFIG = {
+  oils: [
+    {
+      label: "Price + Offer",
+      render: ({ totalSale, totalMrp, discountPct }) => (
+        <>
+          ₹{totalSale.toFixed(2)}
+          {totalMrp > totalSale && (
+            <>
+              <del className="text-muted ms-2">₹{totalMrp.toFixed(2)}</del>
+              <span className="text-success ms-2">{discountPct}% Off</span>
+            </>
+          )}
+        </>
+      ),
+    },
+    { label: "Extraction Method", render: () => "Wood Cold-Pressed" },
+    {
+      label: "Highlight",
+      render: () => (
+        <>
+          <Badge bg="dark" className="me-2">ONLINE EXCLUSIVE</Badge>
+          <code>COLD-PRESSED</code>
+        </>
+      ),
+    },
+    { label: "Size / Quantity", render: () => "(500ml)(1ltr)" },
+    {
+      label: "Customer Benefits",
+      render: () =>
+        renderBenefitsList([
+          "100% Pure",
+          "Wood Cold Pressed",
+          "Lab Tested",
+          "No Chemicals or Preservatives",
+        ]),
+    },
+  ],
+
+  dryfruits: [
+    {
+      label: "Price + Offer",
+       render: ({ totalSale, totalMrp, discountPct }) => (
+        <>
+          ₹{totalSale.toFixed(2)}
+          {totalMrp > totalSale && (
+            <>
+              <del className="text-muted ms-2">₹{totalMrp.toFixed(2)}</del>
+              <span className="text-success ms-2">{discountPct}% Off</span>
+            </>
+          )}
+        </>
+      ),
+    },
+    { label: "Highlight", render: () => "PREMIUM QUALITY · HANDPICKED" },
+    { label: "Size / Quantity", render: () => "(100gm)(1Kg)" },
+    {
+      label: "Customer Benefits",
+      render: () =>
+        renderBenefitsList([
+          "Naturally rich in nutrients",
+          "Premium export-quality grading",
+          "No added sugar or preservatives",
+          "Hygienically packed for freshness",
+        ]),
+    },
+  ],
+
+  millets: [
+    { label: "Price",  render: ({ totalSale, totalMrp, discountPct }) => (
+        <>
+          ₹{totalSale.toFixed(2)}
+          {totalMrp > totalSale && (
+            <>
+              <del className="text-muted ms-2">₹{totalMrp.toFixed(2)}</del>
+              <span className="text-success ms-2">{discountPct}% Off</span>
+            </>
+          )}
+        </>
+      ), },
+    { label: "Highlight", render: () => "WHOLE GRAIN · TRADITIONAL SOURCE" },
+    { label: "Size / Quantity", render: () => "(1Kg)" },
+    {
+      label: "Customer Benefits",
+      render: () =>
+        renderBenefitsList([
+          "High in fiber & protein",
+          "Gluten-free and easy to digest",
+          "Traditionally sourced grains",
+          "Supports healthy lifestyle",
+        ]),
+    },
+  ],
+
+  cosmetics: [
+    { label: "Price",  render: ({ totalSale, totalMrp, discountPct }) => (
+        <>
+          ₹{totalSale.toFixed(2)}
+          {totalMrp > totalSale && (
+            <>
+              <del className="text-muted ms-2">₹{totalMrp.toFixed(2)}</del>
+              <span className="text-success ms-2">{discountPct}% Off</span>
+            </>
+          )}
+        </>
+      ), },
+    { label: "Highlight", render: () => "HERBAL · SKIN SAFE" },
+    { label: "Size / Quantity", render: () => "(50ml)(100ml)" },
+    {
+      label: "Customer Benefits",
+      render: () =>
+        renderBenefitsList([
+          "Made with natural ingredients",
+          "Suitable for all skin types",
+          "No parabens or harsh chemicals",
+          "Dermatologically tested",
+        ]),
+    },
+  ],
+
+  icecream: [
+    {
+      label: "Price + Offer",
+      render: ({ totalSale, totalMrp, discountPct }) => (
+        <>
+          ₹{totalSale.toFixed(2)}
+          {totalMrp > totalSale && (
+            <>
+              <del className="text-muted ms-2">₹{totalMrp.toFixed(2)}</del>
+              <span className="text-success ms-2">{discountPct}% Off</span>
+            </>
+          )}
+        </>
+      ),
+    },
+    { label: "Highlight", render: () => "REAL INGREDIENTS · ARTISANAL" },
+    { label: "Size / Quantity", render: () => "(100ml)(500ml)" },
+    {
+      label: "Customer Benefits",
+      render: () =>
+        renderBenefitsList([
+          "Made with real milk",
+          "Smooth & creamy texture",
+          "No synthetic flavours",
+          "Loved by all age groups",
+        ]),
+    },
+  ],
+
+   homeessentials: [
+    {
+      label: "Price + Offer",
+      render: ({ totalSale, totalMrp, discountPct }) => (
+        <>
+          ₹{totalSale.toFixed(2)}
+          {totalMrp > totalSale && (
+            <>
+              <del className="text-muted ms-2">₹{totalMrp.toFixed(2)}</del>
+              <span className="text-success ms-2">{discountPct}% Off</span>
+            </>
+          )}
+        </>
+      ),
+    },
+    { label: "Highlight", render: () => "EVERYDAY USE · DURABLE" },
+    { label: "Size / Quantity", render: () => "(1Pcs)" },
+    {
+      label: "Customer Benefits",
+      render: () =>
+        renderBenefitsList([
+          "Designed for daily household use",
+          "Long-lasting and reliable",
+          "Safe and easy to use",
+          "Value-for-money products",
+        ]),
+    },
+  ],
+
+  fruits: [
+    {
+      label: "Price + Offer",
+      render: ({ totalSale, totalMrp, discountPct }) => (
+        <>
+          ₹{totalSale.toFixed(2)}
+          {totalMrp > totalSale && (
+            <>
+              <del className="text-muted ms-2">₹{totalMrp.toFixed(2)}</del>
+              <span className="text-success ms-2">{discountPct}% Off</span>
+            </>
+          )}
+        </>
+      ),
+    },
+    { label: "Highlight", render: () => "FARM FRESH · NATURALLY RIPENED" },
+    { label: "Size / Quantity", render: () => "(1Kg)" },
+    {
+      label: "Customer Benefits",
+      render: () =>
+        renderBenefitsList([
+          "Freshly sourced from farms",
+          "Naturally ripened",
+          "Rich in vitamins & minerals",
+          "Carefully packed to retain freshness",
+        ]),
+    },
+  ],
+
+   vegetables: [
+    {
+      label: "Price + Offer",
+      render: ({ totalSale, totalMrp, discountPct }) => (
+        <>
+          ₹{totalSale.toFixed(2)}
+          {totalMrp > totalSale && (
+            <>
+              <del className="text-muted ms-2">₹{totalMrp.toFixed(2)}</del>
+              <span className="text-success ms-2">{discountPct}% Off</span>
+            </>
+          )}
+        </>
+      ),
+    },
+    { label: "Highlight", render: () => "FRESH HARVEST · CHEMICAL FREE" },
+    { label: "Size / Quantity", render: () => "(1Pcs)" },
+    {
+      label: "Customer Benefits",
+      render: () =>
+        renderBenefitsList([
+          "Farm-fresh produce",
+          "No artificial preservatives",
+          "High nutritional value",
+          "Cleaned and sorted before packing",
+        ]),
+    },
+  ],
+
+   giftingsolutions: [
+    {
+      label: "Price + Offer",
+      render: ({ totalSale, totalMrp, discountPct }) => (
+        <>
+          ₹{totalSale.toFixed(2)}
+          {totalMrp > totalSale && (
+            <>
+              <del className="text-muted ms-2">₹{totalMrp.toFixed(2)}</del>
+              <span className="text-success ms-2">{discountPct}% Off</span>
+            </>
+          )}
+        </>
+      ),
+    },
+    { label: "Highlight", render: () => "PREMIUM PACKAGING · PERFECT GIFT" },
+    {
+      label: "Customer Benefits",
+      render: () =>
+        renderBenefitsList([
+          "Thoughtfully curated gift packs",
+          "Elegant and premium presentation",
+          "Ideal for festivals & occasions",
+          "High-quality products inside",
+        ]),
+    },
+  ],
+
+  utensils: [
+    {
+      label: "Price + Offer",
+      render: ({ totalSale, totalMrp, discountPct }) => (
+        <>
+          ₹{totalSale.toFixed(2)}
+          {totalMrp > totalSale && (
+            <>
+              <del className="text-muted ms-2">₹{totalMrp.toFixed(2)}</del>
+              <span className="text-success ms-2">{discountPct}% Off</span>
+            </>
+          )}
+        </>
+      ),
+    },
+    { label: "Highlight", render: () => "FOOD SAFE · LONG LASTING" },
+    { label: "Size / Quantity", render: () => "(1Pcs)" },
+    {
+      label: "Customer Benefits",
+      render: () =>
+        renderBenefitsList([
+          "Made from food-grade materials",
+          "Durable and easy to maintain",
+          "Safe for everyday cooking",
+          "Traditional and modern designs",
+        ]),
+    },
+  ],
+
+  default: [
+    { label: "Price", render: ({ totalSale }) => `₹${totalSale.toFixed(2)}` },
+    { label: "Availability", render: () => "In Stock" },
+  ],
+};
+
 
 const ProductDetails = () => {
   const { productName } = useParams();
@@ -386,6 +709,13 @@ const ProductDetails = () => {
   const discountPct =
     unitMrp > unitSale ? Math.round(((unitMrp - unitSale) / unitMrp) * 100) : 0;
 
+    const categoryKey = normalizeCategory(product?.category);
+
+const tableRows =
+  CATEGORY_TABLE_CONFIG[categoryKey] || CATEGORY_TABLE_CONFIG.default;
+
+
+
   return (
     <>
       <Navbar_Menu />
@@ -632,7 +962,7 @@ const ProductDetails = () => {
 
             {/* PRICE SECTION */}
             <h4
-              className="product-price mt-3"
+              className="products-price mt-3"
               style={{
                 color: "#00614A",
                 fontFamily: "Montserrat",
@@ -768,7 +1098,7 @@ const ProductDetails = () => {
 
             {/* Info table (desktop only) */}
             <div className="d-none d-md-block">
-              <Table bordered responsive className="mt-4 pd-infoTable">
+              {/* <Table bordered responsive className="mt-4 pd-infoTable">
                 <tbody>
                   <tr>
                     <td style={{ fontFamily: "poppins", padding: "15px" }}>
@@ -830,47 +1160,89 @@ const ProductDetails = () => {
                     </td>
                   </tr>
                 </tbody>
-              </Table>
+              </Table> */}
+              <Table bordered responsive className="mt-4 pd-infoTable">
+  <tbody>
+    {tableRows.map((row, index) => (
+      <tr key={index}>
+        <td style={{ fontFamily: "poppins", padding: "15px" }}>
+          <strong>{row.label}</strong>
+        </td>
+        <td style={{ fontFamily: "poppins", padding: "15px" }}>
+          {row.render({
+            totalSale,
+            totalMrp,
+            discountPct,
+            product,
+          })}
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</Table>
+
             </div>
 
             {/* Mobile View - Combined Description Paragraph */}
-            <div className="d-block d-md-none mt-5 mb-3">
-              <h3 style={{ fontFamily: "montserrat", fontSize: "20px", color: "#000", fontWeight: "600" }}>
-                Description
-              </h3>
-              <p
-                style={{
-                  fontFamily: "poppins",
-                  lineHeight: "1.7",
-                  fontSize: "15px",
-                  color: "#000",
-                  textAlign: "justify",
-                }}
-              >
-                It is an online exclusive product, made using{" "}
-                <code style={{ color: "#000", fontSize: 15 }}>cold-pressed</code> extraction
-                methods to ensure maximum purity and nutrient retention.
-                Over the past week, 423 people have viewed this item and 12 customers have made
-                a purchase within the last 72 hours, showing its growing popularity among buyers.
-                The product is available in various size and quantity options such as{" "}
-                {(product.variants || []).map((v, i) => (
-                  <span key={i}>
-                    {v.quantity} {v.unit}
-                    {i !== product.variants.length - 1 ? ", " : "."}
-                  </span>
-                ))}{" "}
-                Customers choose this product for its exceptional quality — it’s 100% pure,
-                wood cold-pressed, and lab tested to ensure safety and freshness.
-                It contains no chemicals or preservatives, making it a healthy and natural
-                choice for everyday use.
-              </p>
-            </div>
+         {/* Mobile View - Product Info */}
+<div className="d-block d-md-none mt-4">
+  <h3
+    style={{
+      fontFamily: "montserrat",
+      fontSize: "20px",
+      fontWeight: "600",
+      marginBottom: "15px",
+    }}
+  >
+    Product Details
+  </h3>
+
+  {tableRows.map((row, index) => (
+    <div
+      key={index}
+      style={{
+        marginBottom: "14px",
+        paddingBottom: "12px",
+        borderBottom: "1px solid #eaeaea",
+      }}
+    >
+      <div
+        style={{
+          fontFamily: "poppins",
+          fontSize: "14px",
+          fontWeight: "600",
+          color: "#555",
+          marginBottom: "6px",
+        }}
+      >
+        {row.label}
+      </div>
+
+      <div
+        style={{
+          fontFamily: "poppins",
+          fontSize: "15px",
+          color: "#000",
+          lineHeight: "1.6",
+        }}
+      >
+        {row.render({
+          totalSale,
+          totalMrp,
+          discountPct,
+          product,
+        })}
+      </div>
+    </div>
+  ))}
+</div>
+
           </Col>
         </Row>
       </Container>
 
       {/* You may also like */}
-      <Container className="pd-alsoLikeWrap" style={{ marginTop: "-200px" }}>
+      <Container className="pd-alsoLikeWrap" style={{ marginTop: "-380px" }}>
         <div className="mb-3" style={{ marginTop: "30%" }}>
           <h5
             style={{
@@ -886,7 +1258,7 @@ const ProductDetails = () => {
       </Container>
 
       <div className="mt-5">
-        <FooterOne />
+        <Footer/>
       </div>
     </>
   );

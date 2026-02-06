@@ -729,13 +729,32 @@ export default function Checkout() {
       unit: item.unit || "",
     }));
 
+    const round2 = (n) => Math.round(n * 100) / 100;
+
   const apiItems = cartToApiItems(cartItems);
-  const subtotal = apiItems.reduce((sum, it) => sum + toNum(it.price) * toNum(it.quantity), 0);
-  const discountPercent = 10; // 10%
-const discountAmount = (subtotal * discountPercent) / 100;
-  const shipping = 0;
-  const gst = 0;
-  const total = subtotal - discountAmount + gst + shipping;
+  // Subtotal
+const subtotal = apiItems.reduce(
+  (sum, it) => sum + toNum(it.price) * toNum(it.quantity),
+  0
+);
+
+// Discount
+const discountPercent = 10; // 10%
+const discountAmount = Math.round((subtotal * discountPercent) / 100);
+
+// Shipping (flat ₹80)
+const shipping = 80;
+
+// Taxable amount (after discount)
+const taxableAmount = subtotal - discountAmount;
+
+// GST (5%)
+const gstRate = 0.05;
+const gst = round2(taxableAmount * gstRate);
+
+// Grand Total
+const total = round2(taxableAmount + gst + shipping);
+
 
   const getAddrId = (a) => a?._id || a?.id;
 
@@ -912,7 +931,7 @@ const handlePayNow = async () => {
   // Guard rails for invalid cart or address
   if (!cartItems || cartItems.length === 0) {
     alert("Your cart is empty. Please add items to proceed.");
-    navigate("/categories"); // redirect to categories
+    navigate("/shop"); // redirect to categories
     return;
   }
 
@@ -926,14 +945,26 @@ const handlePayNow = async () => {
   try {
     // Prepare the items array for payment initiation
     const items = cartToApiItems(cartItems);
+    const round2 = (n) => Math.round(n * 100) / 100;
 
     // Calculate the total amount
-    const computedSubtotal = items.reduce((sum, it) => sum + it.price * it.quantity, 0);
-    const shippingFee = 0;
-    const discountPercent = 10;
-    const discountAmount = (computedSubtotal * discountPercent) / 100;
-    const taxAmount = computedSubtotal * 0;
-    const grandTotal = computedSubtotal + shippingFee + taxAmount - discountAmount;
+    const computedSubtotal = items.reduce(
+  (sum, it) => sum + it.price * it.quantity,
+  0
+);
+
+const discountPercent = 10;
+const discountAmount = Math.round((computedSubtotal * discountPercent) / 100);
+
+const shippingFee = 80;
+
+const taxableAmount = computedSubtotal - discountAmount;
+
+const gstRate = 0.05;
+const taxAmount = round2(taxableAmount * gstRate);
+
+const grandTotal = round2(taxableAmount + taxAmount + shippingFee);
+
 
     // Initiate the payment
     const paymentResponse = await axios.post(
@@ -1330,7 +1361,7 @@ const orderId = paymentResponse.data.phonepeResponse?.orderId;
 
             <Button
                   className="mt-3"
-                  onClick={() => navigate("/categories")}
+                  onClick={() => navigate("/shop")}
                   style={{
                     width: "fit-content",
                     backgroundColor: "#FFD814",
@@ -1394,21 +1425,25 @@ const orderId = paymentResponse.data.phonepeResponse?.orderId;
                   <span>₹{subtotal.toLocaleString("en-IN")}</span>
                 </div>
                 <div className="d-flex justify-content-between">
-                  <span>Shipping:</span>
-                  <span>₹{shipping.toLocaleString("en-IN")}</span>
-                </div>
-                <div className="d-flex justify-content-between">
-                  <span>GST:</span>
-                  <span>₹{gst.toLocaleString("en-IN")}</span>
-                </div>
-                 <div className="d-flex justify-content-between">
-                  <span>Discount(10%):</span>
-                  <span>₹{discountAmount.toLocaleString("en-IN")}</span>
-                </div>
-                <div className="d-flex justify-content-between fw-bold mt-2">
-                  <span>Total:</span>
-                  <span>₹{total.toLocaleString("en-IN")}</span>
-                </div>
+  <span>Shipping:</span>
+  <span>₹{shipping.toLocaleString("en-IN")}</span>
+</div>
+
+<div className="d-flex justify-content-between">
+  <span>GST (5%):</span>
+  <span>₹{gst.toLocaleString("en-IN")}</span>
+</div>
+
+<div className="d-flex justify-content-between">
+  <span>Discount (10%):</span>
+  <span>- ₹{discountAmount.toLocaleString("en-IN")}</span>
+</div>
+
+<div className="d-flex justify-content-between fw-bold mt-2">
+  <span>Total:</span>
+  <span>₹{total.toLocaleString("en-IN")}</span>
+</div>
+
 
                 <Button
                 onClick={handlePayNow}

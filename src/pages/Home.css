@@ -1,0 +1,89 @@
+/* HERO */
+.home-hero {
+  padding: 80px 0;
+  background: #f9f7f2;
+  font-family: 'poppins', sans-serif;
+}
+.hero-tag {
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: #7a6c2f;
+}
+.hero-title {
+  font-size: 46px;
+  font-weight: 800;
+  margin: 15px 0;
+}
+.hero-text {
+  font-size: 17px;
+  color: #444;
+}
+.hero-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+.hero-image {
+  width: 100%;
+  border-radius: 12px;
+}
+
+/* TRUST STRIP */
+.trust-strip {
+  padding: 25px 0;
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
+}
+.trust-item {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* SECTIONS */
+.section-title {
+  font-size: 38px;
+  font-weight: 800;
+}
+.section-tag {
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: #8b7a2e;
+}
+
+/* STORY */
+.story-image {
+  width: 100%;
+  border-radius: 14px;
+}
+
+/* PROCESS */
+.process-section {
+  padding: 80px 0;
+}
+.process-card img {
+  width: 70px;
+  margin-bottom: 15px;
+}
+
+/* PRODUCTS */
+.featured-products {
+  padding: 80px 0;
+  background: #fff;
+}
+
+/* CTA */
+.final-cta {
+  padding: 80px 0;
+  background: #0b4d3b;
+  color: #fff;
+}
+.final-cta p {
+  opacity: 0.85;
+}
+.btn-primary-custom {
+  background: #d3b353;
+  border: none;
+  color: #002209;
+  font-weight: 600;
+  padding: 10px 22px;
+}

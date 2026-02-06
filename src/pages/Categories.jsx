@@ -445,6 +445,8 @@ export default function Categories() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const location = useLocation();
+  const [visibleCount, setVisibleCount] = useState(6);
+
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -456,6 +458,11 @@ export default function Categories() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+  setVisibleCount(8);
+}, [selectedCategory]);
+
 
   // read ?category= from URL; handles kebab-case -> Title Case
   useEffect(() => {
@@ -587,7 +594,7 @@ export default function Categories() {
           <div style={{ backgroundColor: "#ffff", padding: "20px", color: "#002209" }}>
             <Container className="mt-4">
               <Row>
-                <Col md={3} className="category-sidebar">
+                <Col md={12} className="category-sidebar">
                   <h4
                     style={{
                       fontWeight: "700",
@@ -603,7 +610,7 @@ export default function Categories() {
                   />
                 </Col>
 
-                <Col md={9}>
+                <Col md={12}>
                   {selectedCategory && (
                     <h1
                       style={{
@@ -637,7 +644,8 @@ export default function Categories() {
                         marginTop: "3%",
                       }}
                     >
-                      {filteredProducts.map((item) => {
+                      {/* {filteredProducts.map((item) => { */}
+                      {filteredProducts.slice(0, visibleCount).map((item) => {
                         const hasDiscount = item.originalPrice > item.discountPrice;
                         const pct =
                           hasDiscount && item.originalPrice > 0
@@ -676,7 +684,7 @@ export default function Categories() {
                                   display: "flex",
                                   alignItems: "baseline",
                                   gap: "8px",
-                                  marginBottom: "8px",
+                                  marginBottom: "50px",
                                 }}
                               >
                                 {/* MRP (strike-through) — only when discounted */}
@@ -710,6 +718,10 @@ export default function Categories() {
                                 </p>
                                 {item.category === "Dry Fruits" && <p style={{fontFamily:"poppins", fontSize:"14px", fontWeight:"500"}}>(100gms)</p>}
                               </div>
+                              <button className="product-details-btn">
+  More Details
+</button>
+
 
                               {/* Optional % OFF badge */}
                              {/*} {hasDiscount && (
@@ -733,6 +745,27 @@ export default function Categories() {
                       })}
                     </div>
                   )}
+                  {filteredProducts.length > visibleCount && (
+  <div style={{ textAlign: "center", marginTop: "40px" }}>
+    <button
+      onClick={() => setVisibleCount((prev) => prev + 8)}
+      style={{
+        backgroundColor: "#004914",
+        color: "#fff",
+        padding: "12px 30px",
+        fontSize: "16px",
+        fontWeight: "600",
+        border: "none",
+        borderRadius: "30px",
+        cursor: "pointer",
+        fontFamily: "poppins",
+      }}
+    >
+      Load More
+    </button>
+  </div>
+)}
+
                 </Col>
               </Row>
             </Container>

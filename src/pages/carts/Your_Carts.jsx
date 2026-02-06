@@ -1196,10 +1196,15 @@ const discountPercent = 10;
 // ✅ same logic as checkout
 const discountAmount = round1((subtotal * discountPercent) / 100);
 
-const shipping = 0;
-const gst = 0;
+const shipping = 80;
 
-const grandTotal = round1(subtotal - discountAmount + gst + shipping);
+const taxableAmount = subtotal - discountAmount;
+
+const gst = 0.05;
+const gstAmount = round1(taxableAmount * gst);
+
+const grandTotal = round1(taxableAmount + gstAmount + shipping);
+
 
 
 
@@ -1286,7 +1291,7 @@ const grandTotal = round1(subtotal - discountAmount + gst + shipping);
             </h3>
             <Button
               variant="dark"
-              onClick={() => navigate("/categories")}
+              onClick={() => navigate("/shop")}
               style={{ fontFamily: "Poppins", padding: "10px 30px" }}
             >
               Shop Now
@@ -1450,14 +1455,16 @@ const grandTotal = round1(subtotal - discountAmount + gst + shipping);
                 </div>
 
                 <div className="d-flex justify-content-between mb-2">
-                  <span style={{ fontFamily: "Poppins" }}>Shipping</span>
-                  <span style={{ fontFamily: "Poppins" }}>₹{shipping.toFixed(0)}</span>
-                </div>
+  <span style={{ fontFamily: "Poppins" }}>Shipping</span>
+  <span style={{ fontFamily: "Poppins" }}>₹{shipping.toFixed(0)}</span>
+</div>
+
 
                 <div className="d-flex justify-content-between mb-2">
-                  <span style={{ fontFamily: "Poppins" }}>GST</span>
-                  <span style={{ fontFamily: "Poppins" }}>₹{gst.toFixed(0)}</span>
-                </div>
+  <span style={{ fontFamily: "Poppins" }}>GST (5%)</span>
+  <span style={{ fontFamily: "Poppins" }}>₹{gstAmount.toFixed(1)}</span>
+</div>
+
 
                  <div className="d-flex justify-content-between mb-2">
                   <span style={{ fontFamily: "Poppins" }}>Discount(10%)</span>
@@ -1488,13 +1495,13 @@ const grandTotal = round1(subtotal - discountAmount + gst + shipping);
                 </Button>
 
                 <Button
-                  variant="outline-dark"
-                  className="w-100 mt-3"
-                  onClick={() => navigate("/categories")}
-                  style={{ fontFamily: "Poppins" }}
-                >
-                  Continue Shopping
-                </Button>
+  variant="outline-dark"
+  className="w-100 mt-3"
+  onClick={() => navigate(-1)}
+  style={{ fontFamily: "Poppins" }}
+>
+  Continue Shopping
+</Button>
               </div>
             </Col>
           </Row>
