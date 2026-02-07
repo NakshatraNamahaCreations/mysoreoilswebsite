@@ -77,6 +77,7 @@ useEffect(() => {
 const fetchBanners = async () => {
   try {
     const res = await axios.get(
+      // "https://api.themysoreoils.com/api/banners"
       "https://api.themysoreoils.com/api/banners"
     );
 
@@ -87,15 +88,16 @@ const fetchBanners = async () => {
       return;
     }
 
-    const slides = activeBanners.map((banner) => ({
-      title: banner.title,
-      subtitle: "",
-      desc: "",
-      bg: `${"https://api.themysoreoils.com"}${banner.image}`,
-      titleColor: "#ffffff",
-      subtitleColor: "#FFD600",
-      descColor: "#f1f1f1",
-    }));
+   const slides = activeBanners.map((banner) => ({
+  title: banner.title,
+  subtitle: banner.subtitle,
+  desc: banner.desc,
+  bg: `https://api.themysoreoils.com${banner.image}`,
+  titleColor: banner.titleColor || "#ffffff",
+  subtitleColor: banner.subtitleColor || "#FFD600",
+  descColor: banner.descColor || "#f1f1f1",
+}));
+
 
     setHeroSlides(slides);
   } catch (err) {
