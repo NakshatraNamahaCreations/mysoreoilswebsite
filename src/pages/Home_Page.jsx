@@ -37,6 +37,8 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import "swiper/css";
 import "swiper/css/effect-fade";
+import ProductAccordian from "./ProductAccordian"
+import ProductCategoryHome from "./ProductCategoryHome";
 
 
 export default function Home_Page() {
@@ -228,6 +230,10 @@ const fetchBanners = async () => {
       </SwiperSlide>
     ))}
   </Swiper>
+
+  <div className="banner-accordion">
+    <ProductCategoryHome />
+  </div>
 </div>
 
 
@@ -414,20 +420,20 @@ const fetchBanners = async () => {
 
       <p className="about-text">Our company draws inspiration from two great visionaries, Nalwadi Krishnaraja Wodeyar and Sir M. Visvesvaraya from the land of Mysore, who dedicated their lives to serving people with the highest standards of excellence. Their commitment to quality and public welfare continues to guide us in everything we do.</p>
 
-      <p className="about-text">
+      {/* <p className="about-text">
         Welcome to <strong>The Mysore Oils</strong>, where tradition meets
         uncompromised quality. Inspired by the visionary leadership of
         <strong> Nalwadi Krishnaraja Wodeyar</strong> and
         <strong> Sir M. Visvesvaraya</strong>, we are devoted to preserving the
         authentic heritage of cold-pressed oil extraction.
-      </p>
+      </p> */}
 
-      <p className="about-text">
+      {/* <p className="about-text">
         Our journey is rooted in Mysore’s legacy — a land known for its wisdom,
         craftsmanship, and respect for natural processes. We believe true
         nourishment comes from time-tested methods, pure ingredients, and
         ethical practices.
-      </p>
+      </p> */}
 
       <p className="about-text">
         At The Mysore Oils, every drop reflects our promise of purity, wellness,
@@ -492,14 +498,14 @@ const fetchBanners = async () => {
   </Container>
 </div>
 
-      <div
+      {/* <div
         style={{
           backgroundColor: "#f8f8f8",
           height: "600px",
           padding: "2% 0",
         }}
-      >
-        <div className="text-end " style={{ color: "black", padding: "2% 5%" }}>
+      > */}
+        {/* <div className="text-end " style={{ color: "black", padding: "2% 5%" }}>
           <h2
             style={{
               fontSize: "44px",
@@ -524,18 +530,18 @@ const fetchBanners = async () => {
               "The Mysore Oils"
             </span>
           </h2>
-        </div>
-        <img
+        </div> */}
+        {/* <img
           src={"/media/fuelBanner.png"}
           style={{
             width: "100%",
             paddingInline: "5%",
             marginTop:"-80px"
           }}
-        />
-      </div>
+        /> */}
+      {/* </div> */}
       {/* REVIEWS */}
-      <Reviews />
+      {/* <Reviews /> */}
 
       <ScrollToTop />
 

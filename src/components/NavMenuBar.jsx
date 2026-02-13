@@ -31,7 +31,7 @@ const NavbarMenu = () => {
           {/* Left — Logo */}
           <div className="d-flex align-items-center gap-3 nav-logo">
             <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-               <img src="/media/mysoillogo.png" alt="elephant logo" style={{height:100, objectFit:"contain"}}/>
+               <img src="/media/mysoillogo.png" alt="elephant logo"/>
           <span className="logoheading">The Mysore oils</span>
             </Link>
           </div>

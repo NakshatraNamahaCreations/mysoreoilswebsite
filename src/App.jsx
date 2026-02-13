@@ -2,7 +2,7 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
+import { useEffect, useState } from "react";
 import Home_Page from "./pages/Home_Page";
 import Best_Seller from "./pages/Best_Seller";
 import Categories from "./pages/Categories";
@@ -62,13 +62,27 @@ import ResetPassword from "./pages/accounts/ResetPassword";
 import PaymentFailed from "./pages/carts/FailurePage";
 import WhatsAppButton from "./components/WhatsAppBtn";
 import Home from "./pages/Home";
+import Preloader from "./components/Preloader";
 
 
 
 
 function App() {
+
+  const [loading, setLoading] = useState(true);
+  
+  // Preloader timing
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <>
+       {loading && <Preloader />}
       <Router>
         <BackToTop/>
         <WhatsAppButton/>

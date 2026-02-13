@@ -242,39 +242,41 @@ useEffect(() => {
           <div className="d-flex d-md-none w-100 align-items-center justify-content-between">
             {/* LEFT: Logo */}
             <Link to="/" className="d-inline-flex align-items-center">
-              <img
+              {/* <img
                 src="/media/MysuruOilsLogo.png"
                 alt="Mysuru Oils"
                 style={{ height: 50, objectFit: "contain", marginRight: "10px" }}
                 loading="lazy"
-              />
+              /> */}
+               <img src="/media/mysoillogo.png" alt="elephant logo" style={{height:50, objectFit:"contain"}} className="logohead-img"/>
+          <span className="logo-head">The Mysore oils</span>
             </Link>
 
             {/* RIGHT: search + wishlist + cart + account + hamburger */}
-            <div className="d-flex align-items-center gap-2">
+            <div className="d-flex align-items-center gap-2 icons" >
               <button
                 aria-label="Open search"
-                className="icon-btn"
+                className="icons-btn"
                 type="button"
                 onClick={() => setShowSearch((s) => !s)}
               >
-                <img src={loupe} alt="Search" className="icon-img" loading="lazy" />
+                <img src={loupe} alt="Search" className="icons-img" loading="lazy" width={15} height={15}/>
               </button>
 
-              <Link to="/wishlist" aria-label="Wishlist" className="icon-box">
+              {/* <Link to="/wishlist" aria-label="Wishlist" className="icon-box">
                 <img src={faHeart} alt="Wishlist" className="icon-img" loading="lazy" />
-              </Link>
+              </Link> */}
 
               <Link to="/carts" className="cart-wrapper" aria-label="Cart">
-                <div className={`cart-icon ${animate ? "cart-bounce" : ""} icon-box`}>
-                  <img src={Cart} alt="Cart" className="icon-img" loading="lazy" />
+                <div className={`cart-icon ${animate ? "cart-bounce" : ""} icons-box`}>
+                  <img src={Cart} alt="Cart" className="icons-img" loading="lazy" />
                   {itemCount > 0 && <span className="cart-count">{itemCount}</span>}
                 </div>
               </Link>
 
-              <Link to="/login" aria-label="Account" className="icon-box">
+              {/* <Link to="/login" aria-label="Account" className="icon-box">
                 <img src={Account} alt="Account" className="icon-img" loading="lazy" />
-              </Link>
+              </Link> */}
 
               {/* Hamburger */}
               <Navbar.Toggle
@@ -294,7 +296,7 @@ useEffect(() => {
                 alt="Mysuru Oils"
                 style={{ height:95, objectFit: "contain" }}
               />*/}
-              <img src="/media/mysoillogo.png" alt="elephant logo" style={{height:80, objectFit:"contain"}}/>
+              <img src="/media/mysoillogo.png" alt="elephant logo" style={{height:90, objectFit:"contain"}}/>
           <span className="logohead">The Mysore oils</span>
               
             </Link>
@@ -316,7 +318,7 @@ useEffect(() => {
                 title={
                   <span
                     className="nav-title"
-                    style={{ fontFamily: "poppins", color: "#004914", fontWeight: 700, fontSize: 16, letterSpacing:"1px" }}
+                    style={{ fontFamily: "poppins", color: "#fff", fontWeight: 700, fontSize: 16, letterSpacing:"1px" }}
                   >
                     SHOP
                     <FontAwesomeIcon icon={faAngleDown} className={`ms-2 ${isOpen ? "rotate-180" : ""}`} />
@@ -532,7 +534,7 @@ useEffect(() => {
           >
             {/* Header: close button only / optional title */}
             <Offcanvas.Header className="mo-header" closeButton>
-              <Offcanvas.Title id="main-offcanvas-label">Menu</Offcanvas.Title>
+              <Offcanvas.Title id="main-offcanvas-label" style={{fontFamily:"montserrat", fontWeight:"700"}}>Menu</Offcanvas.Title>
             </Offcanvas.Header>
 
             {/* Body: left-aligned, stacked menu */}
@@ -591,6 +593,15 @@ useEffect(() => {
                     </div>
                   </div>
                 </div>
+                <div style={{display:"flex", alignItems:"center", gap:"10px", marginTop:"30px"}}>
+                <Link to="/wishlist" aria-label="Wishlist" className="icon-box">
+                <img src={faHeart} alt="Wishlist" className="icon-img" loading="lazy" />
+              </Link>
+
+              <Link to="/login" aria-label="Account" className="icon-box">
+                <img src={Account} alt="Account" className="icon-img" loading="lazy" />
+              </Link>
+              </div>
               </nav>
             </Offcanvas.Body>
           </Navbar.Offcanvas>

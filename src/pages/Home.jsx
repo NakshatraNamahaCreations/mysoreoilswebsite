@@ -168,9 +168,9 @@ export default function Home() {
       </section>
 
       {/* ================= REVIEWS ================= */}
-      <section className="reviews-section">
+      {/* <section className="reviews-section">
         <Reviews />
-      </section>
+      </section> */}
 
       {/* ================= FINAL CTA ================= */}
       <section className="final-cta">
