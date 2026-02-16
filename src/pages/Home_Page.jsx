@@ -192,7 +192,7 @@ const fetchBanners = async () => {
     modules={[Autoplay, EffectFade]}
     effect="fade"
     autoplay={{
-      delay: 4500,
+      delay: 2500,
       disableOnInteraction: false,
     }}
     loop
