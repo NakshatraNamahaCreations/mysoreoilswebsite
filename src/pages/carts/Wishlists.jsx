@@ -53,8 +53,25 @@ export default function Wishlists() {
       { sale: null, mrp: null }
     );
   };
-  const fullImg = (path) =>
-    path ? `https://api.themysoreoils.com${String(path).startsWith("/") ? "" : "/"}${path}` : "/media/cart-product.png";
+  // const fullImg = (path) =>
+  //   path ? `https://api.themysoreoils.com${String(path).startsWith("/") ? "" : "/"}${path}` : "/media/cart-product.png";
+  const fullImg = (path) => {
+  if (!path) return "/media/cart-product.png";
+
+  const img = String(path);
+
+  // Cloudinary or any external URL
+  if (img.startsWith("http")) return img;
+
+  // Old local uploads fallback
+  return `https://api.themysoreoils.com${img.startsWith("/") ? "" : "/"}${img}`;
+};
+
+const optimizeCloudinary = (url) =>
+  url?.includes("res.cloudinary.com")
+    ? url.replace("/upload/", "/upload/w_200,q_auto,f_auto/")
+    : url;
+
 
   // fetch wishlist
   useEffect(() => {
@@ -190,13 +207,21 @@ export default function Wishlists() {
                         backgroundColor: "#fff",
                       }}
                     >
-                      <img
+                      {/* <img
                         src={img}
                         alt={item.name}
                         className="product-image"
                         style={{ width: "100px", height: "auto", objectFit: "cover", margin: 0 }}
                         onError={(e) => { e.currentTarget.src = "/media/cart-product.png"; }}
-                      />
+                      /> */}
+                      <img
+  src={optimizeCloudinary(fullImg(item?.images?.[0]))}
+  alt={item.name}
+  className="product-image"
+  style={{ width: "100px", height: "auto", objectFit: "cover", margin: 0 }}
+  onError={(e) => { e.currentTarget.src = "/media/cart-product.png"; }}
+/>
+
 
                       <div
                         className="product-info"

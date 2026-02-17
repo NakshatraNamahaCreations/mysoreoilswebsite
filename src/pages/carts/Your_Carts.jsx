@@ -1205,6 +1205,15 @@ const gstAmount = round1(taxableAmount * gst);
 
 const grandTotal = round1(taxableAmount + gstAmount + shipping);
 
+const getImageUrl = (img) => {
+  if (!img) return "/media/default.png";
+
+  // Cloudinary or external URL
+  if (img.startsWith("http")) return img;
+
+  // old local upload support
+  return `https://api.themysoreoils.com${img}`;
+};
 
 
 
@@ -1325,12 +1334,19 @@ const grandTotal = round1(taxableAmount + gstAmount + shipping);
                   >
                     <Row className="align-items-center">
                       <Col xs={4}>
-                        <img
+                        {/* <img
                           src={item.image}
                           alt={item.name}
                           className="img-fluid rounded"
                           style={{ maxWidth: "120px" }}
-                        />
+                        /> */}
+                        <img
+  src={getImageUrl(item.image)}
+  alt={item.name}
+  className="img-fluid rounded"
+  style={{ maxWidth: "120px" }}
+/>
+
                       </Col>
 
                       <Col xs={8} className="cartsectionright">

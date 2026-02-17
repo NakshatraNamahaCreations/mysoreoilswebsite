@@ -580,6 +580,17 @@ const useIsMobile = () => {
   return isMobile;
 };
 
+const optimizeCloudinary = (url) => {
+  if (!url) return url;
+
+  if (url.includes("res.cloudinary.com")) {
+    return url.replace(
+      "/upload/",
+      "/upload/w_400,q_auto,f_auto/"
+    );
+  }
+  return url;
+};
 
 
 export default function Products_Sliders() {
@@ -901,8 +912,21 @@ const settings = {
 
   {/* Image */}
   <div className="oil-media">
-    <img src={item.images[0]} alt={item.name} className="oil-img-main" />
-    <img src={item.images[1]} alt={item.name} className="oil-img-hover" />
+    {/* <img src={item.images[0]} alt={item.name} className="oil-img-main" />
+    <img src={item.images[1]} alt={item.name} className="oil-img-hover" /> */}
+
+    <img
+  src={optimizeCloudinary(item.images[0])}
+  alt={item.name}
+  className="oil-img-main"
+/>
+
+<img
+  src={optimizeCloudinary(item.images[1])}
+  alt={item.name}
+  className="oil-img-hover"
+/>
+
 
     <span className="oil-tag">New</span>
 

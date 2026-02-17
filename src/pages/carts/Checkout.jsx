@@ -1007,6 +1007,17 @@ const grandTotal = round2(taxableAmount + taxAmount + shippingFee);
   }
 };
 
+const getImageUrl = (img) => {
+  if (!img) return "/media/default.png";
+
+  // Cloudinary or full URL
+  if (img.startsWith("http")) return img;
+
+  // old local uploads fallback
+  return `https://api.themysoreoils.com${img}`;
+};
+
+
 
 {/*}  const handlePayNow = async () => {
   // Guard rails for invalid cart or address
@@ -1397,11 +1408,17 @@ const orderId = paymentResponse.data.phonepeResponse?.orderId;
                       style={{ gap: "10px" }}
                     >
                       <div style={{ width: "70px", flexShrink: 0 }}>
-                        <img
+                        {/* <img
                           src={item.image}
                           alt={item.name}
                           style={{ width: "100%", objectFit: "contain", borderRadius: "4px" }}
-                        />
+                        /> */}
+                        <img
+  src={getImageUrl(item.image)}
+  alt={item.name}
+  style={{ width: "100%", objectFit: "contain", borderRadius: "4px" }}
+/>
+
                       </div>
                       <div style={{ flexGrow: 1 }}>
                         <p className="mb-1 fw-semibold" style={{ fontSize: "14px" }}>

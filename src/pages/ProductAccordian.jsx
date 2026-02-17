@@ -206,8 +206,14 @@ useEffect(() => {
   <div className="category-round-scroll">
     {categories.map((item) => {
       const normalizedTitle = item.name.replace(/[/-\s]/g, "");
+      // const image =
+      //   imageMappings[normalizedTitle] || "/media/default.png";
+
       const image =
-        imageMappings[normalizedTitle] || "/media/default.png";
+  item.image && item.image.startsWith("http")
+    ? item.image
+    : imageMappings[normalizedTitle] || "/media/default.png";
+
 
       const isActive =
         currentCategory &&

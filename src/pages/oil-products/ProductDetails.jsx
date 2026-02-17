@@ -455,7 +455,11 @@ const ProductDetails = () => {
           images: (productData.images || []).map((img, index) => {
             const v = enrichedVariants[index];
             return {
-              src: `https://api.themysoreoils.com${img}`,
+              // src: `https://api.themysoreoils.com${img}`,
+              src: img.startsWith("http")
+  ? img
+  : `https://api.themysoreoils.com${img}`,
+
               weight: v?.quantity || "Default",
               unit: v?.unit || "",
               price: v?._sale ?? v?.price ?? productData.discountPrice ?? 0,
@@ -468,18 +472,42 @@ const ProductDetails = () => {
           // we now set these to null instead of a default placeholder.
           // That way, if the backend didn't provide e.g. usesImage,
           // we won't generate an empty thumbnail box.
+          // 
           nutritionalImage: productData.nutritionImage
-            ? `https://api.themysoreoils.com${productData.nutritionImage}`
-            : null,
+  ? productData.nutritionImage.startsWith("http")
+    ? productData.nutritionImage
+    : `https://api.themysoreoils.com${productData.nutritionImage}`
+  : null,
+
+          // usesImage: productData.usesImage
+          //   ? `https://api.themysoreoils.com${productData.usesImage}`
+          //   : null,
+
           usesImage: productData.usesImage
-            ? `https://api.themysoreoils.com${productData.usesImage}`
-            : null,
+  ? productData.usesImage.startsWith("http")
+    ? productData.usesImage
+    : `https://api.themysoreoils.com${productData.usesImage}`
+  : null,
+
+          // benefitsImage: productData.benefitsImage
+          //   ? `https://api.themysoreoils.com${productData.benefitsImage}`
+          //   : null,
           benefitsImage: productData.benefitsImage
-            ? `https://api.themysoreoils.com${productData.benefitsImage}`
-            : null,
+  ? productData.benefitsImage.startsWith("http")
+    ? productData.benefitsImage
+    : `https://api.themysoreoils.com${productData.benefitsImage}`
+  : null,
+
+          // descriptionImage: productData.descriptionImage
+          //   ? `https://api.themysoreoils.com${productData.descriptionImage}`
+          //   : null,
+
           descriptionImage: productData.descriptionImage
-            ? `https://api.themysoreoils.com${productData.descriptionImage}`
-            : null,
+  ? productData.descriptionImage.startsWith("http")
+    ? productData.descriptionImage
+    : `https://api.themysoreoils.com${productData.descriptionImage}`
+  : null,
+
         };
 
         // Start thumbnails with the variant images
