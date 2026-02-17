@@ -94,7 +94,9 @@ const fetchBanners = async () => {
   title: banner.title,
   subtitle: banner.subtitle,
   desc: banner.desc,
-  bg: `https://api.themysoreoils.com${banner.image}`,
+  // bg: `https://api.themysoreoils.com${banner.image}`,
+  bg: banner.image,
+
   titleColor: banner.titleColor || "#ffffff",
   subtitleColor: banner.subtitleColor || "#FFD600",
   descColor: banner.descColor || "#f1f1f1",
