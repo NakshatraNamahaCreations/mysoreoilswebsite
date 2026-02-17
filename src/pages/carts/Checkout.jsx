@@ -969,6 +969,7 @@ const grandTotal = round2(taxableAmount + taxAmount + shippingFee);
     // Initiate the payment
     const paymentResponse = await axios.post(
       "https://api.themysoreoils.com/api/payment/initiate",
+      //  "https://api.themysoreoils.com/api/orders/payment/initiate",
       {
         amount: grandTotal, // for testing, replace with grandTotal later
         callbackUrl: "https://themysoreoils.com/thankyou", 
