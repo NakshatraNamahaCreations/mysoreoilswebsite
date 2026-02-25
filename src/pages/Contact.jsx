@@ -17,7 +17,6 @@ const schema = yup.object().shape({
   email: yup.string().email("Invalid email format").required("Email is required"),
   phoneCode: yup.string().matches(/^\+\d{1,4}$/, "Invalid phone code (e.g. +91)").required("Phone code is required"),
   phoneNumber: yup.string().matches(/^\d{7,15}$/, "Invalid phone number").required("Phone number is required"),
-  message: yup.string().min(10, "Message must be at least 10 characters").required("Message is required"),
 });
 
 /* ---------- Mobile breakpoint hook (<= 768px) ---------- */
@@ -58,11 +57,35 @@ export default function Contact() {
     reset,
   } = useForm({ resolver: yupResolver(schema) });
 
-  const onSubmit = (data) => {
-    console.log("Form Submitted", data);
-    // TODO: POST to your API, then:
-    // reset();
-  };
+  // const onSubmit = (data) => {
+  //   console.log("Form Submitted", data);
+  //   // TODO: POST to your API, then:
+  //   // reset();
+  // };
+
+  const onSubmit = async (data) => {
+  try {
+    const response = await fetch("https://api.themysoreoils.com/api/contact", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      alert("Form submitted successfully!");
+      reset();
+    } else {
+      alert("Something went wrong");
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Server error");
+  }
+};
 
   return (
     <>
@@ -290,28 +313,23 @@ export default function Contact() {
 
                     {/* Phone Code & Number */}
                     <Row className="g-2">
-                      <Col xs={4} md={4}>
-                        <Form.Group className="mb-3 mb-md-4">
-                          <Form.Control
-                            type="text"
-                            placeholder="+91"
-                            {...register("phoneCode")}
-                            isInvalid={!!errors.phoneCode}
-                            style={{
-                              height: isMobile ? 46 : 50,
-                              fontSize: isMobile ? 14 : 16,
-                              borderRadius: 10,
-                              textAlign: "center",
-                            }}
-                            aria-label="Phone Code"
-                            inputMode="tel"
-                            autoComplete="tel-country-code"
-                          />
-                          <Form.Control.Feedback type="invalid">
-                            {errors.phoneCode?.message}
-                          </Form.Control.Feedback>
-                        </Form.Group>
-                      </Col>
+                    <Col xs={4} md={4}>
+  <Form.Group className="mb-3 mb-md-4">
+    <Form.Control
+      type="text"
+      value="+91"
+      readOnly
+      {...register("phoneCode")}
+      style={{
+        height: isMobile ? 46 : 50,
+        fontSize: isMobile ? 14 : 16,
+        borderRadius: 10,
+        textAlign: "center",
+        backgroundColor: "#e9ecef"
+      }}
+    />
+  </Form.Group>
+</Col>
                       <Col xs={8} md={8}>
                         <Form.Group className="mb-3 mb-md-4">
                           <Form.Control
